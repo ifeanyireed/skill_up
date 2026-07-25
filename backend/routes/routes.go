@@ -49,9 +49,10 @@ func SetupRouter() *gin.Engine {
 		api.POST("/users", controllers.CreateUser)
 		api.PUT("/users/:id/toggle", controllers.ToggleUserStatus)
 
-		// Settings
+		// Settings & Admin Wipe
 		api.GET("/settings", controllers.GetSettings)
 		api.PUT("/settings", controllers.UpdateSettings)
+		api.POST("/admin/wipe-test-data", controllers.WipeDatabase)
 	}
 
 	return r
