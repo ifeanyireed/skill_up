@@ -1,0 +1,152 @@
+// ============================================================================
+// Skill Up Academy Check-in portal — Collapsible Admin Sidebar Navigation
+// Role-aware navigation separating Lead Admin from Instructor views
+// ============================================================================
+import { NavLink, useNavigate } from 'react-router-dom'
+import {
+  LayoutDashboard,
+  Users,
+  CalendarCheck,
+  History,
+  UserCog,
+  Settings,
+  LogOut,
+  LogIn,
+  KeyRound,
+  UserPlus,
+  ChevronLeft
+} from 'lucide-react'
+import { useAdminStore } from '../../store/useAdminStore'
+
+const navItems = [
+  { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
+]
+
+const safetyItems = [
+  { to: '/admin/children', label: 'Children Directory', icon: Users },
+  { to: '/admin/checkin', label: 'Daily Check-In', icon: LogIn },
+  { to: '/admin/checkout', label: 'Pickup Verification', icon: KeyRound },
+  { to: '/admin/attendance', label: "Today's Attendance", icon: CalendarCheck },
+  { to: '/admin/history', label: 'Attendance History', icon: History },
+  { to: '/admin/register', label: 'Register Child', icon: UserPlus },
+]
+
+const adminItems = [
+  { to: '/admin/users', label: 'Instructors & Staff', icon: UserCog },
+  { to: '/admin/settings', label: 'Settings', icon: Settings },
+]
+
+export function AdminSidebar() {
+  const { session, logout, sidebarCollapsed, toggleSidebar } = useAdminStore()
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    logout()
+    navigate('/login')
+  }
+
+  const isAdmin = session.user?.role === 'Lead Admin' || session.user?.role === 'Administrator'
+
+  const initials = session.user?.fullName
+    ? session.user.fullName.split(' ').map((n: string) => n[0]).join('').slice(0, 2)
+    : 'SJ'
+
+  return (
+    <nav className="admin-sidebar">
+      {/* Brand Header */}
+      <div className="admin-sidebar-logo">
+        <img
+          src="/logo.avif"
+          alt="Skill Up Academy"
+          style={{
+            height: sidebarCollapsed ? '28px' : '34px',
+            width: 'auto',
+            objectFit: 'contain',
+            transition: 'height 0.2s'
+          }}
+        />
+
+        {!sidebarCollapsed && (
+          <button
+            onClick={toggleSidebar}
+            className="admin-btn admin-btn-icon admin-btn-ghost"
+            title="Collapse Sidebar"
+            style={{ padding: '4px', border: 'none' }}
+          >
+            <ChevronLeft size={16} />
+          </button>
+        )}
+      </div>
+
+      {/* Navigation Sections */}
+      <div className="admin-nav">
+        <div className="admin-nav-section">
+          {navItems.map(({ to, label, icon: Icon, end }) => (
+            <NavLink
+              key={to}
+              to={to}
+              end={!!end}
+              title={sidebarCollapsed ? label : undefined}
+              className={({ isActive }) => `admin-nav-item${isActive ? ' active' : ''}`}
+            >
+              <Icon size={16} />
+              <span>{label}</span>
+            </NavLink>
+          ))}
+        </div>
+
+        <div className="admin-nav-section">
+          <div className="admin-nav-label">Safety & Operations</div>
+          {safetyItems.map(({ to, label, icon: Icon }) => (
+            <NavLink
+              key={to}
+              to={to}
+              title={sidebarCollapsed ? label : undefined}
+              className={({ isActive }) => `admin-nav-item${isActive ? ' active' : ''}`}
+            >
+              <Icon size={16} />
+              <span>{label}</span>
+            </NavLink>
+          ))}
+        </div>
+
+        {/* Administration Section (Only visible for Lead Admins) */}
+        {isAdmin && (
+          <div className="admin-nav-section">
+            <div className="admin-nav-label">Administration</div>
+            {adminItems.map(({ to, label, icon: Icon }) => (
+              <NavLink
+                key={to}
+                to={to}
+                title={sidebarCollapsed ? label : undefined}
+                className={({ isActive }) => `admin-nav-item${isActive ? ' active' : ''}`}
+              >
+                <Icon size={16} />
+                <span>{label}</span>
+              </NavLink>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* User Footer */}
+      <div className="admin-sidebar-user">
+        <div className="admin-avatar" title={session.user?.fullName || 'User'} style={{ width: 30, height: 30, fontSize: 11, flexShrink: 0 }}>
+          {initials}
+        </div>
+        <div className="admin-sidebar-user-info">
+          <div className="admin-sidebar-user-name">{session.user?.fullName ?? 'Coach Sarah Jenkins'}</div>
+          <div className="admin-sidebar-user-role">{session.user?.role ?? 'Lead Admin'}</div>
+        </div>
+        <button
+          onClick={handleLogout}
+          className="admin-btn admin-btn-icon admin-btn-ghost"
+          title="Sign out"
+          style={{ flexShrink: 0 }}
+        >
+          <LogOut size={14} />
+        </button>
+      </div>
+    </nav>
+  )
+}

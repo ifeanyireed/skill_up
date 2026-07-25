@@ -1,0 +1,26 @@
+# Node & Build Outputs
+node_modules/
+dist/
+build/
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Go Binaries
+backend/server
+backend/server.exe
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# System / IDE
+.DS_Store
+.vscode/
+.idea/
+*.log
