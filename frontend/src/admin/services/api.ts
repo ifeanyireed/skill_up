@@ -94,13 +94,23 @@ export async function createChild(data: Partial<BackendChild>): Promise<BackendC
   return res.json()
 }
 
+export async function updateChildStatus(id: number | string, status: string): Promise<BackendChild> {
+  const res = await fetch(`${API_BASE_URL}/children/${id}/status`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status }),
+  })
+  if (!res.ok) throw new Error('Failed to update student status')
+  return res.json()
+}
+
 export async function checkInChild(
   id: number | string,
   adultName: string,
   adultPhone: string,
   rel: string = 'Mother',
   notes: string = '',
-  center: string = 'CBT Centre'
+  center: string = 'Raji Rasaki Centre'
 ) {
   const res = await fetch(`${API_BASE_URL}/children/${id}/checkin`, {
     method: 'POST',

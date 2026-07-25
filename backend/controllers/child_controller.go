@@ -80,6 +80,36 @@ func CreateChild(c *gin.Context) {
 	c.JSON(http.StatusCreated, child)
 }
 
+// PUT /api/children/:id/status
+type StatusUpdateInput struct {
+	Status string `json:"status" binding:"required"`
+}
+
+func UpdateChildStatus(c *gin.Context) {
+	id := c.Param("id")
+	var child models.Child
+	if err := config.DB.First(&child, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Child student record not found"})
+		return
+	}
+
+	var input StatusUpdateInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	child.Status = input.Status
+	config.DB.Save(&child)
+
+	// Sync status to Attendance Log for today
+	config.DB.Model(&models.AttendanceLog{}).
+		Where("student_id = ? AND date = ?", child.StudentID, time.Now().Format("2006-01-02")).
+		Update("status", input.Status)
+
+	c.JSON(http.StatusOK, child)
+}
+
 // POST /api/children/:id/checkin
 type CheckInInput struct {
 	AdultName   string `json:"adult_name" binding:"required"`
@@ -138,7 +168,7 @@ func CheckInChild(c *gin.Context) {
 		CheckInTime:    nowTime,
 		DropOffAdult:   input.AdultName + " (" + input.Rel + ")",
 		PickupPin:      pin,
-		InstructorName: "Coach Sarah Jenkins",
+		InstructorName: "Christiana Okokon",
 		Status:         "Checked In",
 	}
 	config.DB.Create(&logEntry)
