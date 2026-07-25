@@ -294,21 +294,38 @@ func CheckOutChild(c *gin.Context) {
 func DeleteChild(c *gin.Context) {
 	id := c.Param("id")
 	var child models.Child
-	if err := config.DB.First(&child, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Child student record not found"})
-		return
+
+	// Find child by numeric ID or student_id
+	if err := config.DB.Unscoped().First(&child, id).Error; err != nil {
+		if err2 := config.DB.Unscoped().Where("student_id = ?", id).First(&child).Error; err2 != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Child student record not found"})
+			return
+		}
 	}
 
-	if err := config.DB.Delete(&child).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	// Use DB Transaction to purge child and all associated records atomically at the same time
+	err := config.DB.Transaction(func(tx *gorm.DB) error {
+		// 1. Permanently delete all attendance logs matching student_id or child_name
+		if err := tx.Unscoped().Where("student_id = ? OR child_name = ?", child.StudentID, child.FullName).Delete(&models.AttendanceLog{}).Error; err != nil {
+			return err
+		}
+
+		// 2. Permanently delete child record from children table
+		if err := tx.Unscoped().Delete(&child).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete student and associated records: " + err.Error()})
 		return
 	}
-
-	// Purge attendance logs for deleted student
-	config.DB.Where("student_id = ?", child.StudentID).Delete(&models.AttendanceLog{})
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Child student record deleted successfully",
-		"id":      child.ID,
+		"message":    "Child student record and all associated records deleted permanently",
+		"id":         child.ID,
+		"student_id": child.StudentID,
 	})
 }
