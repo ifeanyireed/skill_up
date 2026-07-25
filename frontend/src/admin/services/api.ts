@@ -3,20 +3,7 @@
 // Supports Center selection: Raji Rasaki Centre & CBT Centre
 // ============================================================================
 
-function getApiBaseUrl(): string {
-  const envUrl = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL
-  if (envUrl && !envUrl.includes('localhost') && !envUrl.includes('127.0.0.1')) {
-    return envUrl.endsWith('/') ? envUrl.slice(0, -1) : envUrl
-  }
-  // Dynamic LAN / Mobile IP Resolution:
-  // If accessing on mobile via Wi-Fi IP (e.g. 192.168.x.x), direct API calls to host machine's port 8080
-  if (typeof window !== 'undefined' && window.location.hostname && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-    return `${window.location.protocol}//${window.location.hostname}:8080/api`
-  }
-  return envUrl || 'http://localhost:8080/api'
-}
-
-const API_BASE_URL = getApiBaseUrl()
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api'
 
 export interface BackendChild {
   id: number
