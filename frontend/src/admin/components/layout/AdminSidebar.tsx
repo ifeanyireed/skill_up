@@ -26,7 +26,7 @@ const navItems = [
 const safetyItems = [
   { to: '/admin/children', label: 'Children Directory', icon: Users },
   { to: '/admin/checkin', label: 'Daily Check-In', icon: LogIn },
-  { to: '/admin/checkout', label: 'Pickup Verification', icon: KeyRound },
+  { to: '/admin/checkout', label: 'Daily Pick-up', icon: KeyRound },
   { to: '/admin/attendance', label: "Today's Attendance", icon: CalendarCheck },
   { to: '/admin/history', label: 'Attendance History', icon: History },
   { to: '/admin/register', label: 'Register Child', icon: UserPlus },

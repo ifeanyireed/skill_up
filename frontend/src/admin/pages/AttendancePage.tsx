@@ -79,7 +79,7 @@ export function AttendancePage() {
 
         <div className="admin-page-actions">
           <button className="admin-btn admin-btn-secondary" onClick={() => navigate('/admin/checkout')}>
-            <KeyRound size={14} /> Pickup Verification PIN
+            <KeyRound size={14} /> Daily Pick-up PIN
           </button>
           <button className="admin-btn admin-btn-primary" onClick={() => navigate('/admin/checkin')}>
             <LogIn size={14} /> Daily Child Check-In

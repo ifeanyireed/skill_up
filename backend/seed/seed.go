@@ -8,45 +8,22 @@ import (
 	"checkin-backend/models"
 )
 
-// WipeTestData removes all mock children, attendance logs, and unapproved legacy accounts.
-func WipeTestData(db *gorm.DB) {
-	fmt.Println("==========================================================================")
-	fmt.Println("   WIPING DATABASE TEST DATA & UPDATING ADMIN AVATARS FROM LIBRARY")
-	fmt.Println("==========================================================================")
-
-	// 1. Delete all Children records
-	if err := db.Exec("DELETE FROM children").Error; err != nil {
-		fmt.Printf("[Wipe Warning] Error deleting children: %v\n", err)
-	} else {
-		fmt.Println("[Wipe] Successfully cleared all children records!")
-	}
-
-	// 2. Delete all Attendance Logs
-	if err := db.Exec("DELETE FROM attendance_logs").Error; err != nil {
-		fmt.Printf("[Wipe Warning] Error deleting attendance_logs: %v\n", err)
-	} else {
-		fmt.Println("[Wipe] Successfully cleared all attendance log records!")
-	}
-
-	// 3. Delete any old / unapproved staff/instructor/admin accounts
+// EnsureSystemSetup ensures default system settings and the 3 Lead Administrator accounts exist on startup WITHOUT wiping registered children.
+func EnsureSystemSetup(db *gorm.DB) {
+	// 1. Delete any old / unapproved staff/instructor/admin accounts
 	if err := db.Exec("DELETE FROM users WHERE LOWER(email) NOT IN (?, ?, ?)",
 		"okokon.christiana@kingshouselearning.com",
 		"ifeanyireed@gmail.com",
 		"grace.solomon@kingshouselearning.com",
 	).Error; err != nil {
-		fmt.Printf("[Wipe Warning] Error purging unapproved users: %v\n", err)
-	} else {
-		fmt.Println("[Wipe] Successfully purged all other instructor/admin accounts!")
+		fmt.Printf("[Setup Warning] Error purging unapproved users: %v\n", err)
 	}
 
-	// 4. Update any existing children center records to Raji Rasaki Centre if blank
-	db.Exec("UPDATE children SET center = 'Raji Rasaki Centre' WHERE center = '' OR center IS NULL OR center = 'CBT Centre'")
-
-	// 5. Ensure Default System Settings exist
+	// 2. Ensure Default System Settings exist
 	var settingCount int64
 	db.Model(&models.Setting{}).Count(&settingCount)
 	if settingCount == 0 {
-		fmt.Println("[Wipe] Initializing clean System Settings...")
+		fmt.Println("[Setup] Initializing clean System Settings...")
 		setting := models.Setting{
 			BusinessName:    "Skill Up Academy",
 			Tagline:         "Child Training Check-In & Verification Portal",
@@ -62,7 +39,7 @@ func WipeTestData(db *gorm.DB) {
 		db.Create(&setting)
 	}
 
-	// 6. Ensure the 3 approved Administrator Users exist with Character Library Avatars
+	// 3. Ensure the 3 approved Administrator Users exist with Character Library Avatars
 	admins := []models.User{
 		{
 			FullName:      "Christiana Okokon",
@@ -109,12 +86,24 @@ func WipeTestData(db *gorm.DB) {
 			db.Save(&existing)
 		}
 	}
+}
+
+// WipeTestData explicitly wipes children and attendance logs ONLY when requested by admin API endpoint.
+func WipeTestData(db *gorm.DB) {
+	fmt.Println("==========================================================================")
+	fmt.Println("   WIPING DATABASE TEST DATA VIA ADMIN REQUEST")
+	fmt.Println("==========================================================================")
+
+	db.Exec("DELETE FROM children")
+	db.Exec("DELETE FROM attendance_logs")
+	EnsureSystemSetup(db)
 
 	fmt.Println("==========================================================================")
-	fmt.Println("   RAJI RASAKI CENTRE DEFAULT & CHARACTER AVATARS APPLIED!")
+	fmt.Println("   DATABASE WIPED CLEAN!")
 	fmt.Println("==========================================================================")
 }
 
 func SeedInitialData(db *gorm.DB) {
-	WipeTestData(db)
+	// Preserve all registered students! Only ensure admin users and settings exist.
+	EnsureSystemSetup(db)
 }

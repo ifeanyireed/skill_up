@@ -9,7 +9,7 @@ const pageTitles: Record<string, string> = {
   '/admin': 'Dashboard Overview',
   '/admin/children': 'Children Directory',
   '/admin/checkin': 'Daily Child Check-In',
-  '/admin/checkout': 'Pickup Verification PIN',
+  '/admin/checkout': 'Daily Pick-up PIN',
   '/admin/attendance': "Today's Attendance Monitor",
   '/admin/history': 'Attendance History & Audit Log',
   '/admin/register': 'Child Registration',

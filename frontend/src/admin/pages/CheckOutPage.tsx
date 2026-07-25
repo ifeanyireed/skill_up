@@ -112,7 +112,7 @@ export function CheckOutPage() {
       {/* Page Header */}
       <div className="admin-page-header">
         <div>
-          <div className="admin-page-title">Safe Child Pickup Verification</div>
+          <div className="admin-page-title">Safe Child Daily Pick-up</div>
           <div className="admin-page-desc">
             Verify daily 6-digit PIN provided by collector and record authorized child release in MySQL
           </div>
