@@ -77,7 +77,7 @@ export function DashboardHome() {
   const waitingPickup = children.filter((c) => c.status === 'Waiting Pickup').length
 
   // Instructor Group Filtering
-  const instructorAssignedGroup = 'Junior Champions (Ages 7-9)'
+  const instructorAssignedGroup = 'Junior Champions (Ages 11-19)'
   const instructorChildren = children.filter((c) =>
     isInstructor ? c.group === instructorAssignedGroup || c.group.includes('Junior') : true
   )

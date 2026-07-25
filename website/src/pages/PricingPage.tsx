@@ -98,7 +98,7 @@ export function PricingPage() {
               <h3 style={{ fontSize: '1.375rem', fontWeight: 600, marginTop: '0.5rem', color: 'var(--color-nets-text)' }}>Junior Tech Academy</h3>
               <div style={{ fontSize: '2.75rem', fontWeight: 700, color: 'var(--color-nets-navy)', margin: '1rem 0 0.25rem' }}>$149</div>
               <p style={{ fontSize: '0.875rem', color: 'var(--color-nets-text-2)', marginBottom: '1.5rem' }}>
-                Designed for kids and teens (ages 4-14) in Little Dragons & Junior Champions.
+                Designed for kids and teens (ages 4-19) in Little Dragons & Junior Champions.
               </p>
 
               <ul style={{ listStyle: 'none', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '2rem', fontSize: '0.875rem', color: 'var(--color-nets-text-2)' }}>

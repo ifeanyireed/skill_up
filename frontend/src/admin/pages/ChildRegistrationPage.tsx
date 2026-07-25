@@ -21,7 +21,7 @@ export function ChildRegistrationPage() {
   const [dob, setDob] = useState('2019-04-15')
   const [gender, setGender] = useState('Boy')
   const [center, setCenter] = useState('Raji Rasaki Centre')
-  const [group, setGroup] = useState('Junior Champions (Ages 7-9)')
+  const [group, setGroup] = useState('Junior Champions (Ages 11-19)')
   
   // Photo & Avatar selection (Optional)
   const [photoMode, setPhotoMode] = useState<'avatar' | 'upload'>('avatar')
@@ -365,9 +365,9 @@ export function ChildRegistrationPage() {
           <div className="admin-form-group">
             <label className="admin-label admin-label-req">Training Group / Class</label>
             <select className="admin-select" value={group} onChange={(e) => setGroup(e.target.value)}>
-              <option value="Little Dragons (Ages 4-6)">Little Dragons (Ages 4-6)</option>
-              <option value="Junior Champions (Ages 7-9)">Junior Champions (Ages 7-9)</option>
-              <option value="Elite Athletes (Ages 10-14)">Elite Athletes (Ages 10-14)</option>
+              <option value="Little Dragons (Ages 4-10)">Little Dragons (Ages 4-10)</option>
+              <option value="Junior Champions (Ages 11-19)">Junior Champions (Ages 11-19)</option>
+              <option value="Elite Athletes (Ages 20+)">Elite Athletes (Ages 20+)</option>
             </select>
           </div>
         </div>
