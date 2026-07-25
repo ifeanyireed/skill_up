@@ -8,10 +8,10 @@ import (
 	"checkin-backend/models"
 )
 
-// WipeTestData removes all mock children and attendance logs to prepare for live user testing.
+// WipeTestData removes all mock children, attendance logs, and unapproved legacy accounts.
 func WipeTestData(db *gorm.DB) {
 	fmt.Println("==========================================================================")
-	fmt.Println("   WIPING DATABASE TEST DATA FOR REAL USER TESTING PROD LAUNCH")
+	fmt.Println("   WIPING DATABASE TEST DATA & PURGING UNAPPROVED INSTRUCTOR ACCOUNTS")
 	fmt.Println("==========================================================================")
 
 	// 1. Delete all Children records
@@ -28,7 +28,18 @@ func WipeTestData(db *gorm.DB) {
 		fmt.Println("[Wipe] Successfully cleared all attendance log records!")
 	}
 
-	// 3. Ensure Default System Settings exist
+	// 3. Delete any old / unapproved staff/instructor/admin accounts
+	if err := db.Exec("DELETE FROM users WHERE LOWER(email) NOT IN (?, ?, ?)",
+		"okokon.christiana@kingshouselearning.com",
+		"ifeanyireed@gmail.com",
+		"grace.solomon@kingshouselearning.com",
+	).Error; err != nil {
+		fmt.Printf("[Wipe Warning] Error purging unapproved users: %v\n", err)
+	} else {
+		fmt.Println("[Wipe] Successfully purged all other instructor/admin accounts!")
+	}
+
+	// 4. Ensure Default System Settings exist
 	var settingCount int64
 	db.Model(&models.Setting{}).Count(&settingCount)
 	if settingCount == 0 {
@@ -48,7 +59,7 @@ func WipeTestData(db *gorm.DB) {
 		db.Create(&setting)
 	}
 
-	// 4. Ensure Administrator Users exist (Okokon Christiana, Ifeanyi Reed, Grace Solomon)
+	// 5. Ensure the 3 approved Administrator Users exist (Okokon Christiana, Ifeanyi Reed, Grace Solomon)
 	admins := []models.User{
 		{
 			FullName:      "Christiana Okokon",
@@ -87,14 +98,14 @@ func WipeTestData(db *gorm.DB) {
 
 	for _, admin := range admins {
 		var cnt int64
-		db.Model(&models.User{}).Where("email = ?", admin.Email).Count(&cnt)
+		db.Model(&models.User{}).Where("LOWER(email) = LOWER(?)", admin.Email).Count(&cnt)
 		if cnt == 0 {
 			db.Create(&admin)
 		}
 	}
 
 	fmt.Println("==========================================================================")
-	fmt.Println("   ADMIN ACCOUNTS INITIALIZED — READY FOR LIVE PRODUCTION TESTING!")
+	fmt.Println("   DATABASE PURGED & 3 ADMIN ACCOUNTS VERIFIED READY FOR PROD!")
 	fmt.Println("==========================================================================")
 }
 
