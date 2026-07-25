@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -15,6 +16,11 @@ import (
 var DB *gorm.DB
 
 func InitDB() *gorm.DB {
+	// Attempt to load .env file if available
+	if err := godotenv.Load(); err != nil {
+		fmt.Println("[Config] No .env file found or error loading it, reading system environment variables.")
+	}
+
 	host := os.Getenv("DB_HOST")
 	if host == "" {
 		host = "srv1427.hstgr.io"
