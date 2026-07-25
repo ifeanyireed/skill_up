@@ -41,6 +41,7 @@ func SetupRouter() *gin.Engine {
 		api.POST("/children/:id/checkin", controllers.CheckInChild)
 		api.POST("/children/checkout", controllers.CheckOutChild)
 		api.DELETE("/children/:id", controllers.DeleteChild)
+		api.POST("/children/:id/delete", controllers.DeleteChild)
 
 		// Attendance
 		api.GET("/attendance", controllers.GetAttendanceLogs)

@@ -95,10 +95,23 @@ export async function createChild(data: Partial<BackendChild>): Promise<BackendC
 }
 
 export async function deleteChild(id: number | string): Promise<{ message: string }> {
-  const res = await fetch(`${API_BASE_URL}/children/${id}`, {
+  if (!id || id === 'undefined' || id === 'null') {
+    throw new Error('Invalid student ID for deletion')
+  }
+
+  let res = await fetch(`${API_BASE_URL}/children/${id}`, {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' },
   })
+
+  // Fallback to POST /children/:id/delete if server/proxy returns 404 or Method Not Allowed
+  if (res.status === 404 || res.status === 405) {
+    res = await fetch(`${API_BASE_URL}/children/${id}/delete`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    })
+  }
+
   const text = await res.text()
   if (!res.ok) {
     let errorMsg = 'Failed to delete student record'
