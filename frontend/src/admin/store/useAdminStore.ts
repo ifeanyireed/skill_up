@@ -36,8 +36,8 @@ interface AdminStore {
 
 const DEFAULT_USER: AdminUser = {
   id: 'usr-001',
-  fullName: 'Coach Sarah Jenkins',
-  email: 'sarah.jenkins@skillup.org',
+  fullName: 'Christiana Okokon',
+  email: 'Okokon.Christiana@kingshouselearning.com',
   role: 'Lead Admin',
   status: 'active',
   lastLogin: new Date().toISOString()
@@ -68,13 +68,22 @@ export const useAdminStore = create<AdminStore>((set, get) => ({
   // ── Auth ──
   session: loadInitialSession(),
 
-  login: (email, password) => {
+  login: (email, _password) => {
     const cleanEmail = (email || '').trim().toLowerCase()
+
+    let fullName = 'Christiana Okokon'
+    if (cleanEmail.includes('ifeanyi')) {
+      fullName = 'Ifeanyi Reed'
+    } else if (cleanEmail.includes('grace')) {
+      fullName = 'Grace Solomon'
+    } else if (cleanEmail.includes('michael')) {
+      fullName = 'Coach Michael Davies'
+    }
 
     const user: AdminUser = {
       id: 'usr-001',
-      fullName: cleanEmail.includes('michael') ? 'Coach Michael Davies' : 'Coach Sarah Jenkins',
-      email: cleanEmail || 'sarah.jenkins@skillup.org',
+      fullName: fullName,
+      email: cleanEmail || 'Okokon.Christiana@kingshouselearning.com',
       role: cleanEmail.includes('michael') ? 'Instructor' : 'Lead Admin',
       status: 'active',
       lastLogin: new Date().toISOString()

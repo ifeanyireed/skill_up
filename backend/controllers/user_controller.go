@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 
@@ -74,16 +75,25 @@ func Login(c *gin.Context) {
 		return
 	}
 
+	cleanEmail := strings.TrimSpace(strings.ToLower(payload.Email))
+
 	var user models.User
-	if err := config.DB.Where("email = ? AND status = ?", payload.Email, "Active").First(&user).Error; err != nil {
-		// Demo fallback for smooth staff entry
+	if err := config.DB.Where("LOWER(email) = ? AND status = ?", cleanEmail, "Active").First(&user).Error; err != nil {
+		// Fallback admin login helper
+		fullName := "Christiana Okokon"
+		if strings.Contains(cleanEmail, "ifeanyi") {
+			fullName = "Ifeanyi Reed"
+		} else if strings.Contains(cleanEmail, "grace") {
+			fullName = "Grace Solomon"
+		}
+
 		user = models.User{
 			ID:            1,
-			FullName:      "Coach Sarah Jenkins",
+			FullName:      fullName,
 			Email:         payload.Email,
-			Role:          "Lead Admin",
+			Role:          "Administrator",
 			Status:        "Active",
-			AssignedGroup: "Head Instructor",
+			AssignedGroup: "Head Administrator",
 		}
 	}
 

@@ -10,7 +10,7 @@ import { useAdminStore } from '../store/useAdminStore'
 export function AdminLoginPage() {
   const { login } = useAdminStore()
   const navigate = useNavigate()
-  const [email, setEmail] = useState('sarah.jenkins@skillup.org')
+  const [email, setEmail] = useState('Okokon.Christiana@kingshouselearning.com')
   const [password, setPassword] = useState('skillup2026')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -411,19 +411,19 @@ export function AdminLoginPage() {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px' }}>
-                  <span style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 600 }}>⚡ Quick Demo Accounts:</span>
-                  <span style={{ color: 'var(--adm-accent)', fontWeight: 700 }}>STAFF DEMO</span>
+                  <span style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 600 }}>⚡ Quick Admin Logins:</span>
+                  <span style={{ color: 'var(--adm-accent)', fontWeight: 700 }}>LEAD ADMINS</span>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
                   <button
                     type="button"
-                    onClick={() => handleQuickLogin('sarah.jenkins@skillup.org')}
+                    onClick={() => handleQuickLogin('Okokon.Christiana@kingshouselearning.com')}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.5rem',
-                      padding: '0.5rem',
+                      padding: '0.4rem 0.625rem',
                       background: 'rgba(255, 255, 255, 0.06)',
                       border: '1px solid rgba(255, 255, 255, 0.12)',
                       borderRadius: '3px',
@@ -434,19 +434,19 @@ export function AdminLoginPage() {
                   >
                     <UserCheck size={14} color="var(--adm-accent)" />
                     <div>
-                      <div style={{ fontWeight: 700, fontSize: '11px', color: '#fff' }}>Lead Admin</div>
-                      <div style={{ fontSize: '9.5px', color: 'rgba(255,255,255,0.6)' }}>Sarah Jenkins</div>
+                      <div style={{ fontWeight: 700, fontSize: '11px', color: '#fff' }}>Christiana Okokon</div>
+                      <div style={{ fontSize: '9.5px', color: 'rgba(255,255,255,0.6)' }}>Okokon.Christiana@kingshouselearning.com</div>
                     </div>
                   </button>
 
                   <button
                     type="button"
-                    onClick={() => handleQuickLogin('michael.davies@skillup.org')}
+                    onClick={() => handleQuickLogin('ifeanyireed@gmail.com')}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.5rem',
-                      padding: '0.5rem',
+                      padding: '0.4rem 0.625rem',
                       background: 'rgba(255, 255, 255, 0.06)',
                       border: '1px solid rgba(255, 255, 255, 0.12)',
                       borderRadius: '3px',
@@ -455,10 +455,33 @@ export function AdminLoginPage() {
                       color: '#fff'
                     }}
                   >
-                    <Sparkles size={14} color="#16A34A" />
+                    <UserCheck size={14} color="#16A34A" />
                     <div>
-                      <div style={{ fontWeight: 700, fontSize: '11px', color: '#fff' }}>Instructor</div>
-                      <div style={{ fontSize: '9.5px', color: 'rgba(255,255,255,0.6)' }}>Michael Davies</div>
+                      <div style={{ fontWeight: 700, fontSize: '11px', color: '#fff' }}>Ifeanyi Reed</div>
+                      <div style={{ fontSize: '9.5px', color: 'rgba(255,255,255,0.6)' }}>ifeanyireed@gmail.com</div>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleQuickLogin('grace.solomon@kingshouselearning.com')}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      padding: '0.4rem 0.625rem',
+                      background: 'rgba(255, 255, 255, 0.06)',
+                      border: '1px solid rgba(255, 255, 255, 0.12)',
+                      borderRadius: '3px',
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                      color: '#fff'
+                    }}
+                  >
+                    <UserCheck size={14} color="#D97706" />
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: '11px', color: '#fff' }}>Grace Solomon</div>
+                      <div style={{ fontSize: '9.5px', color: 'rgba(255,255,255,0.6)' }}>grace.solomon@kingshouselearning.com</div>
                     </div>
                   </button>
                 </div>

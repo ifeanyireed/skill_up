@@ -48,31 +48,56 @@ func WipeTestData(db *gorm.DB) {
 		db.Create(&setting)
 	}
 
-	// 4. Ensure Default Administrator User exists for initial staff login
-	var userCount int64
-	db.Model(&models.User{}).Count(&userCount)
-	if userCount == 0 {
-		fmt.Println("[Wipe] Initializing Lead Administrator account...")
-		admin := models.User{
-			FullName:      "Coach Sarah Jenkins",
-			Email:         "sarah.jenkins@skillup.org",
-			Phone:         "+1 (555) 100-2001",
+	// 4. Ensure Administrator Users exist (Okokon Christiana, Ifeanyi Reed, Grace Solomon)
+	admins := []models.User{
+		{
+			FullName:      "Christiana Okokon",
+			Email:         "Okokon.Christiana@kingshouselearning.com",
+			Phone:         "+234 800 111 0001",
 			Role:          "Administrator",
-			AssignedGroup: "Head Instructor / All Groups",
+			AssignedGroup: "Head Administrator / All Groups",
 			Status:        "Active",
 			Avatar:        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200",
 			PasswordHash:  "skillup2026",
 			LastLogin:     "Just now",
+		},
+		{
+			FullName:      "Ifeanyi Reed",
+			Email:         "ifeanyireed@gmail.com",
+			Phone:         "+234 800 111 0002",
+			Role:          "Administrator",
+			AssignedGroup: "Head Administrator / All Groups",
+			Status:        "Active",
+			Avatar:        "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=200",
+			PasswordHash:  "skillup2026",
+			LastLogin:     "Just now",
+		},
+		{
+			FullName:      "Grace Solomon",
+			Email:         "grace.solomon@kingshouselearning.com",
+			Phone:         "+234 800 111 0003",
+			Role:          "Administrator",
+			AssignedGroup: "Head Administrator / All Groups",
+			Status:        "Active",
+			Avatar:        "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=200",
+			PasswordHash:  "skillup2026",
+			LastLogin:     "Just now",
+		},
+	}
+
+	for _, admin := range admins {
+		var cnt int64
+		db.Model(&models.User{}).Where("email = ?", admin.Email).Count(&cnt)
+		if cnt == 0 {
+			db.Create(&admin)
 		}
-		db.Create(&admin)
 	}
 
 	fmt.Println("==========================================================================")
-	fmt.Println("   DATABASE WIPED CLEAN — READY FOR LIVE PRODUCTION USER TESTING!")
+	fmt.Println("   ADMIN ACCOUNTS INITIALIZED — READY FOR LIVE PRODUCTION TESTING!")
 	fmt.Println("==========================================================================")
 }
 
 func SeedInitialData(db *gorm.DB) {
-	// Wipe test data to ensure clean database for live testing
 	WipeTestData(db)
 }
