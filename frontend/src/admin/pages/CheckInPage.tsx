@@ -226,13 +226,13 @@ export function CheckInPage() {
 
                 <button
                   type="button"
-                  onClick={() => setCenter('CBT Centre')}
+                  onClick={() => setCenter('Festac Centre')}
                   style={{
                     padding: '0.75rem',
                     borderRadius: 'var(--adm-radius-sm)',
-                    border: center === 'CBT Centre' ? '2px solid var(--adm-accent)' : '1px solid var(--adm-border)',
-                    background: center === 'CBT Centre' ? 'var(--adm-accent-subtle)' : 'var(--adm-surface-2)',
-                    color: center === 'CBT Centre' ? 'var(--adm-accent)' : 'var(--adm-text-1)',
+                    border: center === 'Festac Centre' ? '2px solid var(--adm-accent)' : '1px solid var(--adm-border)',
+                    background: center === 'Festac Centre' ? 'var(--adm-accent-subtle)' : 'var(--adm-surface-2)',
+                    color: center === 'Festac Centre' ? 'var(--adm-accent)' : 'var(--adm-text-1)',
                     fontWeight: 700,
                     fontSize: '13px',
                     cursor: 'pointer',
@@ -242,7 +242,7 @@ export function CheckInPage() {
                     gap: '0.5rem'
                   }}
                 >
-                  <Building2 size={15} /> 2. CBT Centre
+                  <Building2 size={15} /> 2. Festac Centre
                 </button>
               </div>
             </div>

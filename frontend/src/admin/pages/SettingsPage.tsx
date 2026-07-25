@@ -118,10 +118,10 @@ export function SettingsPage() {
               }}
             >
               <div style={{ fontSize: '11px', fontWeight: 800, color: 'var(--adm-accent)', textTransform: 'uppercase' }}>
-                CENTER 2 (CBT COMPLEX)
+                CENTER 2 (FESTAC COMPLEX)
               </div>
               <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--adm-text-1)', marginTop: '0.25rem' }}>
-                CBT Centre
+                Festac Centre
               </div>
               <div style={{ fontSize: '12px', color: 'var(--adm-text-3)', display: 'flex', alignItems: 'center', gap: '0.25rem', marginTop: '0.375rem' }}>
                 <MapPin size={12} /> CBT Training Complex, Main Gate

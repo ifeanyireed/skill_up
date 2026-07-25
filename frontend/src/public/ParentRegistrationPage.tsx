@@ -544,7 +544,7 @@ export function ParentRegistrationPage() {
                   }}
                 >
                   <option value="Raji Rasaki Centre">1. Raji Rasaki Centre</option>
-                  <option value="CBT Centre">2. CBT Centre</option>
+                  <option value="Festac Centre">2. Festac Centre</option>
                 </select>
               </div>
 

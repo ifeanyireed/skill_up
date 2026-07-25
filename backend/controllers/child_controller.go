@@ -8,13 +8,34 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 
 	"checkin-backend/config"
 	"checkin-backend/models"
 )
 
+// CheckAndAutoTransitionWaitingPickup automatically transitions all "Checked In" students
+// to "Waiting Pickup" once local time reaches 14:00 (2:00 PM).
+func CheckAndAutoTransitionWaitingPickup(db *gorm.DB) {
+	if db == nil {
+		return
+	}
+	now := time.Now()
+	if now.Hour() >= 14 {
+		db.Model(&models.Child{}).
+			Where("status = ?", "Checked In").
+			Update("status", "Waiting Pickup")
+
+		db.Model(&models.AttendanceLog{}).
+			Where("status = ? AND date = ?", "Checked In", now.Format("2006-01-02")).
+			Update("status", "Waiting Pickup")
+	}
+}
+
 // GET /api/children
 func GetChildren(c *gin.Context) {
+	CheckAndAutoTransitionWaitingPickup(config.DB)
+
 	var children []models.Child
 	query := config.DB
 
@@ -148,7 +169,12 @@ func CheckInChild(c *gin.Context) {
 		nowTime = time.Now().Format("03:04 PM")
 	}
 
-	child.Status = "Checked In"
+	childStatus := "Checked In"
+	if time.Now().Hour() >= 14 {
+		childStatus = "Waiting Pickup"
+	}
+
+	child.Status = childStatus
 	child.ActiveCode = pin
 	child.CheckInTime = nowTime
 
@@ -169,7 +195,7 @@ func CheckInChild(c *gin.Context) {
 		DropOffAdult:   input.AdultName + " (" + input.Rel + ")",
 		PickupPin:      pin,
 		InstructorName: "Christiana Okokon",
-		Status:         "Checked In",
+		Status:         childStatus,
 	}
 	config.DB.Create(&logEntry)
 

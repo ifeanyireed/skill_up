@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	"checkin-backend/config"
+	"checkin-backend/controllers"
 	"checkin-backend/routes"
 	"checkin-backend/seed"
 )
@@ -24,6 +26,17 @@ func main() {
 
 	// 2. Seed Initial Database Records if empty
 	seed.SeedInitialData(db)
+
+	// Check and auto-transition students to Waiting Pickup if startup occurs after 2 PM (14:00)
+	controllers.CheckAndAutoTransitionWaitingPickup(db)
+
+	// Background ticker: Automatically transitions Checked In students to Waiting Pickup at 2 PM
+	go func() {
+		ticker := time.NewTicker(30 * time.Second)
+		for range ticker.C {
+			controllers.CheckAndAutoTransitionWaitingPickup(db)
+		}
+	}()
 
 	// 3. Setup Routes & Start HTTP Server
 	r := routes.SetupRouter()

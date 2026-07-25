@@ -13,6 +13,8 @@ import (
 
 // GET /api/attendance
 func GetAttendanceLogs(c *gin.Context) {
+	CheckAndAutoTransitionWaitingPickup(config.DB)
+
 	var logs []models.AttendanceLog
 	query := config.DB
 

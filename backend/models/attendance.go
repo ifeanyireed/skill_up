@@ -12,7 +12,7 @@ type AttendanceLog struct {
 	StudentID      string         `gorm:"type:varchar(50);not null" json:"student_id"`
 	ChildName      string         `gorm:"type:varchar(150);not null" json:"child_name"`
 	Photo          string         `gorm:"type:varchar(255)" json:"photo"`
-	Center         string         `gorm:"type:varchar(100);default:'CBT Centre'" json:"center"` // Raji Rasaki Centre, CBT Centre
+	Center         string         `gorm:"type:varchar(100);default:'Festac Centre'" json:"center"` // Raji Rasaki Centre, Festac Centre
 	Group          string         `gorm:"type:varchar(100)" json:"group"`
 	CheckInTime    string         `gorm:"type:varchar(50)" json:"check_in_time"`
 	DropOffAdult   string         `gorm:"type:varchar(150)" json:"drop_off_adult"`

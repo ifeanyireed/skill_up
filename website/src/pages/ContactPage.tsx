@@ -58,7 +58,7 @@ export function ContactPage() {
               {/* Center 2 Card */}
               <div className="card-nets" style={{ marginBottom: '2rem', borderLeft: '4px solid var(--color-nets-red)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1rem', fontWeight: 600, color: 'var(--color-nets-text)' }}>
-                  <Building2 size={18} color="var(--color-nets-red)" /> 2. CBT Centre Complex
+                  <Building2 size={18} color="var(--color-nets-red)" /> 2. Festac Centre
                 </div>
                 <div style={{ fontSize: '0.875rem', color: 'var(--color-nets-text-2)', marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <MapPin size={14} /> CBT Training Complex, Main Gate
@@ -187,7 +187,7 @@ export function ContactPage() {
                         }}
                       >
                         <option value="Raji Rasaki Centre">1. Raji Rasaki Centre</option>
-                        <option value="CBT Centre">2. CBT Centre</option>
+                        <option value="Festac Centre">2. Festac Centre</option>
                       </select>
                     </div>
 

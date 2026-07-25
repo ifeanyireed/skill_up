@@ -305,7 +305,7 @@ export function ChildRegistrationPage() {
               style={{ fontWeight: 700, borderColor: 'var(--adm-accent)' }}
             >
               <option value="Raji Rasaki Centre">1. Raji Rasaki Centre</option>
-              <option value="CBT Centre">2. CBT Centre</option>
+              <option value="Festac Centre">2. Festac Centre</option>
             </select>
           </div>
 
