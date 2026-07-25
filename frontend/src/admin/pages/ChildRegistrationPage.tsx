@@ -1,12 +1,14 @@
 // ============================================================================
 // Skill Up Academy Check-in portal — Page 8: Child Registration
-// Connected to Go + GORM MySQL backend with Center Selection & Upload Photo
+// Connected to Go + GORM MySQL backend with Center Selection & 20 Character Avatars
 // ============================================================================
 import React, { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Camera, ShieldCheck, Loader2, Building2 } from 'lucide-react'
+import { Camera, ShieldCheck, Loader2, Building2, UserCheck, Upload } from 'lucide-react'
 import '../admin.css'
 import { createChild } from '../services/api'
+
+const AVATAR_CHARACTERS = Array.from({ length: 20 }, (_, i) => `/avatars/character${i + 1}.jpg`)
 
 export function ChildRegistrationPage() {
   const navigate = useNavigate()
@@ -20,7 +22,11 @@ export function ChildRegistrationPage() {
   const [gender, setGender] = useState('Boy')
   const [center, setCenter] = useState('Raji Rasaki Centre')
   const [group, setGroup] = useState('Junior Champions (Ages 7-9)')
-  const [photo, setPhoto] = useState<string>('')
+  
+  // Photo & Avatar selection (Optional)
+  const [photoMode, setPhotoMode] = useState<'avatar' | 'upload'>('avatar')
+  const [selectedAvatar, setSelectedAvatar] = useState<string>(AVATAR_CHARACTERS[0])
+  const [customPhotoUrl, setCustomPhotoUrl] = useState<string>('')
 
   const [parentName, setParentName] = useState('')
   const [parentPhone, setParentPhone] = useState('')
@@ -31,6 +37,8 @@ export function ChildRegistrationPage() {
   const [emergencyPhone, setEmergencyPhone] = useState('')
   const [medicalNotes, setMedicalNotes] = useState('')
 
+  const activePhoto = photoMode === 'upload' && customPhotoUrl ? customPhotoUrl : selectedAvatar
+
   const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
@@ -40,7 +48,8 @@ export function ChildRegistrationPage() {
       }
       const reader = new FileReader()
       reader.onloadend = () => {
-        setPhoto(reader.result as string)
+        setCustomPhotoUrl(reader.result as string)
+        setPhotoMode('upload')
       }
       reader.readAsDataURL(file)
     }
@@ -57,7 +66,7 @@ export function ChildRegistrationPage() {
     try {
       await createChild({
         full_name: `${firstName.trim()} ${lastName.trim()}`,
-        photo: photo || 'https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?auto=format&fit=crop&q=80&w=250',
+        photo: activePhoto,
         age: Number(age),
         gender: gender,
         dob: dob,
@@ -72,7 +81,7 @@ export function ChildRegistrationPage() {
         medical_notes: medicalNotes.trim(),
       })
 
-      alert(`Success! Child "${firstName} ${lastName}" registered at ${center}.`)
+      alert(`Success! Student "${firstName} ${lastName}" registered at ${center}.`)
       navigate('/admin/children')
     } catch (err: any) {
       alert(err.message || 'Registration failed')
@@ -98,18 +107,58 @@ export function ChildRegistrationPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <div className="admin-card-title">1. Child Student Information</div>
 
-          {/* Upload Photo Dropzone */}
+          {/* AVATAR SELECTOR / OPTIONAL PHOTO UPLOAD */}
           <div
             style={{
-              border: '2px dashed var(--adm-border)',
+              border: '1px solid var(--adm-border)',
               borderRadius: 'var(--adm-radius-sm)',
-              padding: '1.25rem',
-              textAlign: 'center',
-              background: 'var(--adm-surface-2)',
-              cursor: 'pointer'
+              padding: '1rem',
+              background: 'var(--adm-surface-2)'
             }}
-            onClick={() => fileInputRef.current?.click()}
           >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+              <label style={{ fontSize: '12px', fontWeight: 800, color: 'var(--adm-text-1)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Student Photo / Avatar (Optional)
+              </label>
+              <div style={{ display: 'flex', gap: '4px', background: 'var(--adm-surface)', padding: '3px', borderRadius: '6px' }}>
+                <button
+                  type="button"
+                  onClick={() => setPhotoMode('avatar')}
+                  style={{
+                    padding: '4px 10px',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    borderRadius: '4px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    background: photoMode === 'avatar' ? 'var(--adm-accent)' : 'transparent',
+                    color: photoMode === 'avatar' ? '#FFFFFF' : 'var(--adm-text-2)'
+                  }}
+                >
+                  <UserCheck size={12} style={{ display: 'inline', marginRight: '4px' }} /> Pick Avatar
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPhotoMode('upload')
+                    fileInputRef.current?.click()
+                  }}
+                  style={{
+                    padding: '4px 10px',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    borderRadius: '4px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    background: photoMode === 'upload' ? 'var(--adm-accent)' : 'transparent',
+                    color: photoMode === 'upload' ? '#FFFFFF' : 'var(--adm-text-2)'
+                  }}
+                >
+                  <Upload size={12} style={{ display: 'inline', marginRight: '4px' }} /> Upload Photo
+                </button>
+              </div>
+            </div>
+
             <input
               ref={fileInputRef}
               type="file"
@@ -119,41 +168,129 @@ export function ChildRegistrationPage() {
               style={{ display: 'none' }}
             />
 
-            {photo ? (
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-                <img
-                  src={photo}
-                  alt="Child preview"
-                  style={{ width: '72px', height: '72px', borderRadius: '50%', objectFit: 'cover', border: '3px solid var(--adm-accent)' }}
-                />
-                <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--adm-accent)' }}>✓ Photo Uploaded — Click to Change</span>
-              </div>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+            {photoMode === 'avatar' ? (
+              <div>
+                <div style={{ fontSize: '11px', color: 'var(--adm-text-3)', marginBottom: '0.75rem' }}>
+                  Select an official character avatar for student profile:
+                </div>
+
+                {/* 20 Character Avatars Grid */}
                 <div
                   style={{
-                    width: '44px',
-                    height: '44px',
-                    borderRadius: '50%',
-                    background: 'var(--adm-accent-subtle)',
-                    color: 'var(--adm-accent)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(52px, 1fr))',
+                    gap: '0.5rem',
+                    maxHeight: '180px',
+                    overflowY: 'auto',
+                    padding: '6px',
+                    background: 'var(--adm-surface)',
+                    borderRadius: '8px',
+                    border: '1px solid var(--adm-border)'
                   }}
                 >
-                  <Camera size={22} />
-                </div>
-                <div>
-                  <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--adm-text-1)' }}>
-                    Upload Photo *
-                  </div>
-                  <div style={{ fontSize: '11px', color: 'var(--adm-text-3)' }}>
-                    Tap to upload student photo from device or take a picture
-                  </div>
+                  {AVATAR_CHARACTERS.map((avatarPath, index) => {
+                    const isSelected = selectedAvatar === avatarPath
+                    return (
+                      <button
+                        key={avatarPath}
+                        type="button"
+                        onClick={() => {
+                          setSelectedAvatar(avatarPath)
+                          setPhotoMode('avatar')
+                        }}
+                        style={{
+                          padding: 0,
+                          border: isSelected ? '3px solid var(--adm-accent)' : '2px solid transparent',
+                          borderRadius: '50%',
+                          background: 'none',
+                          cursor: 'pointer',
+                          transition: 'transform 0.15s ease',
+                          transform: isSelected ? 'scale(1.1)' : 'scale(1)',
+                          outline: 'none'
+                        }}
+                        title={`Character Avatar ${index + 1}`}
+                      >
+                        <img
+                          src={avatarPath}
+                          alt={`Avatar ${index + 1}`}
+                          style={{
+                            width: '48px',
+                            height: '48px',
+                            borderRadius: '50%',
+                            objectFit: 'cover',
+                            display: 'block'
+                          }}
+                        />
+                      </button>
+                    )
+                  })}
                 </div>
               </div>
+            ) : (
+              /* Custom Photo Upload Box */
+              <div
+                style={{
+                  border: '2px dashed var(--adm-border)',
+                  borderRadius: '8px',
+                  padding: '1rem',
+                  textAlign: 'center',
+                  background: 'var(--adm-surface)',
+                  cursor: 'pointer'
+                }}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                {customPhotoUrl ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+                    <img
+                      src={customPhotoUrl}
+                      alt="Child preview"
+                      style={{ width: '72px', height: '72px', borderRadius: '50%', objectFit: 'cover', border: '3px solid var(--adm-accent)' }}
+                    />
+                    <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--adm-accent)' }}>✓ Custom Photo Uploaded — Click to Change</span>
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.375rem' }}>
+                    <div
+                      style={{
+                        width: '42px',
+                        height: '42px',
+                        borderRadius: '50%',
+                        background: 'var(--adm-accent-subtle)',
+                        color: 'var(--adm-accent)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}
+                    >
+                      <Camera size={20} />
+                    </div>
+                    <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--adm-text-1)' }}>
+                      Tap to Upload Custom Photo
+                    </div>
+                    <div style={{ fontSize: '11px', color: 'var(--adm-text-3)' }}>
+                      Supports JPG, PNG from device camera or photo library
+                    </div>
+                  </div>
+                )}
+              </div>
             )}
+
+            {/* Active Selected Preview */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.875rem', paddingTop: '0.75rem', borderTop: '1px solid var(--adm-border)' }}>
+              <img
+                src={activePhoto}
+                alt="Selected avatar preview"
+                style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--adm-accent)' }}
+              />
+              <div>
+                <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--adm-text-1)' }}>
+                  Active Student Profile Picture
+                </div>
+                <div style={{ fontSize: '11px', color: 'var(--adm-text-3)' }}>
+                  {photoMode === 'avatar' ? `Selected Preset Avatar (#${AVATAR_CHARACTERS.indexOf(selectedAvatar) + 1})` : 'Custom Uploaded Photo'}
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Center Selector */}
