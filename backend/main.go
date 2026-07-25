@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"checkin-backend/config"
 	"checkin-backend/routes"
@@ -23,8 +24,13 @@ func main() {
 	// 3. Setup Routes & Start HTTP Server
 	r := routes.SetupRouter()
 
-	fmt.Println("\n[Server] Listening on http://localhost:8080 ...")
-	if err := r.Run(":8080"); err != nil {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	fmt.Printf("\n[Server] Listening on http://0.0.0.0:%s ...\n", port)
+	if err := r.Run(":" + port); err != nil {
 		log.Fatalf("[Server Error] Failed to start HTTP server: %v", err)
 	}
 }
