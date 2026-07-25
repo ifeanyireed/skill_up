@@ -165,8 +165,10 @@ func UpdateChild(c *gin.Context) {
 	id := c.Param("id")
 	var child models.Child
 	if err := config.DB.First(&child, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Child student record not found"})
-		return
+		if err2 := config.DB.Where("student_id = ?", id).First(&child).Error; err2 != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Child student record not found"})
+			return
+		}
 	}
 
 	var input UpdateChildInput
@@ -175,20 +177,29 @@ func UpdateChild(c *gin.Context) {
 		return
 	}
 
-	if input.Center != "" {
-		child.Center = input.Center
+	if strings.TrimSpace(input.Center) != "" {
+		newCenter := strings.TrimSpace(input.Center)
+		if newCenter == "CBT Centre" {
+			newCenter = "Festac Centre"
+		}
+		child.Center = newCenter
 	}
-	if input.Group != "" {
-		child.Group = input.Group
+	if strings.TrimSpace(input.Group) != "" {
+		child.Group = strings.TrimSpace(input.Group)
 	}
-	if input.Status != "" {
-		child.Status = input.Status
+	if strings.TrimSpace(input.Status) != "" {
+		child.Status = strings.TrimSpace(input.Status)
 	}
 
 	if err := config.DB.Save(&child).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
+	// Sync center update to active attendance log for today
+	config.DB.Model(&models.AttendanceLog{}).
+		Where("student_id = ? AND date = ?", child.StudentID, time.Now().Format("2006-01-02")).
+		Update("center", child.Center)
 
 	c.JSON(http.StatusOK, child)
 }
