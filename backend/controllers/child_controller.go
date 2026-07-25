@@ -52,8 +52,12 @@ func GetChildren(c *gin.Context) {
 	search := c.Query("search")
 	if search != "" {
 		searchTerm := "%" + search + "%"
-		query = query.Where("full_name LIKE ? OR student_id LIKE ? OR parent_name LIKE ? OR active_code LIKE ? OR center LIKE ?",
-			searchTerm, searchTerm, searchTerm, searchTerm, searchTerm)
+		query = query.Where(
+			config.DB.Where("full_name LIKE ?", searchTerm).
+				Or("student_id LIKE ?", searchTerm).
+				Or("parent_name LIKE ?", searchTerm).
+				Or("active_code LIKE ?", searchTerm),
+		)
 	}
 
 	if err := query.Order("id desc").Find(&children).Error; err != nil {
