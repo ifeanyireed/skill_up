@@ -177,7 +177,7 @@ export function ChildrenDirectoryPage() {
 
                     <td>
                       <span className="admin-badge admin-badge-gray" style={{ fontSize: '11px' }}>
-                        {child.center || 'CBT Centre'}
+                        {child.center || 'Raji Rasaki Centre'}
                       </span>
                     </td>
 
@@ -271,7 +271,7 @@ export function ChildrenDirectoryPage() {
                   {selectedChild.student_id}
                 </div>
                 <div style={{ fontSize: '12px', color: 'var(--adm-text-3)' }}>
-                  Center: <strong>{selectedChild.center || 'CBT Centre'}</strong>
+                  Center: <strong>{selectedChild.center || 'Raji Rasaki Centre'}</strong>
                 </div>
               </div>
             </div>

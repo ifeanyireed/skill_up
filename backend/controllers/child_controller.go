@@ -68,7 +68,7 @@ func CreateChild(c *gin.Context) {
 		child.StudentID = fmt.Sprintf("KNT-%d", rand.Intn(9000)+1000)
 	}
 	if child.Center == "" {
-		child.Center = "CBT Centre"
+		child.Center = "Raji Rasaki Centre"
 	}
 	child.Status = "Not Checked In"
 
@@ -108,7 +108,7 @@ func CheckInChild(c *gin.Context) {
 		child.Center = input.Center
 	}
 	if child.Center == "" {
-		child.Center = "CBT Centre"
+		child.Center = "Raji Rasaki Centre"
 	}
 
 	// Generate random 6-digit PIN

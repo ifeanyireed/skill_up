@@ -39,7 +39,10 @@ func WipeTestData(db *gorm.DB) {
 		fmt.Println("[Wipe] Successfully purged all other instructor/admin accounts!")
 	}
 
-	// 4. Ensure Default System Settings exist
+	// 4. Update any existing children center records to Raji Rasaki Centre if blank
+	db.Exec("UPDATE children SET center = 'Raji Rasaki Centre' WHERE center = '' OR center IS NULL OR center = 'CBT Centre'")
+
+	// 5. Ensure Default System Settings exist
 	var settingCount int64
 	db.Model(&models.Setting{}).Count(&settingCount)
 	if settingCount == 0 {
@@ -59,7 +62,7 @@ func WipeTestData(db *gorm.DB) {
 		db.Create(&setting)
 	}
 
-	// 5. Ensure the 3 approved Administrator Users exist with Character Library Avatars
+	// 6. Ensure the 3 approved Administrator Users exist with Character Library Avatars
 	admins := []models.User{
 		{
 			FullName:      "Christiana Okokon",
@@ -101,7 +104,6 @@ func WipeTestData(db *gorm.DB) {
 		if err := db.Where("LOWER(email) = LOWER(?)", admin.Email).First(&existing).Error; err != nil {
 			db.Create(&admin)
 		} else {
-			// Update avatar to character library image
 			existing.Avatar = admin.Avatar
 			existing.FullName = admin.FullName
 			db.Save(&existing)
@@ -109,7 +111,7 @@ func WipeTestData(db *gorm.DB) {
 	}
 
 	fmt.Println("==========================================================================")
-	fmt.Println("   CHARACTER AVATARS APPLIED TO ALL 3 ADMINISTRATOR ACCOUNTS!")
+	fmt.Println("   RAJI RASAKI CENTRE DEFAULT & CHARACTER AVATARS APPLIED!")
 	fmt.Println("==========================================================================")
 }
 

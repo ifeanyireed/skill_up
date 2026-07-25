@@ -26,11 +26,11 @@ export function ActivityLogPage() {
     const action = (e.status || '').toLowerCase()
     const matchSearch = !search || desc.includes(search.toLowerCase()) ||
       user.includes(search.toLowerCase()) || action.includes(search.toLowerCase())
-    const matchEntity = entityFilter === 'all' || (e.center || 'CBT Centre') === entityFilter
+    const matchEntity = entityFilter === 'all' || (e.center || 'Raji Rasaki Centre') === entityFilter
     return matchSearch && matchEntity
   })
 
-  const entities: string[] = ['all', ...Array.from(new Set(logs.map((e: any) => e.center || 'CBT Centre')))]
+  const entities: string[] = ['all', ...Array.from(new Set(logs.map((e: any) => e.center || 'Raji Rasaki Centre')))]
 
   return (
     <>
