@@ -205,53 +205,74 @@ export function CheckInPage() {
             </label>
 
             <div style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem' }}>
+                <button
+                  type="button"
+                  onClick={() => setCenter('all')}
+                  style={{
+                    padding: '0.625rem 0.5rem',
+                    borderRadius: 'var(--adm-radius-sm)',
+                    border: center === 'all' ? '2px solid var(--adm-accent)' : '1px solid var(--adm-border)',
+                    background: center === 'all' ? 'var(--adm-accent-subtle)' : 'var(--adm-surface-2)',
+                    color: center === 'all' ? 'var(--adm-accent)' : 'var(--adm-text-1)',
+                    fontWeight: 700,
+                    fontSize: '12px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.375rem'
+                  }}
+                >
+                  <Building2 size={14} /> All Centers
+                </button>
+
                 <button
                   type="button"
                   onClick={() => setCenter('Raji Rasaki Centre')}
                   style={{
-                    padding: '0.75rem',
+                    padding: '0.625rem 0.5rem',
                     borderRadius: 'var(--adm-radius-sm)',
                     border: center === 'Raji Rasaki Centre' ? '2px solid var(--adm-accent)' : '1px solid var(--adm-border)',
                     background: center === 'Raji Rasaki Centre' ? 'var(--adm-accent-subtle)' : 'var(--adm-surface-2)',
                     color: center === 'Raji Rasaki Centre' ? 'var(--adm-accent)' : 'var(--adm-text-1)',
                     fontWeight: 700,
-                    fontSize: '13px',
+                    fontSize: '12px',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '0.5rem'
+                    gap: '0.375rem'
                   }}
                 >
-                  <Building2 size={15} /> 1. Raji Rasaki Centre
+                  <Building2 size={14} /> Raji Rasaki
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setCenter('Festac Centre')}
                   style={{
-                    padding: '0.75rem',
+                    padding: '0.625rem 0.5rem',
                     borderRadius: 'var(--adm-radius-sm)',
                     border: center === 'Festac Centre' ? '2px solid var(--adm-accent)' : '1px solid var(--adm-border)',
                     background: center === 'Festac Centre' ? 'var(--adm-accent-subtle)' : 'var(--adm-surface-2)',
                     color: center === 'Festac Centre' ? 'var(--adm-accent)' : 'var(--adm-text-1)',
                     fontWeight: 700,
-                    fontSize: '13px',
+                    fontSize: '12px',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '0.5rem'
+                    gap: '0.375rem'
                   }}
                 >
-                  <Building2 size={15} /> 2. Festac Centre
+                  <Building2 size={14} /> Festac Centre
                 </button>
               </div>
             </div>
 
             <label className="admin-label admin-label-req" style={{ fontSize: '13px', fontWeight: 600, color: 'var(--adm-text-1)' }}>
-              2. Select Child Student ({center})
+              2. Select Child Student ({center === 'all' ? 'All Centers' : center})
             </label>
 
             {!selectedChild ? (
