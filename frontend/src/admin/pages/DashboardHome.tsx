@@ -241,7 +241,7 @@ export function DashboardHome() {
       )}
 
       {/* Main Grid: Today's Attendance Roster & Recent Activity Log */}
-      <div className="admin-grid-2" style={{ gap: '1.5rem', alignItems: 'start' }}>
+      <div className="admin-grid-wider" style={{ gap: '1.5rem', alignItems: 'start' }}>
         {/* Attendance List */}
         <div className="admin-card" style={{ padding: 0, overflow: 'hidden' }}>
           <div

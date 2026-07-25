@@ -419,6 +419,7 @@
 
 /* Grid utilities */
 .admin-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.admin-grid-wider { display: grid; grid-template-columns: 1.65fr 1fr; gap: 1.25rem; }
 .admin-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.25rem; }
 .admin-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
 
@@ -546,7 +547,7 @@
     padding: 1rem;
   }
 
-  .admin-grid-4, .admin-grid-3, .admin-grid-2 {
+  .admin-grid-4, .admin-grid-3, .admin-grid-2, .admin-grid-wider {
     grid-template-columns: 1fr !important;
     gap: 0.875rem;
   }
