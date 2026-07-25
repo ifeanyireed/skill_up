@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -37,22 +38,26 @@ func GetChildren(c *gin.Context) {
 	CheckAndAutoTransitionWaitingPickup(config.DB)
 
 	var children []models.Child
-	query := config.DB
+	db := config.DB.Model(&models.Child{})
 
-	status := c.Query("status")
+	status := strings.TrimSpace(c.Query("status"))
 	if status != "" && status != "all" {
-		query = query.Where("status = ?", status)
+		db = db.Where("status = ?", status)
 	}
 
-	center := c.Query("center")
+	center := strings.TrimSpace(c.Query("center"))
 	if center != "" && center != "all" {
-		query = query.Where("center = ?", center)
+		if center == "Festac Centre" || center == "CBT Centre" {
+			db = db.Where("center = ? OR center = ?", "Festac Centre", "CBT Centre")
+		} else {
+			db = db.Where("center = ?", center)
+		}
 	}
 
-	search := c.Query("search")
+	search := strings.TrimSpace(c.Query("search"))
 	if search != "" {
 		searchTerm := "%" + search + "%"
-		query = query.Where(
+		db = db.Where(
 			config.DB.Where("full_name LIKE ?", searchTerm).
 				Or("student_id LIKE ?", searchTerm).
 				Or("parent_name LIKE ?", searchTerm).
@@ -60,7 +65,7 @@ func GetChildren(c *gin.Context) {
 		)
 	}
 
-	if err := query.Order("id desc").Find(&children).Error; err != nil {
+	if err := db.Order("id desc").Find(&children).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -92,9 +97,15 @@ func CreateChild(c *gin.Context) {
 	if child.StudentID == "" {
 		child.StudentID = fmt.Sprintf("KNT-%d", rand.Intn(9000)+1000)
 	}
-	if child.Center == "" {
-		child.Center = "Raji Rasaki Centre"
+
+	childCenter := strings.TrimSpace(child.Center)
+	if childCenter == "" {
+		childCenter = "Raji Rasaki Centre"
 	}
+	if childCenter == "CBT Centre" {
+		childCenter = "Festac Centre"
+	}
+	child.Center = childCenter
 	child.Status = "Not Checked In"
 
 	if err := config.DB.Create(&child).Error; err != nil {

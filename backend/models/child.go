@@ -14,7 +14,7 @@ type Child struct {
 	Age                int            `json:"age"`
 	Gender             string         `gorm:"type:varchar(20)" json:"gender"`
 	DOB                string         `gorm:"type:varchar(20)" json:"dob"`
-	Center             string         `gorm:"type:varchar(100);default:'Raji Rasaki Centre'" json:"center"` // Raji Rasaki Centre, Festac Centre
+	Center             string         `gorm:"type:varchar(100)" json:"center"` // Raji Rasaki Centre, Festac Centre
 	Group              string         `gorm:"type:varchar(100);not null" json:"group"`
 	ParentName         string         `gorm:"type:varchar(150);not null" json:"parent_name"`
 	ParentPhone        string         `gorm:"type:varchar(50);not null" json:"parent_phone"`
