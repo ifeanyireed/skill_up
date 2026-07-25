@@ -14,7 +14,8 @@ import {
   LogIn,
   KeyRound,
   UserPlus,
-  ChevronLeft
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react'
 import { useAdminStore } from '../../store/useAdminStore'
 
@@ -53,7 +54,7 @@ export function AdminSidebar() {
 
   return (
     <nav className="admin-sidebar">
-      {/* Brand Header */}
+      {/* Brand Header & Caret Toggle */}
       <div className="admin-sidebar-logo">
         <img
           src="/logo.avif"
@@ -66,16 +67,14 @@ export function AdminSidebar() {
           }}
         />
 
-        {!sidebarCollapsed && (
-          <button
-            onClick={toggleSidebar}
-            className="admin-btn admin-btn-icon admin-btn-ghost"
-            title="Collapse Sidebar"
-            style={{ padding: '4px', border: 'none' }}
-          >
-            <ChevronLeft size={16} />
-          </button>
-        )}
+        <button
+          onClick={toggleSidebar}
+          className="admin-btn admin-btn-icon admin-btn-ghost"
+          title={sidebarCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+          style={{ padding: '4px', border: 'none' }}
+        >
+          {sidebarCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+        </button>
       </div>
 
       {/* Navigation Sections */}
