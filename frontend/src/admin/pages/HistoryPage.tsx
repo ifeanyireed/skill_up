@@ -99,7 +99,7 @@ export function HistoryPage() {
               <th>Check-Out</th>
               <th>Pickup Adult</th>
               <th>PIN Code</th>
-              <th>Instructor</th>
+              <th>Triggered By (Staff/Admin)</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -155,7 +155,7 @@ export function HistoryPage() {
                     #{l.pickup_pin}
                   </td>
 
-                  <td style={{ fontSize: 12, color: 'var(--adm-text-2)' }}>{l.instructor_name}</td>
+                  <td style={{ fontSize: 12, color: 'var(--adm-text-1)', fontWeight: 600 }}>{l.instructor_name || 'Administrator'}</td>
 
                   <td>
                     <span className={`admin-badge ${l.status === 'Checked Out' ? 'admin-badge-green' : l.status === 'Waiting Pickup' ? 'admin-badge-yellow' : 'admin-badge-accent'}`}>

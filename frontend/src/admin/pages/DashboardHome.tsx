@@ -387,7 +387,7 @@ export function DashboardHome() {
                       <strong>{act.child_name}</strong> ({act.student_id}) — {act.status}. PIN: #{act.pickup_pin}
                     </div>
                     <div className="admin-activity-meta">
-                      Instructor/Admin: <strong style={{ color: 'var(--adm-text-1)' }}>{act.instructor_name || session?.user?.fullName || 'Administrator'}</strong> · {act.check_in_time || act.date}
+                      Triggered By: <strong style={{ color: 'var(--adm-text-1)' }}>{act.instructor_name || 'Administrator'}</strong> · {act.check_in_time || act.date}
                     </div>
                   </div>
                 </div>
