@@ -67,7 +67,7 @@ export function Footer() {
                 <span>hello@skilluplearningacademy.com</span>
               </div>
               <a
-                href="http://localhost:5173/login"
+                href="https://checkin.skilluplearningacademy.com/login"
                 target="_blank"
                 rel="noreferrer"
                 className="btn-nets btn-nets-outline-white"

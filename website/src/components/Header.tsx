@@ -47,7 +47,7 @@ export function Header() {
           {/* Actions */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
             <a
-              href="http://localhost:5173/login"
+              href="https://checkin.skilluplearningacademy.com/login"
               target="_blank"
               rel="noreferrer"
               className="btn-nets btn-nets-outline-white"
@@ -88,7 +88,7 @@ export function Header() {
           ))}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1rem' }}>
             <a
-              href="http://localhost:5173/login"
+              href="https://checkin.skilluplearningacademy.com/login"
               target="_blank"
               rel="noreferrer"
               className="btn-nets btn-nets-outline-white"
