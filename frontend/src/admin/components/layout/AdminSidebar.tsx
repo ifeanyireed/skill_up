@@ -144,7 +144,7 @@ export function AdminSidebar() {
           </div>
         )}
         <div className="admin-sidebar-user-info">
-          <div className="admin-sidebar-user-name">{session.user?.fullName ?? 'Coach Sarah Jenkins'}</div>
+          <div className="admin-sidebar-user-name">{session.user?.fullName ?? 'Christiana Okokon'}</div>
           <div className="admin-sidebar-user-role">{session.user?.role ?? 'Lead Admin'}</div>
         </div>
         <button

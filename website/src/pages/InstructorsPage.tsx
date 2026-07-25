@@ -8,11 +8,11 @@ import { Linkedin, Mail, ArrowRight, ShieldCheck } from 'lucide-react'
 
 const INSTRUCTORS = [
   {
-    name: 'Coach Sarah Jenkins',
-    role: 'Head of Tech & Lead Admin',
-    bio: '10+ years software engineering experience. Specializes in Fullstack JavaScript, React, and CBT center operations.',
-    photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400',
-    specialties: ['Web Development', 'React', 'Node.js', 'CBT Supervision']
+    name: 'Christiana Okokon',
+    role: 'Head of Operations & Lead Admin',
+    bio: 'Experienced child safety and technology director. Oversees student security, CBT operations, and academy check-in systems.',
+    photo: '/avatars/character1.jpg',
+    specialties: ['Child Safety', 'Operations', 'CBT Supervision', 'System Auditing']
   },
   {
     name: 'Coach Michael Davies',
