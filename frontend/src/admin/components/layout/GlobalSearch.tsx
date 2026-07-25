@@ -1,19 +1,27 @@
 // ============================================================================
-// NETS Admin — Global Search Overlay
+// SkillUp Academy Check-in portal — Global Search Overlay
 // ============================================================================
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, X, FileText, CalendarCheck, Users, Truck } from 'lucide-react'
+import { Search, X, Users, UserCheck } from 'lucide-react'
 import { useAdminStore } from '../../store/useAdminStore'
+import { getChildren, getUsers } from '../../services/api'
 
 export function GlobalSearch() {
-  const { searchQuery, searchOpen, setSearchQuery, setSearchOpen, quotes, bookings, customers, vehicles } = useAdminStore()
+  const { searchQuery, searchOpen, setSearchQuery, setSearchOpen } = useAdminStore()
   const inputRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
   const q = searchQuery.toLowerCase()
 
+  const [childrenList, setChildrenList] = useState<any[]>([])
+  const [usersList, setUsersList] = useState<any[]>([])
+
   useEffect(() => {
-    if (searchOpen) setTimeout(() => inputRef.current?.focus(), 50)
+    if (searchOpen) {
+      setTimeout(() => inputRef.current?.focus(), 50)
+      getChildren().then((data: any[]) => setChildrenList(data)).catch(() => {})
+      getUsers().then((data: any[]) => setUsersList(data)).catch(() => {})
+    }
   }, [searchOpen])
 
   useEffect(() => {
@@ -27,32 +35,21 @@ export function GlobalSearch() {
 
   if (!searchOpen) return null
 
-  const matchedQuotes = q.length > 1 ? quotes.filter(x =>
-    x.reference.toLowerCase().includes(q) || x.customerName.toLowerCase().includes(q) ||
-    x.pickup.toLowerCase().includes(q) || x.destination.toLowerCase().includes(q)
+  const matchedChildren = q.length > 1 ? childrenList.filter((x: any) =>
+    (x.full_name || '').toLowerCase().includes(q) || (x.parent_name || '').toLowerCase().includes(q) ||
+    (x.parent_phone || '').includes(q) || (x.group || '').toLowerCase().includes(q)
   ).slice(0, 4) : []
 
-  const matchedBookings = q.length > 1 ? bookings.filter(x =>
-    x.reference.toLowerCase().includes(q) || x.customerName.toLowerCase().includes(q) ||
-    x.pickup.toLowerCase().includes(q) || x.destination.toLowerCase().includes(q)
+  const matchedUsers = q.length > 1 ? usersList.filter((x: any) =>
+    (x.full_name || '').toLowerCase().includes(q) || (x.email || '').toLowerCase().includes(q) ||
+    (x.role || '').toLowerCase().includes(q)
   ).slice(0, 4) : []
 
-  const matchedCustomers = q.length > 1 ? customers.filter(x =>
-    x.fullName.toLowerCase().includes(q) || x.email.toLowerCase().includes(q) ||
-    x.company?.toLowerCase().includes(q)
-  ).slice(0, 4) : []
-
-  const matchedVehicles = q.length > 1 ? vehicles.filter(x =>
-    x.name.toLowerCase().includes(q) || x.registrationNumber.toLowerCase().includes(q)
-  ).slice(0, 3) : []
-
-  const hasResults = matchedQuotes.length + matchedBookings.length + matchedCustomers.length + matchedVehicles.length > 0
+  const hasResults = matchedChildren.length + matchedUsers.length > 0
 
   const go = (path: string) => {
     navigate(path); setSearchOpen(false); setSearchQuery('')
   }
-
-  const fmt = (n: number) => `₦${Math.round(n).toLocaleString('en-NG')}`
 
   return (
     <div className="admin-search-overlay" onClick={() => { setSearchOpen(false); setSearchQuery('') }}>
@@ -60,7 +57,7 @@ export function GlobalSearch() {
         <div className="admin-search-input-wrap">
           <Search size={16} color="var(--adm-text-3)" />
           <input ref={inputRef} className="admin-search-input"
-            placeholder="Search quotes, bookings, customers, vehicles..."
+            placeholder="Search students, parents, PINs, staff..."
             value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
           <button className="admin-btn admin-btn-icon admin-btn-ghost" onClick={() => { setSearchOpen(false); setSearchQuery('') }}>
             <X size={14} />
@@ -69,66 +66,36 @@ export function GlobalSearch() {
 
         <div className="admin-search-results">
           {q.length <= 1 && (
-            <div className="admin-search-empty">Start typing to search across all records</div>
+            <div className="admin-search-empty">Start typing to search across student & staff records</div>
           )}
           {q.length > 1 && !hasResults && (
             <div className="admin-search-empty">No results found for "{searchQuery}"</div>
           )}
 
-          {matchedQuotes.length > 0 && (
+          {matchedChildren.length > 0 && (
             <div className="admin-search-group">
-              <div className="admin-search-group-label">Quotes</div>
-              {matchedQuotes.map(q => (
-                <div key={q.id} className="admin-search-result" onClick={() => go('/admin/quotes')}>
-                  <div className="admin-search-result-icon"><FileText size={14} color="var(--adm-text-2)" /></div>
-                  <div>
-                    <div className="admin-search-result-title">{q.reference}</div>
-                    <div className="admin-search-result-sub">{q.customerName} · {fmt(q.estimatedInvestment)}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {matchedBookings.length > 0 && (
-            <div className="admin-search-group">
-              <div className="admin-search-group-label">Bookings</div>
-              {matchedBookings.map(b => (
-                <div key={b.id} className="admin-search-result" onClick={() => go('/admin/bookings')}>
-                  <div className="admin-search-result-icon"><CalendarCheck size={14} color="var(--adm-text-2)" /></div>
-                  <div>
-                    <div className="admin-search-result-title">{b.reference}</div>
-                    <div className="admin-search-result-sub">{b.customerName} · {b.pickup} → {b.destination}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {matchedCustomers.length > 0 && (
-            <div className="admin-search-group">
-              <div className="admin-search-group-label">Customers</div>
-              {matchedCustomers.map(c => (
-                <div key={c.id} className="admin-search-result" onClick={() => go('/admin/customers')}>
+              <div className="admin-search-group-label">Students</div>
+              {matchedChildren.map((c: any) => (
+                <div key={c.id} className="admin-search-result" onClick={() => go('/admin/children')}>
                   <div className="admin-search-result-icon"><Users size={14} color="var(--adm-text-2)" /></div>
                   <div>
-                    <div className="admin-search-result-title">{c.fullName}</div>
-                    <div className="admin-search-result-sub">{c.company ?? 'Individual'} · {c.email}</div>
+                    <div className="admin-search-result-title">{c.full_name}</div>
+                    <div className="admin-search-result-sub">{c.group} · Parent: {c.parent_name} ({c.parent_phone})</div>
                   </div>
                 </div>
               ))}
             </div>
           )}
 
-          {matchedVehicles.length > 0 && (
+          {matchedUsers.length > 0 && (
             <div className="admin-search-group">
-              <div className="admin-search-group-label">Vehicles</div>
-              {matchedVehicles.map(v => (
-                <div key={v.id} className="admin-search-result" onClick={() => go('/admin/fleet')}>
-                  <div className="admin-search-result-icon"><Truck size={14} color="var(--adm-text-2)" /></div>
+              <div className="admin-search-group-label">Instructors & Staff</div>
+              {matchedUsers.map((u: any) => (
+                <div key={u.id} className="admin-search-result" onClick={() => go('/admin/users')}>
+                  <div className="admin-search-result-icon"><UserCheck size={14} color="var(--adm-text-2)" /></div>
                   <div>
-                    <div className="admin-search-result-title">{v.name}</div>
-                    <div className="admin-search-result-sub">{v.registrationNumber} · {v.category}</div>
+                    <div className="admin-search-result-title">{u.full_name}</div>
+                    <div className="admin-search-result-sub">{u.role} · {u.email}</div>
                   </div>
                 </div>
               ))}

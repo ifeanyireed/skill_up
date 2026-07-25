@@ -137,7 +137,7 @@ export function InstructorsPage() {
               }}
             >
               <div>
-                <div style={{ display: 'flex', items: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
                   <img
                     src={staff.avatar || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200'}
                     alt={staff.full_name}

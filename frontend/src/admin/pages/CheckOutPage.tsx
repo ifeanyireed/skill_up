@@ -171,19 +171,19 @@ export function CheckOutPage() {
               margin: '1.5rem auto'
             }}
           >
-            <div style={{ display: 'flex', justify: 'space-between', fontSize: 13 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
               <span style={{ color: 'var(--adm-text-2)' }}>Student:</span>
               <strong style={{ color: 'var(--adm-text-1)' }}>{selectedChild ? selectedChild.full_name : 'Verified Student'}</strong>
             </div>
-            <div style={{ display: 'flex', justify: 'space-between', fontSize: 13 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
               <span style={{ color: 'var(--adm-text-2)' }}>Collected By:</span>
               <strong style={{ color: 'var(--adm-text-1)' }}>{collectorName} ({relationship})</strong>
             </div>
-            <div style={{ display: 'flex', justify: 'space-between', fontSize: 13 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
               <span style={{ color: 'var(--adm-text-2)' }}>Verified PIN:</span>
               <span style={{ fontFamily: 'monospace', fontWeight: 700, color: 'var(--adm-accent)' }}>#{inputPin}</span>
             </div>
-            <div style={{ display: 'flex', justify: 'space-between', fontSize: 13 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
               <span style={{ color: 'var(--adm-text-2)' }}>Release Time:</span>
               <span style={{ fontFamily: 'monospace', color: 'var(--adm-success)', fontWeight: 600 }}>{pickupTime}</span>
             </div>

@@ -138,7 +138,7 @@ export function DashboardHome() {
           {/* Instructor KPI Cards */}
           <div className="admin-grid-4">
             <div className="admin-stat-card">
-              <div style={{ display: 'flex', alignItems: 'center', justify: 'space-between', marginBottom: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                 <span className="admin-stat-label">Assigned Class Roster</span>
                 <Users size={16} color="var(--adm-text-3)" />
               </div>
@@ -147,7 +147,7 @@ export function DashboardHome() {
             </div>
 
             <div className="admin-stat-card" style={{ borderColor: 'rgba(196, 0, 0, 0.3)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justify: 'space-between', marginBottom: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                 <span className="admin-stat-label" style={{ color: 'var(--adm-accent)', fontWeight: 600 }}>Present in Class</span>
                 <LogIn size={16} color="var(--adm-accent)" />
               </div>
@@ -156,7 +156,7 @@ export function DashboardHome() {
             </div>
 
             <div className="admin-stat-card" style={{ borderColor: 'rgba(217, 119, 6, 0.4)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justify: 'space-between', marginBottom: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                 <span className="admin-stat-label" style={{ color: 'var(--adm-warning)', fontWeight: 600 }}>Waiting Pickup</span>
                 <Clock size={16} color="var(--adm-warning)" />
               </div>
@@ -165,7 +165,7 @@ export function DashboardHome() {
             </div>
 
             <div className="admin-stat-card" style={{ borderColor: 'rgba(239, 68, 68, 0.3)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justify: 'space-between', marginBottom: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                 <span className="admin-stat-label" style={{ color: 'var(--adm-danger)', fontWeight: 600 }}>Medical Alerts</span>
                 <AlertTriangle size={16} color="var(--adm-danger)" />
               </div>
@@ -202,7 +202,7 @@ export function DashboardHome() {
           {/* Admin Executive KPI Cards Grid */}
           <div className="admin-grid-4">
             <div className="admin-stat-card">
-              <div style={{ display: 'flex', alignItems: 'center', justify: 'space-between', marginBottom: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                 <span className="admin-stat-label">Total Enrolled Children</span>
                 <Users size={16} color="var(--adm-text-3)" />
               </div>
@@ -211,7 +211,7 @@ export function DashboardHome() {
             </div>
 
             <div className="admin-stat-card" style={{ borderColor: 'rgba(196, 0, 0, 0.3)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justify: 'space-between', marginBottom: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                 <span className="admin-stat-label" style={{ color: 'var(--adm-accent)', fontWeight: 600 }}>Active Session Check-Ins</span>
                 <LogIn size={16} color="var(--adm-accent)" />
               </div>
@@ -220,7 +220,7 @@ export function DashboardHome() {
             </div>
 
             <div className="admin-stat-card" style={{ borderColor: 'rgba(22, 163, 74, 0.3)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justify: 'space-between', marginBottom: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                 <span className="admin-stat-label" style={{ color: 'var(--adm-success)', fontWeight: 600 }}>Released Students</span>
                 <CheckCircle2 size={16} color="var(--adm-success)" />
               </div>
@@ -229,7 +229,7 @@ export function DashboardHome() {
             </div>
 
             <div className="admin-stat-card" style={{ borderColor: 'rgba(217, 119, 6, 0.4)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justify: 'space-between', marginBottom: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                 <span className="admin-stat-label" style={{ color: 'var(--adm-warning)', fontWeight: 600 }}>Awaiting Pickup</span>
                 <Clock size={16} color="var(--adm-warning)" />
               </div>
