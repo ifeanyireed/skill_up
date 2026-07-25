@@ -198,7 +198,7 @@ func CheckInChild(c *gin.Context) {
 
 	instructor := input.InstructorName
 	if instructor == "" {
-		instructor = "Christiana Okokon"
+		instructor = "Administrator"
 	}
 
 	// Record to Attendance Log
