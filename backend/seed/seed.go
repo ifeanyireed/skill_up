@@ -11,7 +11,7 @@ import (
 // WipeTestData removes all mock children, attendance logs, and unapproved legacy accounts.
 func WipeTestData(db *gorm.DB) {
 	fmt.Println("==========================================================================")
-	fmt.Println("   WIPING DATABASE TEST DATA & PURGING UNAPPROVED INSTRUCTOR ACCOUNTS")
+	fmt.Println("   WIPING DATABASE TEST DATA & UPDATING ADMIN AVATARS FROM LIBRARY")
 	fmt.Println("==========================================================================")
 
 	// 1. Delete all Children records
@@ -59,7 +59,7 @@ func WipeTestData(db *gorm.DB) {
 		db.Create(&setting)
 	}
 
-	// 5. Ensure the 3 approved Administrator Users exist (Okokon Christiana, Ifeanyi Reed, Grace Solomon)
+	// 5. Ensure the 3 approved Administrator Users exist with Character Library Avatars
 	admins := []models.User{
 		{
 			FullName:      "Christiana Okokon",
@@ -68,7 +68,7 @@ func WipeTestData(db *gorm.DB) {
 			Role:          "Administrator",
 			AssignedGroup: "Head Administrator / All Groups",
 			Status:        "Active",
-			Avatar:        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200",
+			Avatar:        "/avatars/character1.jpg",
 			PasswordHash:  "skillup2026",
 			LastLogin:     "Just now",
 		},
@@ -79,7 +79,7 @@ func WipeTestData(db *gorm.DB) {
 			Role:          "Administrator",
 			AssignedGroup: "Head Administrator / All Groups",
 			Status:        "Active",
-			Avatar:        "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=200",
+			Avatar:        "/avatars/character2.jpg",
 			PasswordHash:  "skillup2026",
 			LastLogin:     "Just now",
 		},
@@ -90,22 +90,26 @@ func WipeTestData(db *gorm.DB) {
 			Role:          "Administrator",
 			AssignedGroup: "Head Administrator / All Groups",
 			Status:        "Active",
-			Avatar:        "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=200",
+			Avatar:        "/avatars/character3.jpg",
 			PasswordHash:  "skillup2026",
 			LastLogin:     "Just now",
 		},
 	}
 
 	for _, admin := range admins {
-		var cnt int64
-		db.Model(&models.User{}).Where("LOWER(email) = LOWER(?)", admin.Email).Count(&cnt)
-		if cnt == 0 {
+		var existing models.User
+		if err := db.Where("LOWER(email) = LOWER(?)", admin.Email).First(&existing).Error; err != nil {
 			db.Create(&admin)
+		} else {
+			// Update avatar to character library image
+			existing.Avatar = admin.Avatar
+			existing.FullName = admin.FullName
+			db.Save(&existing)
 		}
 	}
 
 	fmt.Println("==========================================================================")
-	fmt.Println("   DATABASE PURGED & 3 ADMIN ACCOUNTS VERIFIED READY FOR PROD!")
+	fmt.Println("   CHARACTER AVATARS APPLIED TO ALL 3 ADMINISTRATOR ACCOUNTS!")
 	fmt.Println("==========================================================================")
 }
 

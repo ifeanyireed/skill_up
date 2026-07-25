@@ -130,9 +130,17 @@ export function AdminSidebar() {
 
       {/* User Footer */}
       <div className="admin-sidebar-user">
-        <div className="admin-avatar" title={session.user?.fullName || 'User'} style={{ width: 30, height: 30, fontSize: 11, flexShrink: 0 }}>
-          {initials}
-        </div>
+        {session.user?.avatar ? (
+          <img
+            src={session.user.avatar}
+            alt={session.user.fullName}
+            style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
+          />
+        ) : (
+          <div className="admin-avatar" title={session.user?.fullName || 'User'} style={{ width: 30, height: 30, fontSize: 11, flexShrink: 0 }}>
+            {initials}
+          </div>
+        )}
         <div className="admin-sidebar-user-info">
           <div className="admin-sidebar-user-name">{session.user?.fullName ?? 'Coach Sarah Jenkins'}</div>
           <div className="admin-sidebar-user-role">{session.user?.role ?? 'Lead Admin'}</div>

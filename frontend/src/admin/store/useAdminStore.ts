@@ -8,6 +8,7 @@ export interface AdminUser {
   fullName: string
   email: string
   role: string
+  avatar?: string
   status: 'active' | 'inactive'
   lastLogin: string
 }
@@ -39,6 +40,7 @@ const DEFAULT_USER: AdminUser = {
   fullName: 'Christiana Okokon',
   email: 'Okokon.Christiana@kingshouselearning.com',
   role: 'Lead Admin',
+  avatar: '/avatars/character1.jpg',
   status: 'active',
   lastLogin: new Date().toISOString()
 }
@@ -72,19 +74,22 @@ export const useAdminStore = create<AdminStore>((set, get) => ({
     const cleanEmail = (email || '').trim().toLowerCase()
 
     let fullName = 'Christiana Okokon'
+    let avatar = '/avatars/character1.jpg'
+
     if (cleanEmail.includes('ifeanyi')) {
       fullName = 'Ifeanyi Reed'
+      avatar = '/avatars/character2.jpg'
     } else if (cleanEmail.includes('grace')) {
       fullName = 'Grace Solomon'
-    } else if (cleanEmail.includes('michael')) {
-      fullName = 'Coach Michael Davies'
+      avatar = '/avatars/character3.jpg'
     }
 
     const user: AdminUser = {
       id: 'usr-001',
-      fullName: fullName,
+      fullName,
       email: cleanEmail || 'Okokon.Christiana@kingshouselearning.com',
-      role: cleanEmail.includes('michael') ? 'Instructor' : 'Lead Admin',
+      role: 'Lead Admin',
+      avatar,
       status: 'active',
       lastLogin: new Date().toISOString()
     }

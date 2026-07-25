@@ -36,9 +36,17 @@ export function AdminTopbar() {
       </button>
 
       <div className="admin-topbar-right">
-        <div className="admin-avatar" title={session.user?.fullName || 'User'}>
-          {initials}
-        </div>
+        {session.user?.avatar ? (
+          <img
+            src={session.user.avatar}
+            alt={session.user.fullName}
+            style={{ width: 34, height: 34, borderRadius: '50%', objectFit: 'cover', border: '1px solid var(--adm-border)' }}
+          />
+        ) : (
+          <div className="admin-avatar" title={session.user?.fullName || 'User'}>
+            {initials}
+          </div>
+        )}
       </div>
     </header>
   )
