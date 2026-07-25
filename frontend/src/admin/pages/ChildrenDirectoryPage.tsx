@@ -15,10 +15,12 @@ import {
   LogIn,
   KeyRound,
   Loader2,
-  Building2
+  Building2,
+  Trash2
 } from 'lucide-react'
 import '../admin.css'
-import { getChildren, BackendChild } from '../services/api'
+import { getChildren, deleteChild, BackendChild } from '../services/api'
+import { useAdminStore } from '../store/useAdminStore'
 
 const getStatusBadgeClass = (status: string) => {
   switch (status) {
@@ -36,6 +38,9 @@ const getStatusBadgeClass = (status: string) => {
 
 export function ChildrenDirectoryPage() {
   const navigate = useNavigate()
+  const { session } = useAdminStore()
+  const isAdmin = session.user?.role === 'Lead Admin' || session.user?.role === 'Administrator'
+
   const [children, setChildren] = useState<BackendChild[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -63,6 +68,22 @@ export function ChildrenDirectoryPage() {
     loadData()
   }, [search, statusFilter, centerFilter])
 
+  const handleDeleteChild = async (id: number, name: string, studentId: string) => {
+    if (!isAdmin) {
+      alert('Unauthorized: Only system Administrators can delete child records.')
+      return
+    }
+    if (window.confirm(`Are you sure you want to permanently delete student "${name}" (${studentId}) from the directory?`)) {
+      try {
+        await deleteChild(id)
+        setSelectedChild(null)
+        loadData()
+      } catch (err: any) {
+        alert(err.message || 'Failed to delete student record')
+      }
+    }
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* Page Header */}
@@ -74,11 +95,13 @@ export function ChildrenDirectoryPage() {
           </div>
         </div>
 
-        <div className="admin-page-actions">
-          <button className="admin-btn admin-btn-primary" onClick={() => navigate('/admin/register')}>
-            <Plus size={14} /> Register New Child
-          </button>
-        </div>
+        {isAdmin && (
+          <div className="admin-page-actions">
+            <button className="admin-btn admin-btn-primary" onClick={() => navigate('/admin/register')}>
+              <Plus size={14} /> Register New Child
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Toolbar Filters */}
@@ -199,15 +222,30 @@ export function ChildrenDirectoryPage() {
                     </td>
 
                     <td>
-                      <button
-                        className="admin-btn admin-btn-ghost admin-btn-sm"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          setSelectedChild(child)
-                        }}
-                      >
-                        Profile
-                      </button>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                        <button
+                          className="admin-btn admin-btn-ghost admin-btn-sm"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setSelectedChild(child)
+                          }}
+                        >
+                          Profile
+                        </button>
+                        {isAdmin && (
+                          <button
+                            className="admin-btn admin-btn-ghost admin-btn-sm"
+                            style={{ color: 'var(--adm-danger)' }}
+                            title="Delete Student Record (Admins Only)"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleDeleteChild(child.id, child.full_name, child.student_id)
+                            }}
+                          >
+                            <Trash2 size={13} />
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -318,21 +356,33 @@ export function ChildrenDirectoryPage() {
             </div>
 
             {/* Actions */}
-            <div style={{ marginTop: 'auto', display: 'flex', gap: '0.5rem' }}>
-              <button
-                className="admin-btn admin-btn-primary"
-                style={{ flex: 1, justifyContent: 'center' }}
-                onClick={() => navigate('/admin/checkin')}
-              >
-                <LogIn size={14} /> Check In
-              </button>
-              <button
-                className="admin-btn admin-btn-ghost"
-                style={{ flex: 1, justifyContent: 'center' }}
-                onClick={() => navigate('/admin/checkout')}
-              >
-                <KeyRound size={14} /> Verify PIN
-              </button>
+            <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <button
+                  className="admin-btn admin-btn-primary"
+                  style={{ flex: 1, justifyContent: 'center' }}
+                  onClick={() => navigate('/admin/checkin')}
+                >
+                  <LogIn size={14} /> Check In
+                </button>
+                <button
+                  className="admin-btn admin-btn-ghost"
+                  style={{ flex: 1, justifyContent: 'center' }}
+                  onClick={() => navigate('/admin/checkout')}
+                >
+                  <KeyRound size={14} /> Verify PIN
+                </button>
+              </div>
+
+              {isAdmin && (
+                <button
+                  className="admin-btn admin-btn-secondary"
+                  style={{ width: '100%', justifyContent: 'center', color: 'var(--adm-danger)', borderColor: 'var(--adm-danger)' }}
+                  onClick={() => handleDeleteChild(selectedChild.id, selectedChild.full_name, selectedChild.student_id)}
+                >
+                  <Trash2 size={14} /> Delete Student Record
+                </button>
+              )}
             </div>
           </div>
         </div>

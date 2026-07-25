@@ -96,17 +96,19 @@ export function AdminSidebar() {
 
         <div className="admin-nav-section">
           <div className="admin-nav-label">Safety & Operations</div>
-          {safetyItems.map(({ to, label, icon: Icon }) => (
-            <NavLink
-              key={to}
-              to={to}
-              title={sidebarCollapsed ? label : undefined}
-              className={({ isActive }) => `admin-nav-item${isActive ? ' active' : ''}`}
-            >
-              <Icon size={16} />
-              <span>{label}</span>
-            </NavLink>
-          ))}
+          {safetyItems
+            .filter(({ to }) => to !== '/admin/register' || isAdmin)
+            .map(({ to, label, icon: Icon }) => (
+              <NavLink
+                key={to}
+                to={to}
+                title={sidebarCollapsed ? label : undefined}
+                className={({ isActive }) => `admin-nav-item${isActive ? ' active' : ''}`}
+              >
+                <Icon size={16} />
+                <span>{label}</span>
+              </NavLink>
+            ))}
         </div>
 
         {/* Administration Section (Only visible for Lead Admins) */}

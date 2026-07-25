@@ -289,3 +289,26 @@ func CheckOutChild(c *gin.Context) {
 		"release_time": nowTime,
 	})
 }
+
+// DELETE /api/children/:id
+func DeleteChild(c *gin.Context) {
+	id := c.Param("id")
+	var child models.Child
+	if err := config.DB.First(&child, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Child student record not found"})
+		return
+	}
+
+	if err := config.DB.Delete(&child).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Purge attendance logs for deleted student
+	config.DB.Where("student_id = ?", child.StudentID).Delete(&models.AttendanceLog{})
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Child student record deleted successfully",
+		"id":      child.ID,
+	})
+}

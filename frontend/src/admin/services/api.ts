@@ -94,6 +94,17 @@ export async function createChild(data: Partial<BackendChild>): Promise<BackendC
   return res.json()
 }
 
+export async function deleteChild(id: number | string): Promise<{ message: string }> {
+  const res = await fetch(`${API_BASE_URL}/children/${id}`, {
+    method: 'DELETE',
+  })
+  if (!res.ok) {
+    const err = await res.json()
+    throw new Error(err.error || 'Failed to delete student record')
+  }
+  return res.json()
+}
+
 export async function updateChildStatus(id: number | string, status: string, instructorName?: string): Promise<BackendChild> {
   const res = await fetch(`${API_BASE_URL}/children/${id}/status`, {
     method: 'PUT',

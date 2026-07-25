@@ -4,14 +4,18 @@
 // ============================================================================
 import React, { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Camera, ShieldCheck, Loader2, Building2, UserCheck, Upload } from 'lucide-react'
+import { Camera, ShieldCheck, ShieldAlert, Loader2, Building2, UserCheck, Upload } from 'lucide-react'
 import '../admin.css'
 import { createChild } from '../services/api'
+import { useAdminStore } from '../store/useAdminStore'
 
 const AVATAR_CHARACTERS = Array.from({ length: 20 }, (_, i) => `/avatars/character${i + 1}.jpg`)
 
 export function ChildRegistrationPage() {
   const navigate = useNavigate()
+  const { session } = useAdminStore()
+  const isAdmin = session.user?.role === 'Lead Admin' || session.user?.role === 'Administrator'
+
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [submitting, setSubmitting] = useState(false)
 
@@ -27,6 +31,39 @@ export function ChildRegistrationPage() {
   const [photoMode, setPhotoMode] = useState<'avatar' | 'upload'>('avatar')
   const [selectedAvatar, setSelectedAvatar] = useState<string>(AVATAR_CHARACTERS[0])
   const [customPhotoUrl, setCustomPhotoUrl] = useState<string>('')
+
+  if (!isAdmin) {
+    return (
+      <div style={{ maxWidth: '600px', margin: '3rem auto', textAlign: 'center' }}>
+        <div className="admin-card" style={{ padding: '2.5rem 1.5rem' }}>
+          <div
+            style={{
+              width: '56px',
+              height: '56px',
+              borderRadius: '50%',
+              background: 'var(--adm-accent-subtle)',
+              color: 'var(--adm-accent)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 1rem'
+            }}
+          >
+            <ShieldAlert size={32} />
+          </div>
+          <h2 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--adm-text-1)', marginBottom: '0.5rem' }}>
+            Administrator Permission Required
+          </h2>
+          <p style={{ fontSize: '13px', color: 'var(--adm-text-3)', marginBottom: '1.5rem' }}>
+            Only Lead Administrators and Administrators are authorized to register new child students to the academy directory.
+          </p>
+          <button className="admin-btn admin-btn-primary" style={{ margin: '0 auto' }} onClick={() => navigate('/admin')}>
+            Return to Operations Dashboard
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   const [parentName, setParentName] = useState('')
   const [parentPhone, setParentPhone] = useState('')
