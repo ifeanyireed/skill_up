@@ -44,8 +44,8 @@ export function CheckInPage() {
   const loadData = async () => {
     setLoading(true)
     try {
-      const data = await getChildren('Not Checked In', search, center)
-      setChildren(data)
+      const data = await getChildren('all', search, center)
+      setChildren(data.filter((c) => c.status !== 'Checked In' && c.status !== 'Waiting Pickup'))
     } catch (err) {
       console.warn('Backend error', err)
     } finally {
@@ -143,35 +143,31 @@ export function CheckInPage() {
             Center: <strong>{center}</strong> • Student ID: <strong>{selectedChild.student_id}</strong> • Arrival Time: <strong>{arrivalTime}</strong>
           </p>
 
-          {/* 6-DIGIT PIN DISPLAY CARD */}
           <div
             style={{
-              marginTop: '1.5rem',
-              marginBottom: '1.5rem',
-              padding: '1.5rem',
+              margin: '1.5rem auto',
+              maxWidth: '360px',
+              padding: '1.25rem',
               background: 'var(--adm-surface-2)',
               border: '2px dashed var(--adm-accent)',
-              borderRadius: 'var(--adm-radius)',
-              maxWidth: '380px',
-              marginLeft: 'auto',
-              marginRight: 'auto'
+              borderRadius: 'var(--adm-radius)'
             }}
           >
-            <div style={{ fontSize: '11px', fontWeight: 800, color: 'var(--adm-accent)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-              DAILY PICKUP VERIFICATION PIN
+            <div style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--adm-accent)', letterSpacing: '0.05em' }}>
+              DAILY GUARDIAN PICKUP VERIFICATION CODE
             </div>
 
             <div
               style={{
-                fontSize: '36px',
+                fontSize: '40px',
                 fontWeight: 900,
                 fontFamily: 'monospace',
-                color: 'var(--adm-accent)',
-                letterSpacing: '0.15em',
+                letterSpacing: '0.2em',
+                color: 'var(--adm-text-1)',
                 margin: '0.5rem 0'
               }}
             >
-              #{generatedCode}
+              {generatedCode}
             </div>
 
             <div style={{ fontSize: '12px', color: 'var(--adm-text-2)' }}>
@@ -179,19 +175,23 @@ export function CheckInPage() {
             </div>
           </div>
 
-          {/* Action Buttons */}
           <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-            <button className="admin-btn admin-btn-ghost" onClick={handleCopyCode}>
-              {copied ? <Check size={14} color="var(--adm-success)" /> : <Copy size={14} />}
-              {copied ? 'PIN Copied!' : 'Copy 6-Digit PIN'}
+            <button className="admin-btn admin-btn-primary" onClick={handleCopyCode}>
+              {copied ? <Check size={14} /> : <Copy size={14} />}
+              {copied ? 'Code Copied!' : 'Copy 6-Digit Code'}
             </button>
-
-            <button className="admin-btn admin-btn-ghost" onClick={() => window.print()}>
-              <Printer size={14} /> Print Security Slip
+            <button className="admin-btn admin-btn-secondary" onClick={() => window.print()}>
+              <Printer size={14} /> Print Pass Tag
             </button>
-
-            <button className="admin-btn admin-btn-primary" onClick={() => { setGeneratedCode(null); setSelectedChildId(null); loadData(); }}>
-              Next Check-In <ArrowRight size={14} />
+            <button
+              className="admin-btn admin-btn-ghost"
+              onClick={() => {
+                setGeneratedCode(null)
+                setSelectedChildId(null)
+                loadData()
+              }}
+            >
+              Check-In Another Child <ArrowRight size={14} />
             </button>
           </div>
         </div>
@@ -281,7 +281,7 @@ export function CheckInPage() {
                     </div>
                   ) : children.length === 0 ? (
                     <div className="admin-table-empty" style={{ padding: '2rem' }}>
-                      No un-checked-in children found at {center}
+                      No available children for check-in found at {center}
                     </div>
                   ) : (
                     children.map((c) => (
