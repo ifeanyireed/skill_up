@@ -99,35 +99,45 @@ export async function deleteChild(id: number | string): Promise<{ message: strin
     throw new Error('Invalid student ID for deletion')
   }
 
-  let res = await fetch(`${API_BASE_URL}/children/${id}`, {
-    method: 'DELETE',
-    headers: { 'Content-Type': 'application/json' },
-  })
+  const endpoints = [
+    { url: `${API_BASE_URL}/children/${id}`, method: 'DELETE' },
+    { url: `${API_BASE_URL}/children/${id}/delete`, method: 'POST' },
+    { url: `${API_BASE_URL}/children/delete/${id}`, method: 'POST' },
+  ]
 
-  // Fallback to POST /children/:id/delete if server/proxy returns 404 or Method Not Allowed
-  if (res.status === 404 || res.status === 405) {
-    res = await fetch(`${API_BASE_URL}/children/${id}/delete`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-    })
-  }
-
-  const text = await res.text()
-  if (!res.ok) {
-    let errorMsg = 'Failed to delete student record'
+  let lastRes: Response | null = null
+  for (const ep of endpoints) {
     try {
-      const err = JSON.parse(text)
-      errorMsg = err.error || errorMsg
-    } catch {
-      if (text) errorMsg = text
+      const res = await fetch(ep.url, {
+        method: ep.method,
+        headers: { 'Content-Type': 'application/json' },
+      })
+      lastRes = res
+      if (res.ok) {
+        const text = await res.text()
+        try {
+          return JSON.parse(text)
+        } catch {
+          return { message: 'Child student record deleted successfully' }
+        }
+      }
+      if (res.status !== 404 && res.status !== 405) {
+        break
+      }
+    } catch (e) {
+      console.warn(`Delete attempt via ${ep.method} ${ep.url} failed`, e)
     }
-    throw new Error(errorMsg)
   }
+
+  const text = lastRes ? await lastRes.text() : ''
+  let errorMsg = 'Failed to delete student record'
   try {
-    return JSON.parse(text)
+    const err = JSON.parse(text)
+    errorMsg = err.error || errorMsg
   } catch {
-    return { message: 'Child student record deleted successfully' }
+    if (text) errorMsg = text
   }
+  throw new Error(errorMsg)
 }
 
 export async function updateChildStatus(id: number | string, status: string, instructorName?: string): Promise<BackendChild> {

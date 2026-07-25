@@ -9,6 +9,37 @@ import (
 	"checkin-backend/controllers"
 )
 
+func registerAPIRoutes(api *gin.RouterGroup) {
+	// Auth
+	api.POST("/auth/login", controllers.Login)
+
+	// Children
+	api.GET("/children", controllers.GetChildren)
+	api.GET("/children/:id", controllers.GetChildByID)
+	api.POST("/children", controllers.CreateChild)
+	api.PUT("/children/:id/status", controllers.UpdateChildStatus)
+	api.POST("/children/:id/checkin", controllers.CheckInChild)
+	api.POST("/children/checkout", controllers.CheckOutChild)
+	api.DELETE("/children/:id", controllers.DeleteChild)
+	api.POST("/children/:id/delete", controllers.DeleteChild)
+	api.POST("/children/delete/:id", controllers.DeleteChild)
+	api.DELETE("/children/delete/:id", controllers.DeleteChild)
+
+	// Attendance
+	api.GET("/attendance", controllers.GetAttendanceLogs)
+	api.GET("/attendance/export", controllers.ExportAttendanceCSV)
+
+	// Staff / Users
+	api.GET("/users", controllers.GetUsers)
+	api.POST("/users", controllers.CreateUser)
+	api.PUT("/users/:id/toggle", controllers.ToggleUserStatus)
+
+	// Settings & Admin Wipe
+	api.GET("/settings", controllers.GetSettings)
+	api.PUT("/settings", controllers.UpdateSettings)
+	api.POST("/admin/wipe-test-data", controllers.WipeDatabase)
+}
+
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
 
@@ -27,36 +58,9 @@ func SetupRouter() *gin.Engine {
 		c.JSON(200, gin.H{"status": "ok", "service": "Skill Up Academy Check-In Backend"})
 	})
 
-	// API Routes Group
-	api := r.Group("/api")
-	{
-		// Auth
-		api.POST("/auth/login", controllers.Login)
-
-		// Children
-		api.GET("/children", controllers.GetChildren)
-		api.GET("/children/:id", controllers.GetChildByID)
-		api.POST("/children", controllers.CreateChild)
-		api.PUT("/children/:id/status", controllers.UpdateChildStatus)
-		api.POST("/children/:id/checkin", controllers.CheckInChild)
-		api.POST("/children/checkout", controllers.CheckOutChild)
-		api.DELETE("/children/:id", controllers.DeleteChild)
-		api.POST("/children/:id/delete", controllers.DeleteChild)
-
-		// Attendance
-		api.GET("/attendance", controllers.GetAttendanceLogs)
-		api.GET("/attendance/export", controllers.ExportAttendanceCSV)
-
-		// Staff / Users
-		api.GET("/users", controllers.GetUsers)
-		api.POST("/users", controllers.CreateUser)
-		api.PUT("/users/:id/toggle", controllers.ToggleUserStatus)
-
-		// Settings & Admin Wipe
-		api.GET("/settings", controllers.GetSettings)
-		api.PUT("/settings", controllers.UpdateSettings)
-		api.POST("/admin/wipe-test-data", controllers.WipeDatabase)
-	}
+	// API Routes Groups (Supports both /api and /api/v1)
+	registerAPIRoutes(r.Group("/api"))
+	registerAPIRoutes(r.Group("/api/v1"))
 
 	return r
 }
