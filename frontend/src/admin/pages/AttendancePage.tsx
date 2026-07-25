@@ -15,15 +15,16 @@ import {
 } from 'lucide-react'
 import '../admin.css'
 import { getChildren, updateChildStatus, BackendChild } from '../services/api'
+import { useAdminStore } from '../store/useAdminStore'
 
 const getStatusBadge = (status: string) => {
   switch (status) {
-    case 'Checked Out':
-      return <span className="admin-badge admin-badge-green"><CheckCircle2 size={10} /> Checked Out</span>
+    case 'Checked In':
+      return <span className="admin-badge admin-badge-green"><UserCheck size={10} /> Checked In</span>
     case 'Waiting Pickup':
       return <span className="admin-badge admin-badge-yellow"><Clock size={10} /> Waiting Pickup</span>
-    case 'Checked In':
-      return <span className="admin-badge admin-badge-blue"><UserCheck size={10} /> Checked In</span>
+    case 'Checked Out':
+      return <span className="admin-badge admin-badge-accent"><CheckCircle2 size={10} /> Checked Out</span>
     default:
       return <span className="admin-badge admin-badge-gray">Not Checked In</span>
   }
@@ -31,6 +32,7 @@ const getStatusBadge = (status: string) => {
 
 export function AttendancePage() {
   const navigate = useNavigate()
+  const { session } = useAdminStore()
   const [children, setChildren] = useState<BackendChild[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -54,7 +56,8 @@ export function AttendancePage() {
 
   const handleMarkWaitingPickup = async (id: number) => {
     try {
-      await updateChildStatus(id, 'Waiting Pickup')
+      const instructorName = session.user?.fullName || 'Administrator'
+      await updateChildStatus(id, 'Waiting Pickup', instructorName)
       loadData()
     } catch (err: any) {
       alert(err.message || 'Failed to update student status to Waiting Pickup')

@@ -14,9 +14,11 @@ import {
 } from 'lucide-react'
 import '../admin.css'
 import { getChildren, checkOutChild, BackendChild } from '../services/api'
+import { useAdminStore } from '../store/useAdminStore'
 
 export function CheckOutPage() {
   const navigate = useNavigate()
+  const { session } = useAdminStore()
   const [children, setChildren] = useState<BackendChild[]>([])
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
@@ -85,12 +87,14 @@ export function CheckOutPage() {
 
     setSubmitting(true)
     try {
+      const instructorName = session.user?.fullName || 'Administrator'
       const res = await checkOutChild(
         inputPin.trim(),
         collectorName,
         collectorPhone,
         relationship,
-        selectedChild ? selectedChild.student_id : ''
+        selectedChild ? selectedChild.student_id : '',
+        instructorName
       )
 
       setVerificationResult({

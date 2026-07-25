@@ -103,7 +103,8 @@ func CreateChild(c *gin.Context) {
 
 // PUT /api/children/:id/status
 type StatusUpdateInput struct {
-	Status string `json:"status" binding:"required"`
+	Status         string `json:"status" binding:"required"`
+	InstructorName string `json:"instructor_name"`
 }
 
 func UpdateChildStatus(c *gin.Context) {
@@ -123,22 +124,30 @@ func UpdateChildStatus(c *gin.Context) {
 	child.Status = input.Status
 	config.DB.Save(&child)
 
+	updates := map[string]interface{}{
+		"status": input.Status,
+	}
+	if input.InstructorName != "" {
+		updates["instructor_name"] = input.InstructorName
+	}
+
 	// Sync status to Attendance Log for today
 	config.DB.Model(&models.AttendanceLog{}).
 		Where("student_id = ? AND date = ?", child.StudentID, time.Now().Format("2006-01-02")).
-		Update("status", input.Status)
+		Updates(updates)
 
 	c.JSON(http.StatusOK, child)
 }
 
 // POST /api/children/:id/checkin
 type CheckInInput struct {
-	AdultName   string `json:"adult_name" binding:"required"`
-	AdultPhone  string `json:"adult_phone" binding:"required"`
-	Center      string `json:"center"`
-	Rel         string `json:"relationship"`
-	Notes       string `json:"notes"`
-	CheckInTime string `json:"check_in_time"`
+	AdultName      string `json:"adult_name" binding:"required"`
+	AdultPhone     string `json:"adult_phone" binding:"required"`
+	Center         string `json:"center"`
+	Rel            string `json:"relationship"`
+	Notes          string `json:"notes"`
+	CheckInTime    string `json:"check_in_time"`
+	InstructorName string `json:"instructor_name"`
 }
 
 func CheckInChild(c *gin.Context) {
@@ -183,6 +192,11 @@ func CheckInChild(c *gin.Context) {
 		return
 	}
 
+	instructor := input.InstructorName
+	if instructor == "" {
+		instructor = "Christiana Okokon"
+	}
+
 	// Record to Attendance Log
 	logEntry := models.AttendanceLog{
 		Date:           time.Now().Format("2006-01-02"),
@@ -194,7 +208,7 @@ func CheckInChild(c *gin.Context) {
 		CheckInTime:    nowTime,
 		DropOffAdult:   input.AdultName + " (" + input.Rel + ")",
 		PickupPin:      pin,
-		InstructorName: "Christiana Okokon",
+		InstructorName: instructor,
 		Status:         childStatus,
 	}
 	config.DB.Create(&logEntry)
@@ -209,12 +223,13 @@ func CheckInChild(c *gin.Context) {
 
 // POST /api/children/checkout
 type CheckOutInput struct {
-	StudentID  string `json:"student_id"`
-	Pin        string `json:"pin" binding:"required"`
-	Collector  string `json:"collector_name" binding:"required"`
-	Phone      string `json:"collector_phone" binding:"required"`
-	Rel        string `json:"relationship"`
-	PickupTime string `json:"pickup_time"`
+	StudentID      string `json:"student_id"`
+	Pin            string `json:"pin" binding:"required"`
+	Collector      string `json:"collector_name" binding:"required"`
+	Phone          string `json:"collector_phone" binding:"required"`
+	Rel            string `json:"relationship"`
+	PickupTime     string `json:"pickup_time"`
+	InstructorName string `json:"instructor_name"`
 }
 
 func CheckOutChild(c *gin.Context) {
@@ -250,14 +265,19 @@ func CheckOutChild(c *gin.Context) {
 		return
 	}
 
+	updates := map[string]interface{}{
+		"check_out_time": nowTime,
+		"pickup_adult":   input.Collector + " (" + input.Rel + ")",
+		"status":         "Checked Out",
+	}
+	if input.InstructorName != "" {
+		updates["instructor_name"] = input.InstructorName
+	}
+
 	// Update Attendance Log
 	config.DB.Model(&models.AttendanceLog{}).
 		Where("student_id = ? AND date = ?", child.StudentID, time.Now().Format("2006-01-02")).
-		Updates(map[string]interface{}{
-			"check_out_time": nowTime,
-			"pickup_adult":   input.Collector + " (" + input.Rel + ")",
-			"status":         "Checked Out",
-		})
+		Updates(updates)
 
 	c.JSON(http.StatusOK, gin.H{
 		"message":      "Pickup PIN verified! Child safely released.",

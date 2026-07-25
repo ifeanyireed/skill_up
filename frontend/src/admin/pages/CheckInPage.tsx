@@ -18,9 +18,11 @@ import {
 } from 'lucide-react'
 import '../admin.css'
 import { getChildren, checkInChild, BackendChild } from '../services/api'
+import { useAdminStore } from '../store/useAdminStore'
 
 export function CheckInPage() {
   const navigate = useNavigate()
+  const { session } = useAdminStore()
   const [children, setChildren] = useState<BackendChild[]>([])
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
@@ -75,7 +77,8 @@ export function CheckInPage() {
 
     setSubmitting(true)
     try {
-      const res = await checkInChild(selectedChild.id, adultName, adultPhone, relationship, notes, center)
+      const instructorName = session.user?.fullName || 'Administrator'
+      const res = await checkInChild(selectedChild.id, adultName, adultPhone, relationship, notes, center, instructorName)
       setGeneratedCode(res.pickup_pin || res.child?.active_code || '482910')
     } catch (err: any) {
       alert(err.message || 'Check-in failed')

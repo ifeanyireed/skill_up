@@ -94,11 +94,11 @@ export async function createChild(data: Partial<BackendChild>): Promise<BackendC
   return res.json()
 }
 
-export async function updateChildStatus(id: number | string, status: string): Promise<BackendChild> {
+export async function updateChildStatus(id: number | string, status: string, instructorName?: string): Promise<BackendChild> {
   const res = await fetch(`${API_BASE_URL}/children/${id}/status`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ status }),
+    body: JSON.stringify({ status, instructor_name: instructorName }),
   })
   if (!res.ok) throw new Error('Failed to update student status')
   return res.json()
@@ -110,7 +110,8 @@ export async function checkInChild(
   adultPhone: string,
   rel: string = 'Mother',
   notes: string = '',
-  center: string = 'Raji Rasaki Centre'
+  center: string = 'Raji Rasaki Centre',
+  instructorName?: string
 ) {
   const res = await fetch(`${API_BASE_URL}/children/${id}/checkin`, {
     method: 'POST',
@@ -121,6 +122,7 @@ export async function checkInChild(
       relationship: rel,
       notes: notes,
       center: center,
+      instructor_name: instructorName,
     }),
   })
   if (!res.ok) {
@@ -135,7 +137,8 @@ export async function checkOutChild(
   collectorName: string,
   collectorPhone: string,
   rel: string = 'Father',
-  studentID: string = ''
+  studentID: string = '',
+  instructorName?: string
 ) {
   const res = await fetch(`${API_BASE_URL}/children/checkout`, {
     method: 'POST',
@@ -146,6 +149,7 @@ export async function checkOutChild(
       collector_phone: collectorPhone,
       relationship: rel,
       student_id: studentID,
+      instructor_name: instructorName,
     }),
   })
   if (!res.ok) {
