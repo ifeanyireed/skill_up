@@ -143,6 +143,45 @@ func UpdateChildStatus(c *gin.Context) {
 	c.JSON(http.StatusOK, child)
 }
 
+type UpdateChildInput struct {
+	Center string `json:"center"`
+	Group  string `json:"group"`
+	Status string `json:"status"`
+}
+
+// PUT /api/children/:id
+func UpdateChild(c *gin.Context) {
+	id := c.Param("id")
+	var child models.Child
+	if err := config.DB.First(&child, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Child student record not found"})
+		return
+	}
+
+	var input UpdateChildInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if input.Center != "" {
+		child.Center = input.Center
+	}
+	if input.Group != "" {
+		child.Group = input.Group
+	}
+	if input.Status != "" {
+		child.Status = input.Status
+	}
+
+	if err := config.DB.Save(&child).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, child)
+}
+
 // POST /api/children/:id/checkin
 type CheckInInput struct {
 	AdultName      string `json:"adult_name" binding:"required"`

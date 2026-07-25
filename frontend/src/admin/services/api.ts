@@ -140,6 +140,16 @@ export async function deleteChild(id: number | string): Promise<{ message: strin
   throw new Error(errorMsg)
 }
 
+export async function updateChildCenter(id: number | string, center: string): Promise<BackendChild> {
+  const res = await fetch(`${API_BASE_URL}/children/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ center }),
+  })
+  if (!res.ok) throw new Error('Failed to update student center')
+  return res.json()
+}
+
 export async function updateChildStatus(id: number | string, status: string, instructorName?: string): Promise<BackendChild> {
   const res = await fetch(`${API_BASE_URL}/children/${id}/status`, {
     method: 'PUT',

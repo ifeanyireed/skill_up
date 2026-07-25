@@ -17,6 +17,7 @@ func registerAPIRoutes(api *gin.RouterGroup) {
 	api.GET("/children", controllers.GetChildren)
 	api.GET("/children/:id", controllers.GetChildByID)
 	api.POST("/children", controllers.CreateChild)
+	api.PUT("/children/:id", controllers.UpdateChild)
 	api.PUT("/children/:id/status", controllers.UpdateChildStatus)
 	api.POST("/children/:id/checkin", controllers.CheckInChild)
 	api.POST("/children/checkout", controllers.CheckOutChild)

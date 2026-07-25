@@ -19,7 +19,7 @@ import {
   Trash2
 } from 'lucide-react'
 import '../admin.css'
-import { getChildren, deleteChild, BackendChild } from '../services/api'
+import { getChildren, deleteChild, updateChildCenter, BackendChild } from '../services/api'
 import { useAdminStore } from '../store/useAdminStore'
 
 const getStatusBadgeClass = (status: string) => {
@@ -84,6 +84,18 @@ export function ChildrenDirectoryPage() {
     }
   }
 
+  const handleCenterChange = async (childId: number, newCenter: string) => {
+    try {
+      const updated = await updateChildCenter(childId, newCenter)
+      if (selectedChild && selectedChild.id === childId) {
+        setSelectedChild(updated)
+      }
+      loadData()
+    } catch (err: any) {
+      alert(err.message || 'Failed to update center')
+    }
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* Page Header */}
@@ -91,14 +103,14 @@ export function ChildrenDirectoryPage() {
         <div>
           <div className="admin-page-title">Children Directory</div>
           <div className="admin-page-desc">
-            Enrolled student records across Raji Rasaki Centre & CBT Centre
+            Enrolled student records across Raji Rasaki Centre & Festac Centre
           </div>
         </div>
 
         {isAdmin && (
           <div className="admin-page-actions">
             <button className="admin-btn admin-btn-primary" onClick={() => navigate('/admin/register')}>
-              <Plus size={14} /> Register New Child
+              <Plus size={16} /> Register New Child
             </button>
           </div>
         )}
@@ -199,9 +211,16 @@ export function ChildrenDirectoryPage() {
                     </td>
 
                     <td>
-                      <span className="admin-badge admin-badge-gray" style={{ fontSize: '11px' }}>
-                        {child.center || 'Raji Rasaki Centre'}
-                      </span>
+                      <select
+                        className="admin-select"
+                        value={child.center || 'Raji Rasaki Centre'}
+                        onClick={(e) => e.stopPropagation()}
+                        onChange={(e) => handleCenterChange(child.id, e.target.value)}
+                        style={{ fontSize: '12px', padding: '0.2rem 0.5rem', height: '30px', minWidth: '150px' }}
+                      >
+                        <option value="Raji Rasaki Centre">Raji Rasaki Centre</option>
+                        <option value="Festac Centre">Festac Centre</option>
+                      </select>
                     </td>
 
                     <td style={{ fontSize: 12, color: 'var(--adm-text-2)' }}>{child.group}</td>
@@ -308,8 +327,17 @@ export function ChildrenDirectoryPage() {
                 <div style={{ fontSize: '12px', fontFamily: 'monospace', fontWeight: 700, color: 'var(--adm-accent)' }}>
                   {selectedChild.student_id}
                 </div>
-                <div style={{ fontSize: '12px', color: 'var(--adm-text-3)' }}>
-                  Center: <strong>{selectedChild.center || 'Raji Rasaki Centre'}</strong>
+                <div style={{ fontSize: '12px', color: 'var(--adm-text-3)', display: 'flex', alignItems: 'center', gap: '0.375rem', marginTop: '0.25rem' }}>
+                  <span>Center:</span>
+                  <select
+                    className="admin-select"
+                    value={selectedChild.center || 'Raji Rasaki Centre'}
+                    onChange={(e) => handleCenterChange(selectedChild.id, e.target.value)}
+                    style={{ fontSize: '11px', height: '24px', padding: '0 0.375rem' }}
+                  >
+                    <option value="Raji Rasaki Centre">Raji Rasaki Centre</option>
+                    <option value="Festac Centre">Festac Centre</option>
+                  </select>
                 </div>
               </div>
             </div>
