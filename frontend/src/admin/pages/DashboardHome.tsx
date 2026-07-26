@@ -374,20 +374,18 @@ export function DashboardHome() {
               activities.map((act) => (
                 <div key={act.id} className="admin-activity-item">
                   <div
-                    className={`admin-activity-dot ${
-                      act.status === 'Checked Out'
-                        ? 'admin-activity-dot-accent'
-                        : act.status === 'Checked In'
-                        ? 'admin-activity-dot-accent'
-                        : ''
-                    }`}
+                    className="admin-activity-dot"
+                    style={{
+                      background: act.status === 'Checked Out' ? 'var(--adm-success, #16A34A)' : 'var(--adm-accent, #C40000)',
+                      boxShadow: act.status === 'Checked Out' ? '0 0 8px rgba(22, 163, 74, 0.4)' : '0 0 8px rgba(196, 0, 0, 0.4)'
+                    }}
                   />
                   <div>
                     <div className="admin-activity-title">
-                      <strong>{act.child_name}</strong> ({act.student_id}) — {act.status}. PIN: #{act.pickup_pin}
+                      <strong>{act.child_name}</strong> ({act.student_id}) — <span style={{ fontWeight: 700, color: act.status === 'Checked Out' ? 'var(--adm-success, #16A34A)' : 'var(--adm-accent, #C40000)' }}>{act.status}</span>. PIN: #{act.pickup_pin || '—'}
                     </div>
                     <div className="admin-activity-meta">
-                      Triggered By: <strong style={{ color: 'var(--adm-text-1)' }}>{act.instructor_name || 'Administrator'}</strong> · {act.check_in_time || act.date}
+                      Triggered By: <strong style={{ color: 'var(--adm-text-1)' }}>{act.instructor_name || 'Administrator'}</strong> · {act.status === 'Checked Out' ? act.check_out_time || act.date : act.check_in_time || act.date} {act.pickup_adult ? `(Released to ${act.pickup_adult})` : act.drop_off_adult ? `(Dropped off by ${act.drop_off_adult})` : ''}
                     </div>
                   </div>
                 </div>

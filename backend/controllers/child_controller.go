@@ -330,19 +330,28 @@ func CheckOutChild(c *gin.Context) {
 		return
 	}
 
-	updates := map[string]interface{}{
-		"check_out_time": nowTime,
-		"pickup_adult":   input.Collector + " (" + input.Rel + ")",
-		"status":         "Checked Out",
-	}
-	if input.InstructorName != "" {
-		updates["check_out_instructor"] = input.InstructorName
+	instructor := input.InstructorName
+	if instructor == "" {
+		instructor = "Administrator"
 	}
 
-	// Update Attendance Log
-	config.DB.Model(&models.AttendanceLog{}).
-		Where("student_id = ? AND date = ?", child.StudentID, time.Now().Format("2006-01-02")).
-		Updates(updates)
+	// Create a new distinct Attendance Log Entry for the Check-Out event
+	logEntry := models.AttendanceLog{
+		Date:               time.Now().Format("2006-01-02"),
+		StudentID:          child.StudentID,
+		ChildName:          child.FullName,
+		Photo:              child.Photo,
+		Center:             child.Center,
+		Group:              child.Group,
+		CheckInTime:        child.CheckInTime,
+		CheckOutTime:       nowTime,
+		PickupAdult:        input.Collector + " (" + input.Rel + ")",
+		PickupPin:          child.ActiveCode,
+		InstructorName:     instructor,
+		CheckOutInstructor: instructor,
+		Status:             "Checked Out",
+	}
+	config.DB.Create(&logEntry)
 
 	c.JSON(http.StatusOK, gin.H{
 		"message":      "Pickup PIN verified! Child safely released.",
