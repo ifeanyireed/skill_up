@@ -141,23 +141,45 @@ export async function deleteChild(id: number | string): Promise<{ message: strin
 }
 
 export async function updateChildCenter(id: number | string, center: string): Promise<BackendChild> {
-  const res = await fetch(`${API_BASE_URL}/children/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ center }),
-  })
-  const text = await res.text()
-  if (!res.ok) {
-    let errorMsg = 'Failed to update student center'
-    try {
-      const err = JSON.parse(text)
-      errorMsg = err.error || errorMsg
-    } catch {
-      if (text) errorMsg = text
-    }
-    throw new Error(errorMsg)
+  if (!id || id === 'undefined' || id === 'null') {
+    throw new Error('Invalid student ID for update')
   }
-  return JSON.parse(text)
+
+  const endpoints = [
+    { url: `${API_BASE_URL}/children/${id}`, method: 'PUT' },
+    { url: `${API_BASE_URL}/children/${id}/update`, method: 'POST' },
+    { url: `${API_BASE_URL}/children/update/${id}`, method: 'POST' },
+  ]
+
+  let lastRes: Response | null = null
+  for (const ep of endpoints) {
+    try {
+      const res = await fetch(ep.url, {
+        method: ep.method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ center }),
+      })
+      lastRes = res
+      if (res.ok) {
+        return res.json()
+      }
+      if (res.status !== 404 && res.status !== 405) {
+        break
+      }
+    } catch (e) {
+      console.warn(`Update center via ${ep.method} ${ep.url} failed`, e)
+    }
+  }
+
+  const text = lastRes ? await lastRes.text() : ''
+  let errorMsg = 'Failed to update student center'
+  try {
+    const err = JSON.parse(text)
+    errorMsg = err.error || errorMsg
+  } catch {
+    if (text) errorMsg = text
+  }
+  throw new Error(errorMsg)
 }
 
 export async function updateChildStatus(id: number | string, status: string, instructorName?: string): Promise<BackendChild> {
