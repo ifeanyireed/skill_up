@@ -3,7 +3,16 @@
 // Supports Center selection: Raji Rasaki Centre & CBT Centre
 // ============================================================================
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api'
+const getApiBaseUrl = () => {
+  let url = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || import.meta.env.NEXT_PUBLIC_API_URL
+  if (url) {
+    url = url.replace(/\/+$/, '')
+    return url
+  }
+  return 'http://localhost:8080/api'
+}
+
+const API_BASE_URL = getApiBaseUrl()
 
 export interface BackendChild {
   id: number
@@ -90,8 +99,18 @@ export async function createChild(data: Partial<BackendChild>): Promise<BackendC
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   })
-  if (!res.ok) throw new Error('Failed to create child record')
-  return res.json()
+  const text = await res.text()
+  if (!res.ok) {
+    let errorMsg = 'Failed to create child record'
+    try {
+      const err = JSON.parse(text)
+      errorMsg = err.error || errorMsg
+    } catch {
+      if (text) errorMsg = text
+    }
+    throw new Error(errorMsg)
+  }
+  return JSON.parse(text)
 }
 
 export async function deleteChild(id: number | string): Promise<{ message: string }> {
