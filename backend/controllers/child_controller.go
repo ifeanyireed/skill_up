@@ -143,7 +143,7 @@ func UpdateChildStatus(c *gin.Context) {
 		"status": input.Status,
 	}
 	if input.InstructorName != "" {
-		updates["instructor_name"] = input.InstructorName
+		updates["check_out_instructor"] = input.InstructorName
 	}
 
 	// Sync status to Attendance Log for today
@@ -336,7 +336,7 @@ func CheckOutChild(c *gin.Context) {
 		"status":         "Checked Out",
 	}
 	if input.InstructorName != "" {
-		updates["instructor_name"] = input.InstructorName
+		updates["check_out_instructor"] = input.InstructorName
 	}
 
 	// Update Attendance Log

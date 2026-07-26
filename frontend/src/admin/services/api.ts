@@ -53,6 +53,7 @@ export interface BackendAttendanceLog {
   pickup_adult: string
   pickup_pin: string
   instructor_name: string
+  check_out_instructor?: string
   status: string
 }
 
