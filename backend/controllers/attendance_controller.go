@@ -55,13 +55,19 @@ func ExportAttendanceCSV(c *gin.Context) {
 	// Write CSV Header
 	w.Write([]string{
 		"Date", "Student ID", "Child Name", "Group", "Status",
-		"Check-In Time", "Drop-Off Adult", "Check-Out Time", "Pickup Adult", "PIN Code", "Instructor",
+		"Check-In Time", "Drop-Off Adult", "Check-In Triggered By",
+		"Check-Out Time", "Pickup Adult", "Check-Out Triggered By", "PIN Code",
 	})
 
 	for _, l := range logs {
+		checkOutStaff := l.CheckOutInstructor
+		if checkOutStaff == "" && l.CheckOutTime != "" {
+			checkOutStaff = l.InstructorName
+		}
 		w.Write([]string{
 			l.Date, l.StudentID, l.ChildName, l.Group, l.Status,
-			l.CheckInTime, l.DropOffAdult, l.CheckOutTime, l.PickupAdult, l.PickupPin, l.InstructorName,
+			l.CheckInTime, l.DropOffAdult, l.InstructorName,
+			l.CheckOutTime, l.PickupAdult, checkOutStaff, l.PickupPin,
 		})
 	}
 	w.Flush()

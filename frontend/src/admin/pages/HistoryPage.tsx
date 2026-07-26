@@ -96,23 +96,24 @@ export function HistoryPage() {
               <th>Group</th>
               <th>Check-In</th>
               <th>Drop-Off Adult</th>
+              <th>Check-In Triggered By</th>
               <th>Check-Out</th>
               <th>Pickup Adult</th>
+              <th>Check-Out Triggered By</th>
               <th>PIN Code</th>
-              <th>Triggered By (Staff/Admin)</th>
               <th>Status</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={10} className="admin-table-empty">
+                <td colSpan={11} className="admin-table-empty">
                   <Loader2 size={16} className="animate-spin" style={{ margin: '0 auto' }} /> Loading audit logs from MySQL...
                 </td>
               </tr>
             ) : logs.length === 0 ? (
               <tr>
-                <td colSpan={10} className="admin-table-empty">
+                <td colSpan={11} className="admin-table-empty">
                   No historical logs found for date {selectedDate || 'selected filter'}
                 </td>
               </tr>
@@ -145,17 +146,23 @@ export function HistoryPage() {
 
                   <td style={{ fontSize: 12 }}>{l.drop_off_adult}</td>
 
+                  <td style={{ fontSize: 12, color: 'var(--adm-text-1)', fontWeight: 600 }}>
+                    {l.instructor_name || 'Administrator'}
+                  </td>
+
                   <td style={{ fontSize: 12, fontFamily: 'monospace', color: 'var(--adm-success)', fontWeight: 600 }}>
                     {l.check_out_time || '—'}
                   </td>
 
                   <td style={{ fontSize: 12 }}>{l.pickup_adult || '—'}</td>
 
+                  <td style={{ fontSize: 12, color: 'var(--adm-text-1)', fontWeight: 600 }}>
+                    {l.check_out_instructor || (l.check_out_time ? l.instructor_name || 'Administrator' : '—')}
+                  </td>
+
                   <td style={{ fontWeight: 700, fontFamily: 'monospace', color: 'var(--adm-accent)' }}>
                     #{l.pickup_pin}
                   </td>
-
-                  <td style={{ fontSize: 12, color: 'var(--adm-text-1)', fontWeight: 600 }}>{l.instructor_name || 'Administrator'}</td>
 
                   <td>
                     <span className={`admin-badge ${l.status === 'Checked Out' ? 'admin-badge-green' : l.status === 'Waiting Pickup' ? 'admin-badge-yellow' : 'admin-badge-accent'}`}>
