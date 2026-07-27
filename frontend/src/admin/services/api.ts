@@ -221,6 +221,7 @@ export async function checkInChild(
   center: string = 'Raji Rasaki Centre',
   instructorName?: string
 ) {
+  const localTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   const res = await fetch(`${API_BASE_URL}/children/${id}/checkin`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -230,6 +231,7 @@ export async function checkInChild(
       relationship: rel,
       notes: notes,
       center: center,
+      check_in_time: localTime,
       instructor_name: instructorName,
     }),
   })
@@ -248,6 +250,7 @@ export async function checkOutChild(
   studentID: string = '',
   instructorName?: string
 ) {
+  const localTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   const res = await fetch(`${API_BASE_URL}/children/checkout`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -257,6 +260,7 @@ export async function checkOutChild(
       collector_phone: collectorPhone,
       relationship: rel,
       student_id: studentID,
+      pickup_time: localTime,
       instructor_name: instructorName,
     }),
   })

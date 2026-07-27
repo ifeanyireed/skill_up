@@ -15,13 +15,22 @@ import (
 	"checkin-backend/models"
 )
 
+// getWATNow returns current time strictly in West Africa Time (UTC+1, Africa/Lagos)
+func getWATNow() time.Time {
+	loc, err := time.LoadLocation("Africa/Lagos")
+	if err != nil {
+		loc = time.FixedZone("WAT", 3600)
+	}
+	return time.Now().In(loc)
+}
+
 // CheckAndAutoTransitionWaitingPickup automatically transitions all "Checked In" students
 // to "Waiting Pickup" once local time reaches 14:00 (2:00 PM).
 func CheckAndAutoTransitionWaitingPickup(db *gorm.DB) {
 	if db == nil {
 		return
 	}
-	now := time.Now()
+	now := getWATNow()
 	if now.Hour() >= 14 {
 		db.Model(&models.Child{}).
 			Where("status = ?", "Checked In").
@@ -198,7 +207,7 @@ func UpdateChild(c *gin.Context) {
 
 	// Sync center update to active attendance log for today
 	config.DB.Model(&models.AttendanceLog{}).
-		Where("student_id = ? AND date = ?", child.StudentID, time.Now().Format("2006-01-02")).
+		Where("student_id = ? AND date = ?", child.StudentID, getWATNow().Format("2006-01-02")).
 		Update("center", child.Center)
 
 	c.JSON(http.StatusOK, child)
@@ -240,11 +249,11 @@ func CheckInChild(c *gin.Context) {
 	pin := strconv.Itoa(rand.Intn(900000) + 100000)
 	nowTime := input.CheckInTime
 	if nowTime == "" {
-		nowTime = time.Now().Format("03:04 PM")
+		nowTime = getWATNow().Format("03:04 PM")
 	}
 
 	childStatus := "Checked In"
-	if time.Now().Hour() >= 14 {
+	if getWATNow().Hour() >= 14 {
 		childStatus = "Waiting Pickup"
 	}
 
@@ -264,7 +273,7 @@ func CheckInChild(c *gin.Context) {
 
 	// Record to Attendance Log
 	logEntry := models.AttendanceLog{
-		Date:           time.Now().Format("2006-01-02"),
+		Date:           getWATNow().Format("2006-01-02"),
 		StudentID:      child.StudentID,
 		ChildName:      child.FullName,
 		Photo:          child.Photo,
@@ -319,7 +328,7 @@ func CheckOutChild(c *gin.Context) {
 
 	nowTime := input.PickupTime
 	if nowTime == "" {
-		nowTime = time.Now().Format("03:04 PM")
+		nowTime = getWATNow().Format("03:04 PM")
 	}
 
 	child.Status = "Checked Out"
@@ -337,7 +346,7 @@ func CheckOutChild(c *gin.Context) {
 
 	// Create a new distinct Attendance Log Entry for the Check-Out event
 	logEntry := models.AttendanceLog{
-		Date:               time.Now().Format("2006-01-02"),
+		Date:               getWATNow().Format("2006-01-02"),
 		StudentID:          child.StudentID,
 		ChildName:          child.FullName,
 		Photo:              child.Photo,
