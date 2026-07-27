@@ -192,9 +192,9 @@ func main() {
 			medicalNotes = extraNotes
 		}
 
-		// Check if record exists by name or parent phone
+		// Check if record exists strictly by student full name
 		var existing models.Child
-		err := db.Where("LOWER(full_name) = LOWER(?) OR parent_phone = ?", studentName, parentPhone).First(&existing).Error
+		err := db.Where("LOWER(TRIM(full_name)) = LOWER(TRIM(?))", studentName).First(&existing).Error
 		if err == nil {
 			// Update existing record with Title Case name
 			existing.FullName = studentName
