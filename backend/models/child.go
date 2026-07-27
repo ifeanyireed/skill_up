@@ -22,7 +22,19 @@ type Child struct {
 	ParentRelationship string         `gorm:"type:varchar(50)" json:"parent_relationship"`
 	EmergencyName      string         `gorm:"type:varchar(150)" json:"emergency_name"`
 	EmergencyPhone     string         `gorm:"type:varchar(50)" json:"emergency_phone"`
-	MedicalNotes       string         `gorm:"type:text" json:"medical_notes"`
+	SchoolName         string         `gorm:"type:varchar(150)" json:"school_name"`
+	CurrentGrade       string         `gorm:"type:varchar(100)" json:"current_grade"`
+	AltPhone           string         `gorm:"type:varchar(50)" json:"alt_phone"`
+	HomeAddress        string         `gorm:"type:varchar(255)" json:"home_address"`
+	SeniorTrack        string         `gorm:"type:varchar(150)" json:"senior_track"`
+	OwnsDevice         string         `gorm:"type:varchar(10)" json:"owns_device"`
+	DeviceType         string         `gorm:"type:varchar(50)" json:"device_type"`
+	AmountPaid         float64        `gorm:"type:decimal(10,2)" json:"amount_paid"`
+	PaymentStatus      string         `gorm:"type:varchar(50)" json:"payment_status"`
+	PaymentDate        string         `gorm:"type:varchar(50)" json:"payment_date"`
+	ReferralSource     string         `gorm:"type:varchar(100)" json:"referral_source"`
+	AdditionalNotes    string         `gorm:"type:text" json:"additional_notes"`
+	ConsentGiven       bool           `gorm:"default:true" json:"consent_given"`
 	Status             string         `gorm:"type:varchar(50);default:'Not Checked In'" json:"status"`
 	ActiveCode         string         `gorm:"type:varchar(10)" json:"active_code"`
 	CheckInTime        string         `gorm:"type:varchar(50)" json:"check_in_time"`

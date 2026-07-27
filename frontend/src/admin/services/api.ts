@@ -31,6 +31,19 @@ export interface BackendChild {
   emergency_name: string
   emergency_phone: string
   medical_notes: string
+  school_name?: string
+  current_grade?: string
+  alt_phone?: string
+  home_address?: string
+  senior_track?: string
+  owns_device?: string
+  device_type?: string
+  amount_paid?: number
+  payment_status?: string
+  payment_date?: string
+  referral_source?: string
+  additional_notes?: string
+  consent_given?: boolean
   status: 'Not Checked In' | 'Checked In' | 'Waiting Pickup' | 'Checked Out'
   active_code: string
   check_in_time: string

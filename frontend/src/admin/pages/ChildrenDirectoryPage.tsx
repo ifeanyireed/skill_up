@@ -357,7 +357,7 @@ export function ChildrenDirectoryPage() {
             </div>
 
             {/* Medical Notes */}
-            {selectedChild.medical_notes && (
+            {selectedChild.medical_notes && selectedChild.medical_notes !== 'None' && (
               <div className="admin-alert admin-alert-warning">
                 <ShieldAlert size={16} />
                 <div>
@@ -366,6 +366,21 @@ export function ChildrenDirectoryPage() {
                 </div>
               </div>
             )}
+
+            {/* School & Camp Info */}
+            <div style={{ padding: '0.875rem', background: 'var(--adm-surface-2)', borderRadius: 'var(--adm-radius-sm)', border: '1px solid var(--adm-border)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', color: 'var(--adm-text-3)' }}>Camp & Academic Details</div>
+              <div style={{ fontSize: 13, color: 'var(--adm-text-1)', fontWeight: 600 }}>Camp Group: <strong>{selectedChild.group}</strong></div>
+              {selectedChild.senior_track && selectedChild.senior_track !== 'N/A - Junior Camp' && (
+                <div style={{ fontSize: 12, color: 'var(--adm-accent)', fontWeight: 700 }}>Senior Track: {selectedChild.senior_track}</div>
+              )}
+              {selectedChild.school_name && (
+                <div style={{ fontSize: 12, color: 'var(--adm-text-2)' }}>School: {selectedChild.school_name} ({selectedChild.current_grade || 'N/A'})</div>
+              )}
+              {selectedChild.owns_device && (
+                <div style={{ fontSize: 12, color: 'var(--adm-text-2)' }}>Owns Device: {selectedChild.owns_device} ({selectedChild.device_type || 'N/A'})</div>
+              )}
+            </div>
 
             {/* Guardian Info */}
             <div>
@@ -376,9 +391,24 @@ export function ChildrenDirectoryPage() {
               <div style={{ fontSize: 12, color: 'var(--adm-text-2)', display: 'flex', alignItems: 'center', gap: 6, marginTop: 4 }}>
                 <Phone size={12} /> {selectedChild.parent_phone} ({selectedChild.parent_relationship})
               </div>
+              {selectedChild.alt_phone && (
+                <div style={{ fontSize: 12, color: 'var(--adm-text-2)', display: 'flex', alignItems: 'center', gap: 6, marginTop: 4 }}>
+                  <Phone size={12} /> Alt: {selectedChild.alt_phone}
+                </div>
+              )}
               {selectedChild.parent_email && (
                 <div style={{ fontSize: 12, color: 'var(--adm-text-2)', display: 'flex', alignItems: 'center', gap: 6, marginTop: 4 }}>
                   <Mail size={12} /> {selectedChild.parent_email}
+                </div>
+              )}
+              {selectedChild.home_address && (
+                <div style={{ fontSize: 12, color: 'var(--adm-text-2)', marginTop: 4 }}>
+                  Address: {selectedChild.home_address}
+                </div>
+              )}
+              {selectedChild.payment_status && (
+                <div style={{ fontSize: 12, color: '#16A34A', fontWeight: 700, marginTop: 6 }}>
+                  Payment: {selectedChild.payment_status} (₦{selectedChild.amount_paid ? selectedChild.amount_paid.toLocaleString() : '0'})
                 </div>
               )}
             </div>

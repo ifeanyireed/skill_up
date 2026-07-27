@@ -1,7 +1,6 @@
 // ============================================================================
-// Skill Up Academy — Public Parent Child Registration Page
-// Enables parents to register children, select from 20 Character Avatars or optional custom photo upload
-// Features Center Selection: 1. Raji Rasaki Centre  2. CBT Centre
+// Skill Up Academy — Summer Tech Camp 2026 Registration Portal
+// Aligned with Google Form: SKILLUP ACADEMY SUMMER TECH CAMP 2026
 // ============================================================================
 import React, { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -14,7 +13,10 @@ import {
   ShieldCheck,
   Building2,
   UserCheck,
-  Upload
+  Upload,
+  Sparkles,
+  HelpCircle,
+  FileCheck
 } from 'lucide-react'
 import { createChild } from '../admin/services/api'
 
@@ -24,30 +26,56 @@ export function ParentRegistrationPage() {
   const navigate = useNavigate()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Child Info
+  // 1. Student Information
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [age, setAge] = useState<number>(7)
   const [dob, setDob] = useState('2019-04-15')
-  const [gender, setGender] = useState('Boy')
+  const [gender, setGender] = useState('Male')
+  const [schoolName, setSchoolName] = useState('')
+  const [currentGrade, setCurrentGrade] = useState('')
   const [center, setCenter] = useState('Raji Rasaki Centre')
-  const [group, setGroup] = useState('Junior Champions (Ages 11-19)')
   
-  // Photo & Avatar selection (Optional)
+  // 2. Camp & Track Selection
+  const [group, setGroup] = useState('Junior Camp (5–10 years)')
+  const [seniorTrack, setSeniorTrack] = useState('Graphics Design (Corel Draw) + Robotics')
+
+  // 3. Parent / Guardian Details
+  const [parentName, setParentName] = useState('')
+  const [parentPhone, setParentPhone] = useState('')
+  const [altPhone, setAltPhone] = useState('')
+  const [parentEmail, setParentEmail] = useState('')
+  const [parentRel, setParentRel] = useState('Mother')
+  const [homeAddress, setHomeAddress] = useState('')
+
+  // 4. Device Information
+  const [ownsDevice, setOwnsDevice] = useState('Yes')
+  const [deviceType, setDeviceType] = useState('Laptop')
+
+  // 5. Payment & Health Info
+  const [amountPaid, setAmountPaid] = useState<string>('50000')
+  const [paymentStatus, setPaymentStatus] = useState('Full Payment')
+  const [paymentDate, setPaymentDate] = useState(new Date().toISOString().split('T')[0])
+  const [hasMedicalCondition, setHasMedicalCondition] = useState('No')
+  const [emergName, setEmergName] = useState('')
+  const [emergPhone, setEmergPhone] = useState('')
+  const [medicalNotes, setMedicalNotes] = useState('')
+  const [referralSource, setReferralSource] = useState('WhatsApp')
+  const [additionalNotes, setAdditionalNotes] = useState('')
+
+  // Photo & Avatar selection
   const [photoMode, setPhotoMode] = useState<'avatar' | 'upload'>('avatar')
   const [selectedAvatar, setSelectedAvatar] = useState<string>(AVATAR_CHARACTERS[0])
   const [customPhotoUrl, setCustomPhotoUrl] = useState<string>('')
 
-  // Parent Info
-  const [parentName, setParentName] = useState('')
-  const [parentPhone, setParentPhone] = useState('')
-  const [parentEmail, setParentEmail] = useState('')
-  const [parentRel, setParentRel] = useState('Mother')
-
-  // Emergency & Medical
-  const [emergName, setEmergName] = useState('')
-  const [emergPhone, setEmergPhone] = useState('')
-  const [medicalNotes, setMedicalNotes] = useState('')
+  // 6. Mandatory Consents
+  const [consents, setConsents] = useState({
+    c1: false,
+    c2: false,
+    c3: false,
+    c4: false,
+    c5: false,
+  })
 
   // Submission State
   const [submitting, setSubmitting] = useState(false)
@@ -56,7 +84,7 @@ export function ParentRegistrationPage() {
 
   const activePhoto = photoMode === 'upload' && customPhotoUrl ? customPhotoUrl : selectedAvatar
 
-  // Handle Photo File Upload / Camera Capture
+  // Handle Photo File Upload
   const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
@@ -74,30 +102,50 @@ export function ParentRegistrationPage() {
     }
   }
 
+  const allConsentsChecked = Object.values(consents).every(Boolean)
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!firstName.trim() || !lastName.trim() || !parentName.trim() || !parentPhone.trim()) {
+    if (!firstName.trim() || !parentName.trim() || !parentPhone.trim()) {
       alert('Please fill out all required fields marked with *')
+      return
+    }
+
+    if (!allConsentsChecked) {
+      alert('Please tick all mandatory consent checkboxes before submitting.')
       return
     }
 
     setSubmitting(true)
     try {
       const res = await createChild({
-        full_name: `${firstName.trim()} ${lastName.trim()}`,
+        full_name: lastName.trim() ? `${firstName.trim()} ${lastName.trim()}` : firstName.trim(),
         photo: activePhoto,
         age: Number(age),
         gender: gender,
         dob: dob,
+        school_name: schoolName.trim(),
+        current_grade: currentGrade.trim(),
         center: center,
         group: group,
+        senior_track: group.includes('Senior') ? seniorTrack : 'N/A - Junior Camp',
         parent_name: parentName.trim(),
         parent_phone: parentPhone.trim(),
+        alt_phone: altPhone.trim(),
         parent_email: parentEmail.trim(),
         parent_relationship: parentRel,
+        home_address: homeAddress.trim(),
+        owns_device: ownsDevice,
+        device_type: ownsDevice === 'Yes' ? deviceType : 'N/A',
+        amount_paid: parseFloat(amountPaid) || 0,
+        payment_status: paymentStatus,
+        payment_date: paymentDate,
         emergency_name: emergName.trim(),
         emergency_phone: emergPhone.trim(),
-        medical_notes: medicalNotes.trim(),
+        medical_notes: hasMedicalCondition === 'Yes' ? medicalNotes.trim() : 'None',
+        referral_source: referralSource,
+        additional_notes: additionalNotes.trim(),
+        consent_given: true,
       })
 
       setRegisteredStudentId(res.student_id || 'KNT-8050')
@@ -110,256 +158,108 @@ export function ParentRegistrationPage() {
   }
 
   return (
-    <div
-      style={{
-        position: 'relative',
-        minHeight: '100vh',
-        background: '#0B0E4E',
-        color: '#FFFFFF',
-        fontFamily: "'Inter', sans-serif",
-        padding: '1.5rem 1rem 3rem',
-        overflowX: 'hidden'
-      }}
-    >
-      {/* ── Background Image & Navy Gradient Overlay ── */}
-      <div aria-hidden style={{ position: 'fixed', inset: 0, zIndex: 0 }}>
-        <img
-          src="/cbt-centre.jpeg"
-          alt="CBT Centre Background"
-          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 40%' }}
-          loading="eager"
-        />
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'linear-gradient(105deg, rgba(11, 14, 78, 0.94) 0%, rgba(13, 16, 96, 0.88) 50%, rgba(11, 14, 78, 0.75) 100%)',
-          }}
-        />
-        <div
-          aria-hidden
-          style={{
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            bottom: 0,
-            width: '4px',
-            background: '#C40000',
-            zIndex: 10,
-          }}
-        />
+    <div className="parent-reg-page" style={{ background: '#F8FAFC', minHeight: '100vh', padding: '1.5rem 1rem' }}>
+      {/* Top Bar */}
+      <div style={{ maxWidth: '680px', margin: '0 auto 1rem auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <button
+          type="button"
+          onClick={() => navigate('/')}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', background: 'none', border: 'none', color: '#64748B', fontWeight: 600, fontSize: '13px', cursor: 'pointer' }}
+        >
+          <ArrowLeft size={16} /> Back to Portal Home
+        </button>
+        <span style={{ fontSize: '12px', fontWeight: 800, background: '#FEF2F2', color: '#C40000', padding: '0.35rem 0.75rem', borderRadius: '16px', border: '1px solid #FCA5A5' }}>
+          Summer Tech Camp 2026
+        </span>
       </div>
 
-      <div style={{ position: 'relative', zIndex: 1, maxWidth: '680px', margin: '0 auto' }}>
-        {/* Header Branding */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <img
-              src="/logo.avif"
-              alt="Skill Up Academy"
-              style={{ height: '40px', width: 'auto', filter: 'brightness(0) invert(1) drop-shadow(0 2px 8px rgba(0,0,0,0.5))' }}
-            />
-          </div>
-          <button
-            onClick={() => navigate('/login')}
-            style={{
-              background: 'rgba(255,255,255,0.12)',
-              border: '1px solid rgba(255,255,255,0.25)',
-              color: '#fff',
-              padding: '0.4rem 0.875rem',
-              borderRadius: '6px',
-              fontSize: '12px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.375rem',
-              backdropFilter: 'blur(8px)'
-            }}
-          >
-            <ArrowLeft size={13} /> Staff Portal
-          </button>
+      {/* Main Registration Card */}
+      <div style={{ maxWidth: '680px', margin: '0 auto', background: '#FFFFFF', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.06)', border: '1px solid #E2E8F0', padding: '1.75rem' }}>
+        
+        {/* Banner Header */}
+        <div style={{ textAlign: 'center', marginBottom: '1.5rem', borderBottom: '2px solid #FEF2F2', paddingBottom: '1rem' }}>
+          <h1 style={{ fontSize: '22px', fontWeight: 900, color: '#C40000', margin: '0 0 0.35rem 0', textTransform: 'uppercase', letterSpacing: '-0.02em' }}>
+            SKILLUP ACADEMY SUMMER TECH CAMP 2026
+          </h1>
+          <p style={{ fontSize: '13.5px', color: '#475569', margin: 0, lineHeight: '1.5', maxWidth: '540px', marginLeft: 'auto', marginRight: 'auto' }}>
+            A 4-week hands-on Summer Camp designed for children aged 5–17+, focused on practical learning in technology, creativity, and digital skills.
+          </p>
         </div>
 
         {submitted ? (
-          /* SUCCESS CONFIRMATION PASS */
-          <div
-            style={{
-              background: '#FFFFFF',
-              color: '#0F172A',
-              borderRadius: '12px',
-              padding: '2rem 1.5rem',
-              textAlign: 'center',
-              boxShadow: '0 24px 64px rgba(0,0,0,0.5)',
-              animation: 'adminSlideUp 0.3s ease'
-            }}
-          >
-            <div
-              style={{
-                width: '60px',
-                height: '60px',
-                borderRadius: '50%',
-                background: 'rgba(22, 163, 74, 0.1)',
-                color: '#16A34A',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 1rem'
-              }}
-            >
-              <CheckCircle2 size={36} />
+          /* SUCCESS SCREEN */
+          <div style={{ textAlign: 'center', padding: '2rem 1rem' }}>
+            <div style={{ width: '64px', height: '64px', background: '#DCFCE7', color: '#16A34A', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem auto' }}>
+              <CheckCircle2 size={38} />
             </div>
-
-            <span
-              style={{
-                background: 'rgba(22, 163, 74, 0.12)',
-                color: '#16A34A',
-                fontSize: '11px',
-                fontWeight: 700,
-                padding: '4px 12px',
-                borderRadius: '20px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em'
-              }}
-            >
-              STUDENT REGISTRATION COMPLETE
-            </span>
-
-            <h2 style={{ fontSize: '22px', fontWeight: 800, marginTop: '0.75rem', color: '#0F172A' }}>
-              Welcome, {firstName}!
+            <h2 style={{ fontSize: '22px', fontWeight: 800, color: '#0F172A', marginBottom: '0.5rem' }}>
+              Registration Successfully Submitted!
             </h2>
-            <p style={{ fontSize: '13px', color: '#64748B', marginTop: '0.25rem' }}>
-              Registered at <strong>{center}</strong>
+            <p style={{ fontSize: '14px', color: '#475569', maxWidth: '440px', margin: '0 auto 1.5rem auto' }}>
+              Your child has been enrolled in the SkillUp Academy Summer Tech Camp 2026.
             </p>
 
-            {/* Parent Digital Pass */}
-            <div
-              style={{
-                margin: '1.5rem 0',
-                padding: '1.25rem',
-                background: '#F8FAFC',
-                border: '2px dashed #C40000',
-                borderRadius: '10px',
-                textAlign: 'left'
-              }}
-            >
-              <div style={{ fontSize: '10px', fontWeight: 800, color: '#C40000', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                DIGITAL STUDENT ID PASS — {center.toUpperCase()}
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '0.75rem' }}>
-                <img
-                  src={activePhoto}
-                  alt={firstName}
-                  style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #C40000' }}
-                />
+            {/* Generated Student Card */}
+            <div style={{ background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)', color: '#FFF', borderRadius: '14px', padding: '1.5rem', margin: '0 auto 1.5rem auto', maxWidth: '400px', textAlign: 'left', boxShadow: '0 12px 28px rgba(15,23,42,0.18)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
+                <img src={activePhoto} alt="Student avatar" style={{ width: '60px', height: '60px', borderRadius: '50%', objectFit: 'cover', border: '2.5px solid #C40000' }} />
                 <div>
-                  <div style={{ fontSize: '16px', fontWeight: 700 }}>{firstName} {lastName}</div>
-                  <div style={{ fontSize: '13px', fontFamily: 'monospace', fontWeight: 700, color: '#C40000' }}>
-                    Student ID: {registeredStudentId}
-                  </div>
-                  <div style={{ fontSize: '12px', color: '#64748B' }}>{center} • {group}</div>
+                  <div style={{ fontSize: '17px', fontWeight: 800 }}>{firstName} {lastName}</div>
+                  <div style={{ fontSize: '12.5px', color: '#94A3B8' }}>{group} · {center}</div>
+                  {group.includes('Senior') && (
+                    <div style={{ fontSize: '11.5px', color: '#38BDF8', marginTop: '3px', fontWeight: 600 }}>Track: {seniorTrack}</div>
+                  )}
                 </div>
               </div>
-            </div>
-
-            <div style={{ fontSize: '12px', color: '#475569', marginBottom: '1.5rem', lineHeight: 1.5 }}>
-              💡 <strong>Morning Drop-Off Instructions:</strong> State your child's name or Student ID (<strong>{registeredStudentId}</strong>) at the reception desk at <strong>{center}</strong> to receive your daily 6-digit pickup PIN.
+              <div style={{ background: 'rgba(255,255,255,0.08)', borderRadius: '10px', padding: '0.875rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid rgba(255,255,255,0.1)' }}>
+                <div>
+                  <div style={{ fontSize: '10.5px', textTransform: 'uppercase', color: '#94A3B8', fontWeight: 700, letterSpacing: '0.05em' }}>Official Student ID</div>
+                  <div style={{ fontSize: '20px', fontWeight: 900, letterSpacing: '0.05em', color: '#FACC15' }}>{registeredStudentId}</div>
+                </div>
+                <UserCheck size={32} color="#FACC15" />
+              </div>
             </div>
 
             <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
               <button
+                type="button"
                 onClick={() => window.print()}
-                style={{
-                  background: '#F1F5F9',
-                  border: '1px solid #CBD5E1',
-                  color: '#334155',
-                  padding: '0.625rem 1.25rem',
-                  borderRadius: '6px',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.375rem'
-                }}
+                style={{ padding: '0.65rem 1.25rem', borderRadius: '8px', border: '1px solid #CBD5E1', background: '#FFF', fontSize: '13.5px', fontWeight: 700, color: '#334155', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.375rem' }}
               >
-                <Printer size={15} /> Print Pass
+                <Printer size={16} /> Print Registration Slip
               </button>
               <button
+                type="button"
                 onClick={() => {
                   setSubmitted(false)
-                  setCustomPhotoUrl('')
                   setFirstName('')
                   setLastName('')
                 }}
-                style={{
-                  background: '#C40000',
-                  color: '#fff',
-                  border: 'none',
-                  padding: '0.625rem 1.25rem',
-                  borderRadius: '6px',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  cursor: 'pointer'
-                }}
+                style={{ padding: '0.65rem 1.25rem', borderRadius: '8px', border: 'none', background: '#C40000', fontSize: '13.5px', fontWeight: 700, color: '#FFF', cursor: 'pointer' }}
               >
                 Register Another Child
               </button>
             </div>
           </div>
         ) : (
-          /* PARENT REGISTRATION FORM CARD */
-          <form
-            onSubmit={handleSubmit}
-            style={{
-              background: '#FFFFFF',
-              color: '#0F172A',
-              borderRadius: '12px',
-              padding: '1.75rem 1.5rem',
-              boxShadow: '0 24px 64px rgba(0,0,0,0.5)',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '1.25rem'
-            }}
-          >
-            <div>
-              <h1 style={{ fontSize: '20px', fontWeight: 800, color: '#0F172A', margin: 0 }}>
-                Child Registration Portal
-              </h1>
-              <p style={{ fontSize: '13px', color: '#64748B', marginTop: '0.25rem' }}>
-                Select your training center, pick a character avatar or upload a custom photo.
-              </p>
-            </div>
-
-            {/* AVATAR SELECTOR / OPTIONAL PHOTO UPLOAD */}
-            <div
-              style={{
-                border: '1px solid #E2E8F0',
-                borderRadius: '10px',
-                padding: '1rem',
-                background: '#F8FAFC'
-              }}
-            >
+          /* REGISTRATION FORM */
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.35rem' }}>
+            
+            {/* AVATAR / PHOTO SELECTOR */}
+            <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '10px', padding: '1rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                <label style={{ fontSize: '12px', fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  Student Photo / Avatar (Optional)
+                <label style={{ fontSize: '12.5px', fontWeight: 700, color: '#0F172A', display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                  <Camera size={16} color="#C40000" /> Student Profile Photo / Avatar (Optional)
                 </label>
-                <div style={{ display: 'flex', gap: '4px', background: '#E2E8F0', padding: '3px', borderRadius: '6px' }}>
+
+                {/* Photo mode toggle */}
+                <div style={{ display: 'flex', gap: '0.25rem', background: '#E2E8F0', padding: '2px', borderRadius: '6px' }}>
                   <button
                     type="button"
                     onClick={() => setPhotoMode('avatar')}
-                    style={{
-                      padding: '4px 10px',
-                      fontSize: '11px',
-                      fontWeight: 700,
-                      borderRadius: '4px',
-                      border: 'none',
-                      cursor: 'pointer',
-                      background: photoMode === 'avatar' ? '#C40000' : 'transparent',
-                      color: photoMode === 'avatar' ? '#FFFFFF' : '#475569'
-                    }}
+                    style={{ border: 'none', background: photoMode === 'avatar' ? '#FFF' : 'transparent', color: photoMode === 'avatar' ? '#C40000' : '#64748B', padding: '3px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 700, cursor: 'pointer' }}
                   >
-                    <UserCheck size={12} style={{ display: 'inline', marginRight: '4px' }} /> Pick Avatar
+                    Preset Character
                   </button>
                   <button
                     type="button"
@@ -367,184 +267,89 @@ export function ParentRegistrationPage() {
                       setPhotoMode('upload')
                       fileInputRef.current?.click()
                     }}
-                    style={{
-                      padding: '4px 10px',
-                      fontSize: '11px',
-                      fontWeight: 700,
-                      borderRadius: '4px',
-                      border: 'none',
-                      cursor: 'pointer',
-                      background: photoMode === 'upload' ? '#C40000' : 'transparent',
-                      color: photoMode === 'upload' ? '#FFFFFF' : '#475569'
-                    }}
+                    style={{ border: 'none', background: photoMode === 'upload' ? '#FFF' : 'transparent', color: photoMode === 'upload' ? '#C40000' : '#64748B', padding: '3px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 700, cursor: 'pointer' }}
                   >
-                    <Upload size={12} style={{ display: 'inline', marginRight: '4px' }} /> Upload Photo
+                    Upload Photo
                   </button>
                 </div>
               </div>
 
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                capture="environment"
-                onChange={handlePhotoSelect}
-                style={{ display: 'none' }}
-              />
-
               {photoMode === 'avatar' ? (
-                <div>
-                  <div style={{ fontSize: '11px', color: '#64748B', marginBottom: '0.75rem' }}>
-                    Select an official SkillUp character avatar for your child:
-                  </div>
-
-                  {/* 20 Character Avatars Grid */}
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(auto-fill, minmax(52px, 1fr))',
-                      gap: '0.5rem',
-                      maxHeight: '180px',
-                      overflowY: 'auto',
-                      padding: '4px',
-                      background: '#FFFFFF',
-                      borderRadius: '8px',
-                      border: '1px solid #CBD5E1'
-                    }}
-                  >
-                    {AVATAR_CHARACTERS.map((avatarPath, index) => {
-                      const isSelected = selectedAvatar === avatarPath
-                      return (
-                        <button
-                          key={avatarPath}
-                          type="button"
-                          onClick={() => {
-                            setSelectedAvatar(avatarPath)
-                            setPhotoMode('avatar')
-                          }}
-                          style={{
-                            padding: 0,
-                            border: isSelected ? '3px solid #C40000' : '2px solid transparent',
-                            borderRadius: '50%',
-                            background: 'none',
-                            cursor: 'pointer',
-                            transition: 'transform 0.15s ease',
-                            transform: isSelected ? 'scale(1.1)' : 'scale(1)',
-                            outline: 'none'
-                          }}
-                          title={`Character Avatar ${index + 1}`}
-                        >
-                          <img
-                            src={avatarPath}
-                            alt={`Avatar ${index + 1}`}
-                            style={{
-                              width: '48px',
-                              height: '48px',
-                              borderRadius: '50%',
-                              objectFit: 'cover',
-                              display: 'block'
-                            }}
-                          />
-                        </button>
-                      )
-                    })}
-                  </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(10, 1fr)', gap: '6px', maxHeight: '110px', overflowY: 'auto', paddingRight: '4px' }}>
+                  {AVATAR_CHARACTERS.map((avatar, idx) => (
+                    <img
+                      key={idx}
+                      src={avatar}
+                      alt={`Character ${idx + 1}`}
+                      onClick={() => setSelectedAvatar(avatar)}
+                      style={{
+                        width: '100%',
+                        aspectRatio: '1',
+                        borderRadius: '50%',
+                        objectFit: 'cover',
+                        cursor: 'pointer',
+                        border: selectedAvatar === avatar ? '3px solid #C40000' : '1.5px solid #CBD5E1',
+                        opacity: selectedAvatar === avatar ? 1 : 0.75,
+                        transform: selectedAvatar === avatar ? 'scale(1.08)' : 'scale(1)',
+                        transition: 'all 0.15s ease'
+                      }}
+                    />
+                  ))}
                 </div>
               ) : (
-                /* Custom Photo Upload Box */
-                <div
-                  style={{
-                    border: '2px dashed #CBD5E1',
-                    borderRadius: '8px',
-                    padding: '1rem',
-                    textAlign: 'center',
-                    background: '#FFFFFF',
-                    cursor: 'pointer'
-                  }}
-                  onClick={() => fileInputRef.current?.click()}
-                >
+                <div style={{ textAlign: 'center', padding: '0.75rem', border: '1.5px dashed #CBD5E1', borderRadius: '6px', background: '#FFF' }}>
+                  <input ref={fileInputRef} type="file" accept="image/*" onChange={handlePhotoSelect} style={{ display: 'none' }} />
                   {customPhotoUrl ? (
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-                      <img
-                        src={customPhotoUrl}
-                        alt="Child preview"
-                        style={{ width: '72px', height: '72px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #C40000' }}
-                      />
-                      <span style={{ fontSize: '12px', fontWeight: 600, color: '#C40000' }}>✓ Custom Photo Uploaded — Tap to Change</span>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem' }}>
+                      <img src={customPhotoUrl} alt="Uploaded preview" style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #C40000' }} />
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        style={{ padding: '4px 10px', borderRadius: '4px', border: '1px solid #CBD5E1', background: '#F8FAFC', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}
+                      >
+                        Change Photo
+                      </button>
                     </div>
                   ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.375rem' }}>
-                      <div
-                        style={{
-                          width: '42px',
-                          height: '42px',
-                          borderRadius: '50%',
-                          background: 'rgba(196, 0, 0, 0.08)',
-                          color: '#C40000',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}
-                      >
-                        <Camera size={20} />
-                      </div>
-                      <div style={{ fontSize: '12px', fontWeight: 700, color: '#0F172A' }}>
-                        Tap to Upload Custom Photo
-                      </div>
-                      <div style={{ fontSize: '11px', color: '#64748B' }}>
-                        Supports JPG, PNG from device camera or photo library
-                      </div>
-                    </div>
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      style={{ border: 'none', background: 'transparent', color: '#64748B', fontSize: '12px', fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.375rem' }}
+                    >
+                      <Upload size={16} /> Click to select or capture student photo
+                    </button>
                   )}
                 </div>
               )}
 
-              {/* Active Selected Preview */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.875rem', paddingTop: '0.75rem', borderTop: '1px solid #E2E8F0' }}>
-                <img
-                  src={activePhoto}
-                  alt="Selected avatar preview"
-                  style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #C40000' }}
-                />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.75rem', paddingTop: '0.5rem', borderTop: '1px solid #E2E8F0' }}>
+                <img src={activePhoto} alt="Selected avatar preview" style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #C40000' }} />
                 <div>
-                  <div style={{ fontSize: '12px', fontWeight: 700, color: '#0F172A' }}>
-                    Active Student Pass Image
-                  </div>
-                  <div style={{ fontSize: '11px', color: '#64748B' }}>
+                  <div style={{ fontSize: '11.5px', fontWeight: 700, color: '#0F172A' }}>Active Student Image</div>
+                  <div style={{ fontSize: '10.5px', color: '#64748B' }}>
                     {photoMode === 'avatar' ? `Selected Preset Avatar (#${AVATAR_CHARACTERS.indexOf(selectedAvatar) + 1})` : 'Custom Uploaded Photo'}
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Section 1: Child Basic Info */}
+            {/* SECTION 1: STUDENT INFORMATION */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
               <div style={{ fontSize: '12px', fontWeight: 800, color: '#C40000', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                1. Child Information & Center Location
+                1. Student Information
               </div>
 
-              {/* CENTER LOCATION SELECTOR */}
               <div>
                 <label style={{ fontSize: '12px', fontWeight: 700, color: '#0F172A', display: 'flex', alignItems: 'center', gap: '0.375rem', marginBottom: '4px' }}>
-                  <Building2 size={14} color="#C40000" /> Select Training Center *
+                  <Building2 size={14} color="#C40000" /> Preferred Centre *
                 </label>
                 <select
                   value={center}
                   onChange={(e) => setCenter(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '0.625rem',
-                    borderRadius: '6px',
-                    border: '2px solid #C40000',
-                    fontSize: '13.5px',
-                    fontWeight: 700,
-                    outline: 'none',
-                    background: '#FEF2F2',
-                    color: '#0F172A'
-                  }}
+                  style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '2px solid #C40000', fontSize: '13.5px', fontWeight: 700, outline: 'none', background: '#FEF2F2', color: '#0F172A' }}
                 >
-                  <option value="Raji Rasaki Centre">1. Raji Rasaki Centre</option>
-                  <option value="Festac Centre">2. Festac Centre</option>
+                  <option value="Raji Rasaki Centre">Raji Rasaki Centre</option>
+                  <option value="Festac Centre">Festac Centre</option>
                 </select>
               </div>
 
@@ -559,35 +364,20 @@ export function ParentRegistrationPage() {
                     placeholder="e.g. Leo"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '0.625rem',
-                      borderRadius: '6px',
-                      border: '1px solid #CBD5E1',
-                      fontSize: '13.5px',
-                      outline: 'none'
-                    }}
+                    style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px', outline: 'none' }}
                   />
                 </div>
 
                 <div>
                   <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
-                    Last Name *
+                    Last Name
                   </label>
                   <input
                     type="text"
-                    required
                     placeholder="e.g. Vance"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '0.625rem',
-                      borderRadius: '6px',
-                      border: '1px solid #CBD5E1',
-                      fontSize: '13.5px',
-                      outline: 'none'
-                    }}
+                    style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px', outline: 'none' }}
                   />
                 </div>
               </div>
@@ -595,96 +385,80 @@ export function ParentRegistrationPage() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
                 <div>
                   <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
-                    Age *
+                    Date of Birth *
                   </label>
                   <input
-                    type="number"
-                    min={2}
-                    max={18}
+                    type="date"
                     required
-                    value={age}
-                    onChange={(e) => setAge(parseInt(e.target.value) || 6)}
-                    style={{
-                      width: '100%',
-                      padding: '0.625rem',
-                      borderRadius: '6px',
-                      border: '1px solid #CBD5E1',
-                      fontSize: '13.5px',
-                      outline: 'none'
-                    }}
+                    value={dob}
+                    onChange={(e) => setDob(e.target.value)}
+                    style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '12px', outline: 'none' }}
                   />
                 </div>
 
                 <div>
                   <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
-                    Gender
+                    Age (Years) *
+                  </label>
+                  <input
+                    type="number"
+                    min={4}
+                    max={18}
+                    required
+                    value={age}
+                    onChange={(e) => setAge(parseInt(e.target.value) || 5)}
+                    style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px', outline: 'none' }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
+                    Gender *
                   </label>
                   <select
                     value={gender}
                     onChange={(e) => setGender(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '0.625rem',
-                      borderRadius: '6px',
-                      border: '1px solid #CBD5E1',
-                      fontSize: '13.5px',
-                      outline: 'none',
-                      background: '#fff'
-                    }}
+                    style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px', outline: 'none', background: '#fff' }}
                   >
-                    <option value="Boy">Boy</option>
-                    <option value="Girl">Girl</option>
-                    <option value="Other">Other</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
                   </select>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                <div>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
+                    School Name
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Corona School"
+                    value={schoolName}
+                    onChange={(e) => setSchoolName(e.target.value)}
+                    style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px', outline: 'none' }}
+                  />
                 </div>
 
                 <div>
                   <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
-                    Date of Birth
+                    Current Class / Grade
                   </label>
                   <input
-                    type="date"
-                    value={dob}
-                    onChange={(e) => setDob(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '0.625rem',
-                      borderRadius: '6px',
-                      border: '1px solid #CBD5E1',
-                      fontSize: '12px',
-                      outline: 'none'
-                    }}
+                    type="text"
+                    placeholder="e.g. Primary 4 / Basic 5"
+                    value={currentGrade}
+                    onChange={(e) => setCurrentGrade(e.target.value)}
+                    style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px', outline: 'none' }}
                   />
                 </div>
               </div>
-
-              <div>
-                <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
-                  Training Class / Group *
-                </label>
-                <select
-                  value={group}
-                  onChange={(e) => setGroup(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '0.625rem',
-                    borderRadius: '6px',
-                    border: '1px solid #CBD5E1',
-                    fontSize: '13.5px',
-                    outline: 'none',
-                    background: '#fff'
-                  }}
-                >
-                  <option value="Little Dragons (Ages 4-10)">Little Dragons (Ages 4-10)</option>
-                  <option value="Junior Champions (Ages 11-19)">Junior Champions (Ages 11-19)</option>
-                </select>
-              </div>
             </div>
 
-            {/* Section 2: Parent Information */}
+            {/* SECTION 2: PARENT / GUARDIAN INFORMATION */}
             <div style={{ borderTop: '1px solid #E2E8F0', paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
               <div style={{ fontSize: '12px', fontWeight: 800, color: '#C40000', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                2. Parent / Guardian Details
+                2. Parent / Guardian Information
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
@@ -695,17 +469,10 @@ export function ParentRegistrationPage() {
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Sarah Vance"
+                    placeholder="Parent / Guardian Name"
                     value={parentName}
                     onChange={(e) => setParentName(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '0.625rem',
-                      borderRadius: '6px',
-                      border: '1px solid #CBD5E1',
-                      fontSize: '13.5px',
-                      outline: 'none'
-                    }}
+                    style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px', outline: 'none' }}
                   />
                 </div>
 
@@ -716,15 +483,7 @@ export function ParentRegistrationPage() {
                   <select
                     value={parentRel}
                     onChange={(e) => setParentRel(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '0.625rem',
-                      borderRadius: '6px',
-                      border: '1px solid #CBD5E1',
-                      fontSize: '13.5px',
-                      outline: 'none',
-                      background: '#fff'
-                    }}
+                    style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px', outline: 'none', background: '#fff' }}
                   >
                     <option value="Mother">Mother</option>
                     <option value="Father">Father</option>
@@ -742,20 +501,28 @@ export function ParentRegistrationPage() {
                   <input
                     type="tel"
                     required
-                    placeholder="+1 (555) 234-8901"
+                    placeholder="e.g. 08012345678"
                     value={parentPhone}
                     onChange={(e) => setParentPhone(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '0.625rem',
-                      borderRadius: '6px',
-                      border: '1px solid #CBD5E1',
-                      fontSize: '13.5px',
-                      outline: 'none'
-                    }}
+                    style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px', outline: 'none' }}
                   />
                 </div>
 
+                <div>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
+                    Alternative Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    placeholder="e.g. 08098765432"
+                    value={altPhone}
+                    onChange={(e) => setAltPhone(e.target.value)}
+                    style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px', outline: 'none' }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                 <div>
                   <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
                     Email Address
@@ -765,112 +532,270 @@ export function ParentRegistrationPage() {
                     placeholder="parent@example.com"
                     value={parentEmail}
                     onChange={(e) => setParentEmail(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '0.625rem',
-                      borderRadius: '6px',
-                      border: '1px solid #CBD5E1',
-                      fontSize: '13.5px',
-                      outline: 'none'
-                    }}
+                    style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px', outline: 'none' }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
+                    Home Address
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Street Name & Estate / Area"
+                    value={homeAddress}
+                    onChange={(e) => setHomeAddress(e.target.value)}
+                    style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px', outline: 'none' }}
                   />
                 </div>
               </div>
             </div>
 
-            {/* Section 3: Medical Notes */}
+            {/* SECTION 3: CAMP SELECTION & SENIOR TRACK */}
             <div style={{ borderTop: '1px solid #E2E8F0', paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
-              <div style={{ fontSize: '12px', fontWeight: 800, color: '#D97706', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                3. Medical & Emergency Info
+              <div style={{ fontSize: '12px', fontWeight: 800, color: '#C40000', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                3. Camp Selection & Senior Track
+              </div>
+
+              <div>
+                <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
+                  Select Age Category *
+                </label>
+                <select
+                  value={group}
+                  onChange={(e) => setGroup(e.target.value)}
+                  style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px', outline: 'none', background: '#fff' }}
+                >
+                  <option value="Junior Camp (5–10 years)">Junior Camp (5–10 years)</option>
+                  <option value="Senior Camp (11+ years)">Senior Camp (11+ years)</option>
+                </select>
+              </div>
+
+              {group.includes('Senior') && (
+                <div style={{ background: '#F0F9FF', border: '1.5px solid #0284C7', borderRadius: '8px', padding: '0.875rem' }}>
+                  <label style={{ fontSize: '12px', fontWeight: 700, color: '#0369A1', display: 'block', marginBottom: '4px' }}>
+                    SENIOR TRACK SELECTION (11+ ONLY) *
+                  </label>
+                  <select
+                    value={seniorTrack}
+                    onChange={(e) => setSeniorTrack(e.target.value)}
+                    style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #7DD3FC', fontSize: '13.5px', fontWeight: 700, outline: 'none', background: '#fff', color: '#0369A1' }}
+                  >
+                    <option value="Graphics Design (Corel Draw) + Robotics">Graphics Design (Corel Draw) + Robotics</option>
+                    <option value="Cybersecurity + Python Programming">Cybersecurity + Python Programming</option>
+                  </select>
+                </div>
+              )}
+            </div>
+
+            {/* SECTION 4: DEVICE INFORMATION */}
+            <div style={{ borderTop: '1px solid #E2E8F0', paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+              <div style={{ fontSize: '12px', fontWeight: 800, color: '#C40000', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                4. Device Information
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                 <div>
                   <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
-                    Emergency Contact Name
+                    Does the student own a device? *
+                  </label>
+                  <select
+                    value={ownsDevice}
+                    onChange={(e) => setOwnsDevice(e.target.value)}
+                    style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px', outline: 'none', background: '#fff' }}
+                  >
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </select>
+                </div>
+
+                {ownsDevice === 'Yes' && (
+                  <div>
+                    <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
+                      Select Device Type
+                    </label>
+                    <select
+                      value={deviceType}
+                      onChange={(e) => setDeviceType(e.target.value)}
+                      style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px', outline: 'none', background: '#fff' }}
+                    >
+                      <option value="Laptop">Laptop</option>
+                      <option value="Tablet">Tablet</option>
+                      <option value="Both (Laptop & Tablet)">Both (Laptop & Tablet)</option>
+                    </select>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* SECTION 5: PAYMENT, HEALTH & MARKETING */}
+            <div style={{ borderTop: '1px solid #E2E8F0', paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+              <div style={{ fontSize: '12px', fontWeight: 800, color: '#D97706', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                5. Payment, Health & Marketing
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
+                <div>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
+                    Payment Status
+                  </label>
+                  <select
+                    value={paymentStatus}
+                    onChange={(e) => setPaymentStatus(e.target.value)}
+                    style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px', outline: 'none', background: '#fff' }}
+                  >
+                    <option value="Full Payment">Full Payment</option>
+                    <option value="Part Payment (Installment)">Part Payment (Installment)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
+                    Amount Paid (₦)
                   </label>
                   <input
-                    type="text"
-                    placeholder="e.g. Mark Vance"
-                    value={emergName}
-                    onChange={(e) => setEmergName(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '0.625rem',
-                      borderRadius: '6px',
-                      border: '1px solid #CBD5E1',
-                      fontSize: '13.5px',
-                      outline: 'none'
-                    }}
+                    type="number"
+                    value={amountPaid}
+                    onChange={(e) => setAmountPaid(e.target.value)}
+                    style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px', outline: 'none' }}
                   />
                 </div>
 
                 <div>
                   <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
-                    Emergency Phone
+                    Payment Date
                   </label>
                   <input
-                    type="tel"
-                    placeholder="+1 (555) 234-8902"
-                    value={emergPhone}
-                    onChange={(e) => setEmergPhone(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '0.625rem',
-                      borderRadius: '6px',
-                      border: '1px solid #CBD5E1',
-                      fontSize: '13.5px',
-                      outline: 'none'
-                    }}
+                    type="date"
+                    value={paymentDate}
+                    onChange={(e) => setPaymentDate(e.target.value)}
+                    style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '12px', outline: 'none' }}
                   />
                 </div>
               </div>
 
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                <div>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
+                    Does child have medical condition?
+                  </label>
+                  <select
+                    value={hasMedicalCondition}
+                    onChange={(e) => setHasMedicalCondition(e.target.value)}
+                    style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px', outline: 'none', background: '#fff' }}
+                  >
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
+                    How did you hear about us?
+                  </label>
+                  <select
+                    value={referralSource}
+                    onChange={(e) => setReferralSource(e.target.value)}
+                    style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px', outline: 'none', background: '#fff' }}
+                  >
+                    <option value="WhatsApp">WhatsApp</option>
+                    <option value="Instagram">Instagram</option>
+                    <option value="Referral">Referral</option>
+                    <option value="School">School</option>
+                    <option value="Church">Church</option>
+                    <option value="Walk-In">Walk-In</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              {hasMedicalCondition === 'Yes' && (
+                <div>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
+                    Medical Condition & Allergy Details
+                  </label>
+                  <textarea
+                    rows={2}
+                    placeholder="Specify allergies, asthma, inhaler needs..."
+                    value={medicalNotes}
+                    onChange={(e) => setMedicalNotes(e.target.value)}
+                    style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px', outline: 'none', resize: 'vertical' }}
+                  />
+                </div>
+              )}
+
               <div>
                 <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
-                  Medical & Allergy Notes (Optional)
+                  Any extra information you would like us to know:
                 </label>
                 <textarea
                   rows={2}
-                  placeholder="e.g. Mild asthma (inhaler in backpack), EpiPen for tree nuts..."
-                  value={medicalNotes}
-                  onChange={(e) => setMedicalNotes(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '0.625rem',
-                    borderRadius: '6px',
-                    border: '1px solid #CBD5E1',
-                    fontSize: '13.5px',
-                    outline: 'none',
-                    resize: 'vertical'
-                  }}
+                  placeholder="Special instructions or notes for camp instructors..."
+                  value={additionalNotes}
+                  onChange={(e) => setAdditionalNotes(e.target.value)}
+                  style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px', outline: 'none', resize: 'vertical' }}
                 />
+              </div>
+            </div>
+
+            {/* SECTION 6: MANDATORY CONSENT CHECKBOXES */}
+            <div style={{ borderTop: '1px solid #E2E8F0', paddingTop: '1rem', background: '#FEF2F2', border: '1px solid #FCA5A5', borderRadius: '10px', padding: '1rem' }}>
+              <div style={{ fontSize: '12px', fontWeight: 800, color: '#991B1B', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                <ShieldCheck size={16} /> CONSENT & TERMS (Please tick all mandatory items) *
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
+                <label style={{ fontSize: '12.5px', color: '#1E293B', display: 'flex', alignItems: 'flex-start', gap: '0.5rem', cursor: 'pointer', fontWeight: 500 }}>
+                  <input type="checkbox" checked={consents.c1} onChange={(e) => setConsents({ ...consents, c1: e.target.checked })} style={{ marginTop: '2px', accentColor: '#C40000' }} />
+                  <span>I consent for my child to participate in all camp activities</span>
+                </label>
+
+                <label style={{ fontSize: '12.5px', color: '#1E293B', display: 'flex', alignItems: 'flex-start', gap: '0.5rem', cursor: 'pointer', fontWeight: 500 }}>
+                  <input type="checkbox" checked={consents.c2} onChange={(e) => setConsents({ ...consents, c2: e.target.checked })} style={{ marginTop: '2px', accentColor: '#C40000' }} />
+                  <span>I understand the camp involves computer-based and creative learning</span>
+                </label>
+
+                <label style={{ fontSize: '12.5px', color: '#1E293B', display: 'flex', alignItems: 'flex-start', gap: '0.5rem', cursor: 'pointer', fontWeight: 500 }}>
+                  <input type="checkbox" checked={consents.c3} onChange={(e) => setConsents({ ...consents, c3: e.target.checked })} style={{ marginTop: '2px', accentColor: '#C40000' }} />
+                  <span>I agree my child will be supervised at all times</span>
+                </label>
+
+                <label style={{ fontSize: '12.5px', color: '#1E293B', display: 'flex', alignItems: 'flex-start', gap: '0.5rem', cursor: 'pointer', fontWeight: 500 }}>
+                  <input type="checkbox" checked={consents.c4} onChange={(e) => setConsents({ ...consents, c4: e.target.checked })} style={{ marginTop: '2px', accentColor: '#C40000' }} />
+                  <span>I understand fees are non-refundable (if applicable)</span>
+                </label>
+
+                <label style={{ fontSize: '12.5px', color: '#1E293B', display: 'flex', alignItems: 'flex-start', gap: '0.5rem', cursor: 'pointer', fontWeight: 500 }}>
+                  <input type="checkbox" checked={consents.c5} onChange={(e) => setConsents({ ...consents, c5: e.target.checked })} style={{ marginTop: '2px', accentColor: '#C40000' }} />
+                  <span>I consent to use of student work/photos for learning or promotional purposes</span>
+                </label>
               </div>
             </div>
 
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={submitting}
+              disabled={submitting || !allConsentsChecked}
               style={{
                 width: '100%',
-                height: '46px',
-                background: '#C40000',
+                height: '48px',
+                background: allConsentsChecked ? '#C40000' : '#94A3B8',
                 color: '#FFFFFF',
                 border: 'none',
-                borderRadius: '8px',
-                fontSize: '14.5px',
-                fontWeight: 700,
-                cursor: 'pointer',
+                borderRadius: '10px',
+                fontSize: '15px',
+                fontWeight: 800,
+                cursor: allConsentsChecked ? 'pointer' : 'not-allowed',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '0.5rem',
-                marginTop: '0.5rem'
+                marginTop: '0.5rem',
+                boxShadow: allConsentsChecked ? '0 4px 12px rgba(196, 0, 0, 0.25)' : 'none'
               }}
             >
-              {submitting ? <Loader2 size={18} className="animate-spin" /> : <ShieldCheck size={18} />}
-              {submitting ? 'Registering Child...' : 'Submit Student Registration'}
+              {submitting ? <Loader2 size={18} className="animate-spin" /> : <FileCheck size={18} />}
+              {submitting ? 'Submitting Registration...' : 'Submit Summer Camp Registration'}
             </button>
           </form>
         )}
