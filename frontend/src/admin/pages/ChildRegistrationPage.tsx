@@ -373,14 +373,53 @@ export function ChildRegistrationPage() {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
             <div className="admin-form-group">
-              <label className="admin-label admin-label-req">Age</label>
+              <label className="admin-label admin-label-req">Date of Birth</label>
+              <input
+                className="admin-input"
+                type="date"
+                required
+                value={dob}
+                onChange={(e) => {
+                  const newDob = e.target.value
+                  setDob(newDob)
+                  if (!newDob) return
+                  const birthDate = new Date(newDob)
+                  if (isNaN(birthDate.getTime())) return
+                  const today = new Date()
+                  let computedAge = today.getFullYear() - birthDate.getFullYear()
+                  const monthDiff = today.getMonth() - birthDate.getMonth()
+                  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    computedAge--
+                  }
+                  if (computedAge >= 0 && computedAge <= 100) {
+                    setAge(computedAge)
+                    if (computedAge >= 11) {
+                      setGroup('Senior Camp (11+ years)')
+                    } else {
+                      setGroup('Junior Camp (5–10 years)')
+                    }
+                  }
+                }}
+              />
+            </div>
+
+            <div className="admin-form-group">
+              <label className="admin-label admin-label-req">Age (Years)</label>
               <input
                 className="admin-input"
                 type="number"
                 min={2}
                 max={18}
                 value={age}
-                onChange={(e) => setAge(parseInt(e.target.value) || 6)}
+                onChange={(e) => {
+                  const newAge = parseInt(e.target.value) || 6
+                  setAge(newAge)
+                  if (newAge >= 11) {
+                    setGroup('Senior Camp (11+ years)')
+                  } else {
+                    setGroup('Junior Camp (5–10 years)')
+                  }
+                }}
               />
             </div>
 
@@ -391,11 +430,6 @@ export function ChildRegistrationPage() {
                 <option value="Girl">Girl</option>
                 <option value="Other">Other</option>
               </select>
-            </div>
-
-            <div className="admin-form-group">
-              <label className="admin-label">Date of Birth</label>
-              <input className="admin-input" type="date" value={dob} onChange={(e) => setDob(e.target.value)} />
             </div>
           </div>
 

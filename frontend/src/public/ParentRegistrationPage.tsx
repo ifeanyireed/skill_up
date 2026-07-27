@@ -79,6 +79,47 @@ export function ParentRegistrationPage() {
     c5: false,
   })
 
+  // Auto-calculate Age and Training Group from Date of Birth
+  const handleDobChange = (newDob: string) => {
+    setDob(newDob)
+    if (!newDob) return
+    const birthDate = new Date(newDob)
+    if (isNaN(birthDate.getTime())) return
+
+    const today = new Date()
+    let computedAge = today.getFullYear() - birthDate.getFullYear()
+    const monthDiff = today.getMonth() - birthDate.getMonth()
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      computedAge--
+    }
+
+    if (computedAge >= 0 && computedAge <= 100) {
+      setAge(computedAge)
+      if (computedAge >= 11) {
+        setGroup('Senior Camp (11+ years)')
+        if (seniorTrack === 'N/A - Junior Camp') {
+          setSeniorTrack('Graphics Design (Corel Draw) + Robotics')
+        }
+      } else {
+        setGroup('Junior Camp (5–10 years)')
+        setSeniorTrack('N/A - Junior Camp')
+      }
+    }
+  }
+
+  const handleAgeChange = (newAge: number) => {
+    setAge(newAge)
+    if (newAge >= 11) {
+      setGroup('Senior Camp (11+ years)')
+      if (seniorTrack === 'N/A - Junior Camp') {
+        setSeniorTrack('Graphics Design (Corel Draw) + Robotics')
+      }
+    } else {
+      setGroup('Junior Camp (5–10 years)')
+      setSeniorTrack('N/A - Junior Camp')
+    }
+  }
+
   // Submission State
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
@@ -399,7 +440,7 @@ export function ParentRegistrationPage() {
                     type="date"
                     required
                     value={dob}
-                    onChange={(e) => setDob(e.target.value)}
+                    onChange={(e) => handleDobChange(e.target.value)}
                     style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '12px', outline: 'none' }}
                   />
                 </div>
@@ -414,7 +455,7 @@ export function ParentRegistrationPage() {
                     max={18}
                     required
                     value={age}
-                    onChange={(e) => setAge(parseInt(e.target.value) || 5)}
+                    onChange={(e) => handleAgeChange(parseInt(e.target.value) || 5)}
                     style={{ width: '100%', padding: '0.625rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px', outline: 'none' }}
                   />
                 </div>
