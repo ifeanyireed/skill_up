@@ -34,7 +34,7 @@ func EnsureSystemSetup(db *gorm.DB) {
 			AutoExpireHour:  "20:00",
 			SmsEnabled:      true,
 			RequirePhone:    true,
-			GroupsJSON:      `["Little Dragons (Ages 4-10)","Junior Champions (Ages 11-19)","Elite Athletes (Ages 20+)"]`,
+			GroupsJSON:      `["Little Dragons (Ages 4-10)","Junior Champions (Ages 11-19)"]`,
 		}
 		db.Create(&setting)
 	}

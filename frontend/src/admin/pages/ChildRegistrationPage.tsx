@@ -404,7 +404,6 @@ export function ChildRegistrationPage() {
             <select className="admin-select" value={group} onChange={(e) => setGroup(e.target.value)}>
               <option value="Little Dragons (Ages 4-10)">Little Dragons (Ages 4-10)</option>
               <option value="Junior Champions (Ages 11-19)">Junior Champions (Ages 11-19)</option>
-              <option value="Elite Athletes (Ages 20+)">Elite Athletes (Ages 20+)</option>
             </select>
           </div>
         </div>
