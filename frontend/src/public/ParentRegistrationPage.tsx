@@ -16,7 +16,9 @@ import {
   Upload,
   Sparkles,
   HelpCircle,
-  FileCheck
+  FileCheck,
+  Globe,
+  ExternalLink
 } from 'lucide-react'
 import { createChild } from '../admin/services/api'
 
@@ -220,7 +222,7 @@ export function ParentRegistrationPage() {
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
+            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
               <button
                 type="button"
                 onClick={() => window.print()}
@@ -239,6 +241,12 @@ export function ParentRegistrationPage() {
               >
                 Register Another Child
               </button>
+              <a
+                href="https://skilluplearningacademy.com"
+                style={{ padding: '0.65rem 1.25rem', borderRadius: '8px', border: '1.5px solid #C40000', background: '#FEF2F2', fontSize: '13.5px', fontWeight: 700, color: '#C40000', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.375rem' }}
+              >
+                <Globe size={16} /> Return to Main Website <ExternalLink size={14} />
+              </a>
             </div>
           </div>
         ) : (
