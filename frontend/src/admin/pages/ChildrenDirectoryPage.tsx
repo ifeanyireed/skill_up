@@ -108,6 +108,106 @@ export function ChildrenDirectoryPage() {
   const endIndex = Math.min(startIndex + pageSize, totalItems)
   const paginatedChildren = children.slice(startIndex, endIndex)
 
+  // Render Pagination Bar Component
+  const renderPaginationBar = (position: 'top' | 'bottom') => {
+    if (loading || children.length === 0) return null
+    return (
+      <div
+        style={{
+          padding: '0.75rem 1.25rem',
+          borderTop: position === 'bottom' ? '1px solid var(--adm-border)' : 'none',
+          borderBottom: position === 'top' ? '1px solid var(--adm-border)' : 'none',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '1rem',
+          background: 'var(--adm-surface)'
+        }}
+      >
+        {/* Range summary & Page Size Selector */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '13px', color: 'var(--adm-text-2)' }}>
+          <span>
+            Showing <strong>{startIndex + 1}</strong> to <strong>{endIndex}</strong> of <strong>{totalItems}</strong> students
+          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+            <span>Show:</span>
+            <select
+              className="admin-select"
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value))
+                setCurrentPage(1)
+              }}
+              style={{ height: '30px', padding: '0 0.5rem', fontSize: '12px', fontWeight: 600 }}
+            >
+              <option value={10}>10 per page</option>
+              <option value={20}>20 per page</option>
+              <option value={50}>50 per page</option>
+              <option value={100}>100 per page</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Page Navigation Buttons */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+          <button
+            className="admin-btn admin-btn-ghost admin-btn-sm"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(1)}
+            title="First Page"
+          >
+            « First
+          </button>
+          <button
+            className="admin-btn admin-btn-ghost admin-btn-sm"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            title="Previous Page"
+          >
+            ‹ Prev
+          </button>
+
+          {/* Page Number Buttons */}
+          {Array.from({ length: totalPages }, (_, i) => i + 1)
+            .filter((p) => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 2)
+            .map((p, idx, arr) => {
+              const showEllipsis = idx > 0 && p - arr[idx - 1] > 1
+              return (
+                <React.Fragment key={p}>
+                  {showEllipsis && <span style={{ padding: '0 0.25rem', color: 'var(--adm-text-3)' }}>...</span>}
+                  <button
+                    className={`admin-btn admin-btn-sm ${currentPage === p ? 'admin-btn-primary' : 'admin-btn-ghost'}`}
+                    onClick={() => setCurrentPage(p)}
+                    style={{ minWidth: '34px', justifyContent: 'center', fontWeight: currentPage === p ? 800 : 500 }}
+                  >
+                    {p}
+                  </button>
+                </React.Fragment>
+              )
+            })}
+
+          <button
+            className="admin-btn admin-btn-ghost admin-btn-sm"
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            title="Next Page"
+          >
+            Next ›
+          </button>
+          <button
+            className="admin-btn admin-btn-ghost admin-btn-sm"
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(totalPages)}
+            title="Last Page"
+          >
+            Last »
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* Header Bar */}
@@ -177,16 +277,19 @@ export function ChildrenDirectoryPage() {
 
       {/* Table & Cards View */}
       <div className="admin-card" style={{ padding: 0, overflow: 'hidden' }}>
+        {/* Top Pagination Controller */}
+        {renderPaginationBar('top')}
+
         <div className="admin-table-wrap">
           <table className="admin-table">
             <thead>
               <tr>
                 <th>Student ID & Name</th>
-                <th>Center</th>
-                <th>Training Group</th>
-                <th>Parent / Guardian</th>
-                <th>Status</th>
-                <th>Active PIN</th>
+                <th>Center & Training Track</th>
+                <th>School & Grade</th>
+                <th>Device & Payment</th>
+                <th>Parent Contact & Address</th>
+                <th>Status & PIN</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -210,52 +313,93 @@ export function ChildrenDirectoryPage() {
                     style={{ cursor: 'pointer' }}
                     onClick={() => setSelectedChild(child)}
                   >
+                    {/* Student ID & Name */}
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                         <img
-                          src={child.photo || 'https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?auto=format&fit=crop&q=80&w=250'}
+                          src={child.photo || '/avatars/character1.jpg'}
                           alt={child.full_name}
-                          style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }}
+                          style={{ width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover', border: '1.5px solid var(--adm-accent)' }}
                         />
                         <div>
                           <div style={{ fontWeight: 700, color: 'var(--adm-text-1)' }}>{child.full_name}</div>
-                          <div style={{ fontSize: '11px', fontFamily: 'monospace', color: 'var(--adm-accent)', fontWeight: 600 }}>
+                          <div style={{ fontSize: '11px', fontFamily: 'monospace', color: 'var(--adm-accent)', fontWeight: 700 }}>
                             {child.student_id}
+                          </div>
+                          <div style={{ fontSize: '11px', color: 'var(--adm-text-3)' }}>
+                            {child.age ? `${child.age} yrs` : ''}{child.gender ? ` • ${child.gender}` : ''}{child.dob ? ` • DOB: ${child.dob}` : ''}
                           </div>
                         </div>
                       </div>
                     </td>
 
+                    {/* Center & Track */}
                     <td>
                       <select
                         className="admin-select"
                         value={child.center || 'Raji Rasaki Centre'}
                         onClick={(e) => e.stopPropagation()}
                         onChange={(e) => handleCenterChange(child.id, e.target.value)}
-                        style={{ fontSize: '12px', padding: '0.2rem 0.5rem', height: '30px', minWidth: '150px' }}
+                        style={{ fontSize: '11.5px', padding: '0.2rem 0.4rem', height: '28px', minWidth: '140px', fontWeight: 600 }}
                       >
                         <option value="Raji Rasaki Centre">Raji Rasaki Centre</option>
                         <option value="Festac Centre">Festac Centre</option>
                       </select>
+                      <div style={{ fontSize: '11px', color: 'var(--adm-text-2)', marginTop: '2px', fontWeight: 600 }}>{child.group}</div>
+                      {child.senior_track && child.senior_track !== 'N/A - Junior Camp' && (
+                        <div style={{ fontSize: '10.5px', color: 'var(--adm-accent)', fontWeight: 600, maxWidth: '170px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          Track: {child.senior_track}
+                        </div>
+                      )}
                     </td>
 
-                    <td style={{ fontSize: 12, color: 'var(--adm-text-2)' }}>{child.group}</td>
-
+                    {/* School & Grade */}
                     <td>
-                      <div style={{ fontSize: 12, color: 'var(--adm-text-1)', fontWeight: 500 }}>{child.parent_name}</div>
+                      <div style={{ fontSize: 12, color: 'var(--adm-text-1)', fontWeight: 600 }}>
+                        {child.school_name || 'N/A'}
+                      </div>
                       <div style={{ fontSize: 11, color: 'var(--adm-text-3)' }}>
-                        {child.parent_relationship} • {child.parent_phone}
+                        Grade: {child.current_grade || 'N/A'}
                       </div>
                     </td>
 
+                    {/* Device & Payment */}
+                    <td>
+                      <div style={{ fontSize: 11, color: '#16A34A', fontWeight: 700 }}>
+                        {child.payment_status || 'Full Payment'} (₦{child.amount_paid ? child.amount_paid.toLocaleString() : '50,000'})
+                      </div>
+                      <div style={{ fontSize: 11, color: 'var(--adm-text-2)' }}>
+                        Device: {child.owns_device || 'N/A'} {child.device_type ? `(${child.device_type})` : ''}
+                      </div>
+                    </td>
+
+                    {/* Parent Contact & Address */}
+                    <td>
+                      <div style={{ fontSize: 12, color: 'var(--adm-text-1)', fontWeight: 600 }}>{child.parent_name}</div>
+                      <div style={{ fontSize: 11, color: 'var(--adm-text-3)' }}>
+                        {child.parent_relationship || 'Parent'} • {child.parent_phone}
+                      </div>
+                      {child.alt_phone && (
+                        <div style={{ fontSize: 10.5, color: 'var(--adm-text-3)' }}>
+                          Alt: {child.alt_phone}
+                        </div>
+                      )}
+                      {child.home_address && (
+                        <div style={{ fontSize: 10.5, color: 'var(--adm-text-3)', maxWidth: '180px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {child.home_address}
+                        </div>
+                      )}
+                    </td>
+
+                    {/* Status & PIN */}
                     <td>
                       <span className={getStatusBadgeClass(child.status)}>{child.status}</span>
+                      <div style={{ fontWeight: 800, fontFamily: 'monospace', color: 'var(--adm-accent)', fontSize: '12px', marginTop: '2px' }}>
+                        {child.active_code ? `#${child.active_code}` : '—'}
+                      </div>
                     </td>
 
-                    <td style={{ fontWeight: 700, fontFamily: 'monospace', color: 'var(--adm-accent)' }}>
-                      {child.active_code ? `#${child.active_code}` : '—'}
-                    </td>
-
+                    {/* Actions */}
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
                         <button
@@ -265,7 +409,7 @@ export function ChildrenDirectoryPage() {
                             setSelectedChild(child)
                           }}
                         >
-                          Profile
+                          Full Profile
                         </button>
                         {isAdmin && (
                           <button
@@ -289,104 +433,11 @@ export function ChildrenDirectoryPage() {
           </table>
         </div>
 
-        {/* Pagination Controller Bar */}
-        {!loading && children.length > 0 && (
-          <div
-            style={{
-              padding: '0.875rem 1.25rem',
-              borderTop: '1px solid var(--adm-border)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              flexWrap: 'wrap',
-              gap: '1rem',
-              background: 'var(--adm-surface)'
-            }}
-          >
-            {/* Range summary & Page Size Selector */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '13px', color: 'var(--adm-text-2)' }}>
-              <span>
-                Showing <strong>{startIndex + 1}</strong> to <strong>{endIndex}</strong> of <strong>{totalItems}</strong> students
-              </span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
-                <span>Per page:</span>
-                <select
-                  className="admin-select"
-                  value={pageSize}
-                  onChange={(e) => {
-                    setPageSize(Number(e.target.value))
-                    setCurrentPage(1)
-                  }}
-                  style={{ height: '30px', padding: '0 0.5rem', fontSize: '12px' }}
-                >
-                  <option value={10}>10</option>
-                  <option value={20}>20</option>
-                  <option value={50}>50</option>
-                  <option value={100}>100</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Page Navigation Controls */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-              <button
-                className="admin-btn admin-btn-ghost admin-btn-sm"
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage(1)}
-                title="First Page"
-              >
-                «
-              </button>
-              <button
-                className="admin-btn admin-btn-ghost admin-btn-sm"
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                title="Previous Page"
-              >
-                ‹
-              </button>
-
-              {/* Page Number Buttons */}
-              {Array.from({ length: totalPages }, (_, i) => i + 1)
-                .filter((p) => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1)
-                .map((p, idx, arr) => {
-                  const showEllipsis = idx > 0 && p - arr[idx - 1] > 1
-                  return (
-                    <React.Fragment key={p}>
-                      {showEllipsis && <span style={{ padding: '0 0.25rem', color: 'var(--adm-text-3)' }}>...</span>}
-                      <button
-                        className={`admin-btn admin-btn-sm ${currentPage === p ? 'admin-btn-primary' : 'admin-btn-ghost'}`}
-                        onClick={() => setCurrentPage(p)}
-                        style={{ minWidth: '32px', justifyContent: 'center' }}
-                      >
-                        {p}
-                      </button>
-                    </React.Fragment>
-                  )
-                })}
-
-              <button
-                className="admin-btn admin-btn-ghost admin-btn-sm"
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                title="Next Page"
-              >
-                ›
-              </button>
-              <button
-                className="admin-btn admin-btn-ghost admin-btn-sm"
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage(totalPages)}
-                title="Last Page"
-              >
-                »
-              </button>
-            </div>
-          </div>
-        )}
+        {/* Bottom Pagination Controller Bar */}
+        {renderPaginationBar('bottom')}
       </div>
 
-      {/* Child Details Slide-Over Drawer */}
+      {/* Child Details Slide-Over Drawer with ALL Registration Fields */}
       {selectedChild && (
         <div
           style={{
@@ -403,7 +454,7 @@ export function ChildrenDirectoryPage() {
           <div
             style={{
               width: '100%',
-              maxWidth: '420px',
+              maxWidth: '520px',
               height: '100%',
               background: 'var(--adm-surface)',
               borderLeft: '1px solid var(--adm-border)',
@@ -416,131 +467,179 @@ export function ChildrenDirectoryPage() {
             }}
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Header Bar */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span className="admin-badge admin-badge-accent">Student Profile</span>
+              <span className="admin-badge admin-badge-accent">Complete Student Record</span>
               <button
                 className="admin-btn admin-btn-icon admin-btn-ghost"
                 onClick={() => setSelectedChild(null)}
               >
-                <X size={16} />
+                <X size={18} />
               </button>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            {/* Profile Header */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'var(--adm-surface-2)', padding: '1rem', borderRadius: '10px', border: '1px solid var(--adm-border)' }}>
               <img
-                src={selectedChild.photo || 'https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?auto=format&fit=crop&q=80&w=250'}
+                src={selectedChild.photo || '/avatars/character1.jpg'}
                 alt={selectedChild.full_name}
-                style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--adm-accent)' }}
+                style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover', border: '2.5px solid var(--adm-accent)' }}
               />
-              <div>
+              <div style={{ flex: 1 }}>
                 <h2 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--adm-text-1)', margin: 0 }}>
                   {selectedChild.full_name}
                 </h2>
-                <div style={{ fontSize: '12px', fontFamily: 'monospace', fontWeight: 700, color: 'var(--adm-accent)' }}>
+                <div style={{ fontSize: '13px', fontFamily: 'monospace', fontWeight: 800, color: 'var(--adm-accent)' }}>
                   {selectedChild.student_id}
                 </div>
-                <div style={{ fontSize: '12px', color: 'var(--adm-text-3)', display: 'flex', alignItems: 'center', gap: '0.375rem', marginTop: '0.25rem' }}>
-                  <span>Center:</span>
-                  <select
-                    className="admin-select"
-                    value={selectedChild.center || 'Raji Rasaki Centre'}
-                    onChange={(e) => handleCenterChange(selectedChild.id, e.target.value)}
-                    style={{ fontSize: '11px', height: '24px', padding: '0 0.375rem' }}
-                  >
-                    <option value="Raji Rasaki Centre">Raji Rasaki Centre</option>
-                    <option value="Festac Centre">Festac Centre</option>
-                  </select>
+                <div style={{ fontSize: '12px', color: 'var(--adm-text-3)', marginTop: '2px' }}>
+                  {selectedChild.gender} • {selectedChild.age} Years Old • DOB: {selectedChild.dob || 'N/A'}
                 </div>
               </div>
             </div>
 
-            {/* Status & PIN Card */}
-            <div style={{ padding: '1rem', background: 'var(--adm-surface-2)', borderRadius: 'var(--adm-radius-sm)', border: '1px solid var(--adm-border)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: 12, color: 'var(--adm-text-3)' }}>Current Status:</span>
+            {/* Status & Security Code */}
+            <div style={{ padding: '0.875rem', background: 'var(--adm-surface-2)', borderRadius: '8px', border: '1px solid var(--adm-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <div style={{ fontSize: 11, color: 'var(--adm-text-3)', textTransform: 'uppercase', fontWeight: 700 }}>Check-In Status</div>
                 <span className={getStatusBadgeClass(selectedChild.status)}>{selectedChild.status}</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: 12, color: 'var(--adm-text-3)' }}>Active 6-Digit PIN:</span>
-                <span style={{ fontWeight: 800, fontFamily: 'monospace', fontSize: 16, color: 'var(--adm-accent)' }}>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: 11, color: 'var(--adm-text-3)', textTransform: 'uppercase', fontWeight: 700 }}>Active Verification PIN</div>
+                <span style={{ fontWeight: 900, fontFamily: 'monospace', fontSize: 18, color: 'var(--adm-accent)' }}>
                   {selectedChild.active_code ? `#${selectedChild.active_code}` : 'None'}
                 </span>
               </div>
             </div>
 
-            {/* Medical Notes */}
-            {selectedChild.medical_notes && selectedChild.medical_notes !== 'None' && (
-              <div className="admin-alert admin-alert-warning">
-                <ShieldAlert size={16} />
-                <div>
-                  <strong>Medical & Allergy Warning:</strong>
-                  <div>{selectedChild.medical_notes}</div>
-                </div>
+            {/* SECTION 1: CENTER & CAMP TRACK */}
+            <div style={{ padding: '1rem', background: 'var(--adm-surface-2)', borderRadius: '8px', border: '1px solid var(--adm-border)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', color: 'var(--adm-accent)', letterSpacing: '0.05em' }}>
+                1. Center & Camp Program Track
               </div>
-            )}
+              <div style={{ fontSize: 13, color: 'var(--adm-text-1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span>Assigned Center:</span>
+                <select
+                  className="admin-select"
+                  value={selectedChild.center || 'Raji Rasaki Centre'}
+                  onChange={(e) => handleCenterChange(selectedChild.id, e.target.value)}
+                  style={{ fontSize: '12px', height: '28px', padding: '0 0.5rem', fontWeight: 700 }}
+                >
+                  <option value="Raji Rasaki Centre">Raji Rasaki Centre</option>
+                  <option value="Festac Centre">Festac Centre</option>
+                </select>
+              </div>
+              <div style={{ fontSize: 13, color: 'var(--adm-text-1)' }}>Camp Group: <strong>{selectedChild.group}</strong></div>
+              <div style={{ fontSize: 12.5, color: 'var(--adm-accent)', fontWeight: 700 }}>
+                Senior Track: {selectedChild.senior_track || 'N/A - Junior Camp'}
+              </div>
+            </div>
 
-            {/* School & Camp Info */}
-            <div style={{ padding: '0.875rem', background: 'var(--adm-surface-2)', borderRadius: 'var(--adm-radius-sm)', border: '1px solid var(--adm-border)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', color: 'var(--adm-text-3)' }}>Camp & Academic Details</div>
-              <div style={{ fontSize: 13, color: 'var(--adm-text-1)', fontWeight: 600 }}>Camp Group: <strong>{selectedChild.group}</strong></div>
-              {selectedChild.senior_track && selectedChild.senior_track !== 'N/A - Junior Camp' && (
-                <div style={{ fontSize: 12, color: 'var(--adm-accent)', fontWeight: 700 }}>Senior Track: {selectedChild.senior_track}</div>
-              )}
-              {selectedChild.school_name && (
-                <div style={{ fontSize: 12, color: 'var(--adm-text-2)' }}>School: {selectedChild.school_name} ({selectedChild.current_grade || 'N/A'})</div>
-              )}
-              {selectedChild.owns_device && (
-                <div style={{ fontSize: 12, color: 'var(--adm-text-2)' }}>Owns Device: {selectedChild.owns_device} ({selectedChild.device_type || 'N/A'})</div>
+            {/* SECTION 2: ACADEMIC & SCHOOL DETAILS */}
+            <div style={{ padding: '1rem', background: 'var(--adm-surface-2)', borderRadius: '8px', border: '1px solid var(--adm-border)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', color: 'var(--adm-accent)', letterSpacing: '0.05em' }}>
+                2. Academic & School Information
+              </div>
+              <div style={{ fontSize: 13, color: 'var(--adm-text-1)' }}>School Name: <strong>{selectedChild.school_name || 'N/A'}</strong></div>
+              <div style={{ fontSize: 13, color: 'var(--adm-text-1)' }}>Current Class / Grade: <strong>{selectedChild.current_grade || 'N/A'}</strong></div>
+            </div>
+
+            {/* SECTION 3: DEVICE INFORMATION */}
+            <div style={{ padding: '1rem', background: 'var(--adm-surface-2)', borderRadius: '8px', border: '1px solid var(--adm-border)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', color: 'var(--adm-accent)', letterSpacing: '0.05em' }}>
+                3. Device Ownership & Type
+              </div>
+              <div style={{ fontSize: 13, color: 'var(--adm-text-1)' }}>Owns Personal Device: <strong>{selectedChild.owns_device || 'No'}</strong></div>
+              {selectedChild.owns_device === 'Yes' && (
+                <div style={{ fontSize: 13, color: 'var(--adm-text-1)' }}>Device Type: <strong>{selectedChild.device_type || 'N/A'}</strong></div>
               )}
             </div>
 
-            {/* Guardian Info */}
-            <div>
-              <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', color: 'var(--adm-text-3)', marginBottom: '0.5rem' }}>
-                Primary Parent Contact
+            {/* SECTION 4: PAYMENT & FEES */}
+            <div style={{ padding: '1rem', background: 'var(--adm-surface-2)', borderRadius: '8px', border: '1px solid var(--adm-border)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', color: 'var(--adm-accent)', letterSpacing: '0.05em' }}>
+                4. Payment & Fee Details
               </div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--adm-text-1)' }}>{selectedChild.parent_name}</div>
-              <div style={{ fontSize: 12, color: 'var(--adm-text-2)', display: 'flex', alignItems: 'center', gap: 6, marginTop: 4 }}>
-                <Phone size={12} /> {selectedChild.parent_phone} ({selectedChild.parent_relationship})
+              <div style={{ fontSize: 13, color: '#16A34A', fontWeight: 800 }}>Payment Status: {selectedChild.payment_status || 'Full Payment'}</div>
+              <div style={{ fontSize: 13, color: 'var(--adm-text-1)' }}>Amount Paid: <strong>₦{selectedChild.amount_paid ? selectedChild.amount_paid.toLocaleString() : '50,000'}</strong></div>
+              <div style={{ fontSize: 12, color: 'var(--adm-text-3)' }}>Payment Date: {selectedChild.payment_date || 'N/A'}</div>
+            </div>
+
+            {/* SECTION 5: PARENT / GUARDIAN CONTACT */}
+            <div style={{ padding: '1rem', background: 'var(--adm-surface-2)', borderRadius: '8px', border: '1px solid var(--adm-border)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', color: 'var(--adm-accent)', letterSpacing: '0.05em' }}>
+                5. Parent / Guardian & Home Address
+              </div>
+              <div style={{ fontSize: 13.5, fontWeight: 700, color: 'var(--adm-text-1)' }}>{selectedChild.parent_name} ({selectedChild.parent_relationship || 'Parent'})</div>
+              <div style={{ fontSize: 12.5, color: 'var(--adm-text-2)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Phone size={13} /> Primary Phone: <strong>{selectedChild.parent_phone}</strong>
               </div>
               {selectedChild.alt_phone && (
-                <div style={{ fontSize: 12, color: 'var(--adm-text-2)', display: 'flex', alignItems: 'center', gap: 6, marginTop: 4 }}>
-                  <Phone size={12} /> Alt: {selectedChild.alt_phone}
+                <div style={{ fontSize: 12.5, color: 'var(--adm-text-2)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <Phone size={13} /> Alternative Phone: {selectedChild.alt_phone}
                 </div>
               )}
               {selectedChild.parent_email && (
-                <div style={{ fontSize: 12, color: 'var(--adm-text-2)', display: 'flex', alignItems: 'center', gap: 6, marginTop: 4 }}>
-                  <Mail size={12} /> {selectedChild.parent_email}
+                <div style={{ fontSize: 12.5, color: 'var(--adm-text-2)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <Mail size={13} /> Email: {selectedChild.parent_email}
                 </div>
               )}
               {selectedChild.home_address && (
-                <div style={{ fontSize: 12, color: 'var(--adm-text-2)', marginTop: 4 }}>
-                  Address: {selectedChild.home_address}
-                </div>
-              )}
-              {selectedChild.payment_status && (
-                <div style={{ fontSize: 12, color: '#16A34A', fontWeight: 700, marginTop: 6 }}>
-                  Payment: {selectedChild.payment_status} (₦{selectedChild.amount_paid ? selectedChild.amount_paid.toLocaleString() : '0'})
+                <div style={{ fontSize: 12.5, color: 'var(--adm-text-2)', marginTop: 2 }}>
+                  Home Address: <strong>{selectedChild.home_address}</strong>
                 </div>
               )}
             </div>
 
-            {/* Actions */}
-            <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            {/* SECTION 6: MARKETING & REFERRAL SOURCE */}
+            <div style={{ padding: '1rem', background: 'var(--adm-surface-2)', borderRadius: '8px', border: '1px solid var(--adm-border)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', color: 'var(--adm-accent)', letterSpacing: '0.05em' }}>
+                6. Marketing & Referral Source
+              </div>
+              <div style={{ fontSize: 13, color: 'var(--adm-text-1)' }}>How they heard about us: <strong>{selectedChild.referral_source || 'Walk-In'}</strong></div>
+            </div>
+
+            {/* SECTION 7: MEDICAL CONDITIONS & EXTRA NOTES */}
+            <div style={{ padding: '1rem', background: 'var(--adm-surface-2)', borderRadius: '8px', border: '1px solid var(--adm-border)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', color: 'var(--adm-accent)', letterSpacing: '0.05em' }}>
+                7. Medical Conditions & Extra Notes
+              </div>
+              <div style={{ fontSize: 13, color: selectedChild.medical_notes && selectedChild.medical_notes !== 'None' && selectedChild.medical_notes !== 'No' ? 'var(--adm-danger)' : 'var(--adm-text-1)', fontWeight: selectedChild.medical_notes && selectedChild.medical_notes !== 'None' ? 700 : 400 }}>
+                Medical / Allergies: {selectedChild.medical_notes || 'None'}
+              </div>
+              {selectedChild.additional_notes && (
+                <div style={{ fontSize: 12.5, color: 'var(--adm-text-2)', marginTop: 2 }}>
+                  Additional Notes: {selectedChild.additional_notes}
+                </div>
+              )}
+            </div>
+
+            {/* SECTION 8: SAFETY CONSENTS */}
+            <div style={{ padding: '1rem', background: 'var(--adm-surface-2)', borderRadius: '8px', border: '1px solid var(--adm-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', color: 'var(--adm-accent)', letterSpacing: '0.05em' }}>
+                8. Safety & Media Consent
+              </div>
+              <span className="admin-badge admin-badge-green" style={{ fontWeight: 700 }}>
+                ✓ Consents Granted ({selectedChild.consent_given ? 'Yes' : 'No'})
+              </span>
+            </div>
+
+            {/* Action Buttons */}
+            <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem', paddingTop: '1rem' }}>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <button
                   className="admin-btn admin-btn-primary"
                   style={{ flex: 1, justifyContent: 'center' }}
                   onClick={() => navigate('/admin/checkin')}
                 >
-                  <LogIn size={14} /> Check In
+                  <LogIn size={14} /> Check In Student
                 </button>
                 <button
                   className="admin-btn admin-btn-ghost"
                   style={{ flex: 1, justifyContent: 'center' }}
                   onClick={() => navigate('/admin/checkout')}
                 >
-                  <KeyRound size={14} /> Verify PIN
+                  <KeyRound size={14} /> Verify Pickup PIN
                 </button>
               </div>
 
