@@ -33,6 +33,7 @@ type Child struct {
 	PaymentStatus      string         `gorm:"type:varchar(50)" json:"payment_status"`
 	PaymentDate        string         `gorm:"type:varchar(50)" json:"payment_date"`
 	ReferralSource     string         `gorm:"type:varchar(100)" json:"referral_source"`
+	MedicalNotes       string         `gorm:"type:text" json:"medical_notes"`
 	AdditionalNotes    string         `gorm:"type:text" json:"additional_notes"`
 	ConsentGiven       bool           `gorm:"default:true" json:"consent_given"`
 	Status             string         `gorm:"type:varchar(50);default:'Not Checked In'" json:"status"`
