@@ -49,6 +49,10 @@ export function ChildrenDirectoryPage() {
   const [statusFilter, setStatusFilter] = useState('all')
   const [centerFilter, setCenterFilter] = useState('all')
 
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+
   // Selected Child Drawer
   const [selectedChild, setSelectedChild] = useState<BackendChild | null>(null)
 
@@ -66,6 +70,7 @@ export function ChildrenDirectoryPage() {
 
   useEffect(() => {
     loadData()
+    setCurrentPage(1)
   }, [search, statusFilter, centerFilter])
 
   const handleDeleteChild = async (id: number, name: string, studentId: string) => {
@@ -96,49 +101,60 @@ export function ChildrenDirectoryPage() {
     }
   }
 
+  // Pagination Calculations
+  const totalItems = children.length
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize))
+  const startIndex = (currentPage - 1) * pageSize
+  const endIndex = Math.min(startIndex + pageSize, totalItems)
+  const paginatedChildren = children.slice(startIndex, endIndex)
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      {/* Page Header */}
+      {/* Header Bar */}
       <div className="admin-page-header">
         <div>
-          <div className="admin-page-title">Children Directory</div>
-          <div className="admin-page-desc">
-            Enrolled student records across Raji Rasaki Centre & Festac Centre
-          </div>
+          <h1 className="admin-page-title">Child Students Directory</h1>
+          <p className="admin-page-desc">
+            View, search, and manage registered student profiles & pickup verification status
+          </p>
         </div>
-
-        {isAdmin && (
-          <div className="admin-page-actions">
-            <button className="admin-btn admin-btn-primary" onClick={() => navigate('/admin/register')}>
-              <Plus size={16} /> Register New Child
+        <div style={{ display: 'flex', gap: '0.75rem' }}>
+          <button className="admin-btn admin-btn-accent" onClick={() => navigate('/register')}>
+            <Plus size={16} /> Public Parent Register Form
+          </button>
+          {isAdmin && (
+            <button className="admin-btn admin-btn-primary" onClick={() => navigate('/admin/children/register')}>
+              <Plus size={16} /> Admin Register Student
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
-      {/* Toolbar Filters */}
-      <div className="admin-toolbar" style={{ gap: '0.75rem', flexWrap: 'wrap' }}>
-        {/* Search */}
-        <div className="admin-toolbar-search">
-          <Search size={14} color="var(--adm-text-3)" />
-          <input
-            type="text"
-            placeholder="Search by student name, ID, parent..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+      {/* Filter Toolbar */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', gap: '0.75rem', flex: 1, minWidth: '280px' }}>
+          <div className="admin-search-wrap" style={{ flex: 1 }}>
+            <Search size={16} className="admin-search-icon" />
+            <input
+              type="text"
+              className="admin-input admin-search-input"
+              placeholder="Search by student name, ID, PIN, or parent..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
         </div>
 
-        {/* Center Filter */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
-          <Building2 size={14} color="var(--adm-text-3)" />
+        {/* Center Location Filter */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Building2 size={16} color="var(--adm-accent)" />
           <select
             className="admin-select"
             value={centerFilter}
             onChange={(e) => setCenterFilter(e.target.value)}
-            style={{ width: '160px', height: '36px' }}
+            style={{ width: '170px', height: '36px', fontWeight: 600 }}
           >
-            <option value="all">All Centers</option>
+            <option value="all">All Centers (Raji & Festac)</option>
             <option value="Raji Rasaki Centre">Raji Rasaki Centre</option>
             <option value="Festac Centre">Festac Centre</option>
           </select>
@@ -188,7 +204,7 @@ export function ChildrenDirectoryPage() {
                   </td>
                 </tr>
               ) : (
-                children.map((child) => (
+                paginatedChildren.map((child) => (
                   <tr
                     key={child.id}
                     style={{ cursor: 'pointer' }}
@@ -272,6 +288,102 @@ export function ChildrenDirectoryPage() {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Controller Bar */}
+        {!loading && children.length > 0 && (
+          <div
+            style={{
+              padding: '0.875rem 1.25rem',
+              borderTop: '1px solid var(--adm-border)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '1rem',
+              background: 'var(--adm-surface)'
+            }}
+          >
+            {/* Range summary & Page Size Selector */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '13px', color: 'var(--adm-text-2)' }}>
+              <span>
+                Showing <strong>{startIndex + 1}</strong> to <strong>{endIndex}</strong> of <strong>{totalItems}</strong> students
+              </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                <span>Per page:</span>
+                <select
+                  className="admin-select"
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value))
+                    setCurrentPage(1)
+                  }}
+                  style={{ height: '30px', padding: '0 0.5rem', fontSize: '12px' }}
+                >
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                  <option value={50}>50</option>
+                  <option value={100}>100</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Page Navigation Controls */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              <button
+                className="admin-btn admin-btn-ghost admin-btn-sm"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(1)}
+                title="First Page"
+              >
+                «
+              </button>
+              <button
+                className="admin-btn admin-btn-ghost admin-btn-sm"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                title="Previous Page"
+              >
+                ‹
+              </button>
+
+              {/* Page Number Buttons */}
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter((p) => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1)
+                .map((p, idx, arr) => {
+                  const showEllipsis = idx > 0 && p - arr[idx - 1] > 1
+                  return (
+                    <React.Fragment key={p}>
+                      {showEllipsis && <span style={{ padding: '0 0.25rem', color: 'var(--adm-text-3)' }}>...</span>}
+                      <button
+                        className={`admin-btn admin-btn-sm ${currentPage === p ? 'admin-btn-primary' : 'admin-btn-ghost'}`}
+                        onClick={() => setCurrentPage(p)}
+                        style={{ minWidth: '32px', justifyContent: 'center' }}
+                      >
+                        {p}
+                      </button>
+                    </React.Fragment>
+                  )
+                })}
+
+              <button
+                className="admin-btn admin-btn-ghost admin-btn-sm"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                title="Next Page"
+              >
+                ›
+              </button>
+              <button
+                className="admin-btn admin-btn-ghost admin-btn-sm"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(totalPages)}
+                title="Last Page"
+              >
+                »
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Child Details Slide-Over Drawer */}
