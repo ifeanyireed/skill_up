@@ -272,6 +272,11 @@ export function InstructorsPage() {
                     </select>
                   </div>
                 </div>
+
+                <div style={{ padding: '0.75rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid #E2E8F0', fontSize: '12px', color: '#475569', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span>Default Login Password for New Staff:</span>
+                  <code style={{ background: '#FEF2F2', color: '#C40000', padding: '2px 8px', borderRadius: '4px', fontWeight: 800, fontFamily: 'monospace' }}>skillup2026</code>
+                </div>
               </div>
 
               <div className="admin-modal-footer">

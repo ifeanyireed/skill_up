@@ -31,8 +31,11 @@ func CreateUser(c *gin.Context) {
 	if u.Status == "" {
 		u.Status = "Active"
 	}
+	if u.PasswordHash == "" {
+		u.PasswordHash = "skillup2026"
+	}
 	if u.Avatar == "" {
-		u.Avatar = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200"
+		u.Avatar = "/avatars/character1.jpg"
 	}
 
 	if err := config.DB.Create(&u).Error; err != nil {
