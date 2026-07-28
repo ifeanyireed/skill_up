@@ -38,6 +38,21 @@ func CreateUser(c *gin.Context) {
 		u.Avatar = "/avatars/character1.jpg"
 	}
 
+	var existing models.User
+	if err := config.DB.Where("LOWER(email) = LOWER(?)", u.Email).First(&existing).Error; err == nil {
+		existing.FullName = u.FullName
+		existing.Status = u.Status
+		if u.Avatar != "" {
+			existing.Avatar = u.Avatar
+		}
+		if u.Role != "" {
+			existing.Role = u.Role
+		}
+		config.DB.Save(&existing)
+		c.JSON(http.StatusOK, existing)
+		return
+	}
+
 	if err := config.DB.Create(&u).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

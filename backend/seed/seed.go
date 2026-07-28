@@ -8,18 +8,9 @@ import (
 	"checkin-backend/models"
 )
 
-// EnsureSystemSetup ensures default system settings and the 3 Lead Administrator accounts exist on startup WITHOUT wiping registered children.
+// EnsureSystemSetup ensures default system settings and the 3 Lead Administrator accounts exist on startup WITHOUT wiping instructors or children.
 func EnsureSystemSetup(db *gorm.DB) {
-	// 1. Delete any old / unapproved staff/instructor/admin accounts
-	if err := db.Exec("DELETE FROM users WHERE LOWER(email) NOT IN (?, ?, ?)",
-		"okokon.christiana@kingshouselearning.com",
-		"ifeanyireed@gmail.com",
-		"grace.solomon@kingshouselearning.com",
-	).Error; err != nil {
-		fmt.Printf("[Setup Warning] Error purging unapproved users: %v\n", err)
-	}
-
-	// 2. Ensure Default System Settings exist
+	// 1. Ensure Default System Settings exist
 	var settingCount int64
 	db.Model(&models.Setting{}).Count(&settingCount)
 	if settingCount == 0 {
@@ -71,6 +62,17 @@ func EnsureSystemSetup(db *gorm.DB) {
 			AssignedGroup: "Head Administrator / All Groups",
 			Status:        "Active",
 			Avatar:        "/avatars/character3.jpg",
+			PasswordHash:  "skillup2026",
+			LastLogin:     "Just now",
+		},
+		{
+			FullName:      "Bridget Blover",
+			Email:         "bridgetblover@gmail.com",
+			Phone:         "+234 800 111 0004",
+			Role:          "Instructor",
+			AssignedGroup: "Junior Champions (Ages 11-19)",
+			Status:        "Active",
+			Avatar:        "/avatars/character4.jpg",
 			PasswordHash:  "skillup2026",
 			LastLogin:     "Just now",
 		},

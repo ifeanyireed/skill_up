@@ -271,21 +271,36 @@ func CheckInChild(c *gin.Context) {
 		instructor = "Administrator"
 	}
 
-	// Record to Attendance Log
-	logEntry := models.AttendanceLog{
-		Date:           getWATNow().Format("2006-01-02"),
-		StudentID:      child.StudentID,
-		ChildName:      child.FullName,
-		Photo:          child.Photo,
-		Center:         child.Center,
-		Group:          child.Group,
-		CheckInTime:    nowTime,
-		DropOffAdult:   input.AdultName + " (" + input.Rel + ")",
-		PickupPin:      pin,
-		InstructorName: instructor,
-		Status:         childStatus,
+	// Record or update Attendance Log for today
+	todayDate := getWATNow().Format("2006-01-02")
+	var logEntry models.AttendanceLog
+	if err := config.DB.Where("student_id = ? AND date = ?", child.StudentID, todayDate).First(&logEntry).Error; err != nil {
+		logEntry = models.AttendanceLog{
+			Date:           todayDate,
+			StudentID:      child.StudentID,
+			ChildName:      child.FullName,
+			Photo:          child.Photo,
+			Center:         child.Center,
+			Group:          child.Group,
+			CheckInTime:    nowTime,
+			DropOffAdult:   input.AdultName + " (" + input.Rel + ")",
+			PickupPin:      pin,
+			InstructorName: instructor,
+			Status:         childStatus,
+		}
+		config.DB.Create(&logEntry)
+	} else {
+		logEntry.ChildName = child.FullName
+		logEntry.Photo = child.Photo
+		logEntry.Center = child.Center
+		logEntry.Group = child.Group
+		logEntry.CheckInTime = nowTime
+		logEntry.DropOffAdult = input.AdultName + " (" + input.Rel + ")"
+		logEntry.PickupPin = pin
+		logEntry.InstructorName = instructor
+		logEntry.Status = childStatus
+		config.DB.Save(&logEntry)
 	}
-	config.DB.Create(&logEntry)
 
 	c.JSON(http.StatusOK, gin.H{
 		"message":       "Check-in successful",
@@ -344,23 +359,36 @@ func CheckOutChild(c *gin.Context) {
 		instructor = "Administrator"
 	}
 
-	// Create a new distinct Attendance Log Entry for the Check-Out event
-	logEntry := models.AttendanceLog{
-		Date:               getWATNow().Format("2006-01-02"),
-		StudentID:          child.StudentID,
-		ChildName:          child.FullName,
-		Photo:              child.Photo,
-		Center:             child.Center,
-		Group:              child.Group,
-		CheckInTime:        child.CheckInTime,
-		CheckOutTime:       nowTime,
-		PickupAdult:        input.Collector + " (" + input.Rel + ")",
-		PickupPin:          child.ActiveCode,
-		InstructorName:     instructor,
-		CheckOutInstructor: instructor,
-		Status:             "Checked Out",
+	// Update existing Attendance Log for today, or create if missing
+	todayDate := getWATNow().Format("2006-01-02")
+	var checkoutLog models.AttendanceLog
+	if err := config.DB.Where("student_id = ? AND date = ?", child.StudentID, todayDate).First(&checkoutLog).Error; err != nil {
+		checkoutLog = models.AttendanceLog{
+			Date:               todayDate,
+			StudentID:          child.StudentID,
+			ChildName:          child.FullName,
+			Photo:              child.Photo,
+			Center:             child.Center,
+			Group:              child.Group,
+			CheckInTime:        child.CheckInTime,
+			CheckOutTime:       nowTime,
+			PickupAdult:        input.Collector + " (" + input.Rel + ")",
+			PickupPin:          child.ActiveCode,
+			InstructorName:     instructor,
+			CheckOutInstructor: instructor,
+			Status:             "Checked Out",
+		}
+		config.DB.Create(&checkoutLog)
+	} else {
+		checkoutLog.CheckOutTime = nowTime
+		checkoutLog.PickupAdult = input.Collector + " (" + input.Rel + ")"
+		checkoutLog.CheckOutInstructor = instructor
+		checkoutLog.Status = "Checked Out"
+		if checkoutLog.CheckInTime == "" {
+			checkoutLog.CheckInTime = child.CheckInTime
+		}
+		config.DB.Save(&checkoutLog)
 	}
-	config.DB.Create(&logEntry)
 
 	c.JSON(http.StatusOK, gin.H{
 		"message":      "Pickup PIN verified! Child safely released.",

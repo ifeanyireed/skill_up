@@ -12,11 +12,19 @@ import {
 import '../admin.css'
 import { getAttendanceLogs, getAttendanceExportCSVURL, BackendAttendanceLog } from '../services/api'
 
+const getTodayLocalString = () => {
+  const d = new Date()
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
 export function HistoryPage() {
   const [logs, setLogs] = useState<BackendAttendanceLog[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
-  const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0])
+  const [selectedDate, setSelectedDate] = useState<string>(getTodayLocalString())
 
   const loadData = async () => {
     setLoading(true)
