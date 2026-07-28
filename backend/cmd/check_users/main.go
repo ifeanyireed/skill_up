@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strings"
 
 	"checkin-backend/config"
 	"checkin-backend/models"

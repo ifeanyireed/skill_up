@@ -26,8 +26,23 @@ func GetAttendanceLogs(c *gin.Context) {
 	search := c.Query("search")
 	if search != "" {
 		searchTerm := "%" + search + "%"
-		query = query.Where("child_name LIKE ? OR student_id LIKE ? OR pickup_pin LIKE ?",
-			searchTerm, searchTerm, searchTerm)
+		query = query.Where("child_name LIKE ? OR student_id LIKE ? OR pickup_pin LIKE ? OR drop_off_adult LIKE ? OR pickup_adult LIKE ?",
+			searchTerm, searchTerm, searchTerm, searchTerm, searchTerm)
+	}
+
+	status := c.Query("status")
+	if status != "" && status != "all" {
+		query = query.Where("status = ?", status)
+	}
+
+	group := c.Query("group")
+	if group != "" && group != "all" {
+		query = query.Where("`group` = ?", group)
+	}
+
+	center := c.Query("center")
+	if center != "" && center != "all" {
+		query = query.Where("center = ?", center)
 	}
 
 	if err := query.Order("id desc").Find(&logs).Error; err != nil {

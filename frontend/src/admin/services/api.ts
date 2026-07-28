@@ -285,10 +285,19 @@ export async function checkOutChild(
 }
 
 // ── Attendance Logs API ──────────────────────────────────────────────────────
-export async function getAttendanceLogs(date?: string, search?: string): Promise<BackendAttendanceLog[]> {
+export async function getAttendanceLogs(
+  date?: string,
+  search?: string,
+  status?: string,
+  group?: string,
+  center?: string
+): Promise<BackendAttendanceLog[]> {
   const params = new URLSearchParams()
   if (date) params.append('date', date)
   if (search) params.append('search', search)
+  if (status && status !== 'all') params.append('status', status)
+  if (group && group !== 'all') params.append('group', group)
+  if (center && center !== 'all') params.append('center', center)
 
   const res = await fetch(`${API_BASE_URL}/attendance?${params.toString()}`)
   if (!res.ok) throw new Error('Failed to fetch attendance logs')
