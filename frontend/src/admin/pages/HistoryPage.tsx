@@ -269,7 +269,7 @@ export function HistoryPage() {
           >
             <option value="all">All Centers</option>
             <option value="Raji Rasaki Centre">Raji Rasaki Centre</option>
-            <option value="CBT Centre">CBT Centre</option>
+            <option value="Festac Centre">Festac Centre</option>
           </select>
 
           {/* Reset Filters Button */}

@@ -134,7 +134,7 @@ export function ChildRegistrationPage() {
         <div>
           <div className="admin-page-title">Register New Student</div>
           <div className="admin-page-desc">
-            Add a child to the academy directory at Raji Rasaki Centre or CBT Centre
+            Add a child to the academy directory at Raji Rasaki Centre or Festac Centre
           </div>
         </div>
       </div>

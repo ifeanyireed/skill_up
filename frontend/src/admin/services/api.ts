@@ -22,7 +22,7 @@ export interface BackendChild {
   age: number
   gender: string
   dob: string
-  center: string // 'Raji Rasaki Centre' | 'CBT Centre'
+  center: string // 'Raji Rasaki Centre' | 'Festac Centre'
   group: string
   parent_name: string
   parent_phone: string
