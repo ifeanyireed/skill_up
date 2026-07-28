@@ -48,14 +48,20 @@ func CheckAndAutoTransitionWaitingPickup(db *gorm.DB) {
 
 	// 2. DAILY MORNING RESET: Reset all students to "Not Checked In" at the start of a new date
 	if lastResetDate != todayDate {
-		db.Model(&models.Child{}).
-			Where("status != ?", "Not Checked In").
-			Updates(map[string]interface{}{
-				"status":         "Not Checked In",
-				"active_code":    "",
-				"check_in_time":  "",
-				"check_out_time": "",
-			})
+		var todayLogsCount int64
+		db.Model(&models.AttendanceLog{}).Where("date = ?", todayDate).Count(&todayLogsCount)
+		
+		// Only reset if there are no check-ins today yet (truly a fresh morning)
+		if todayLogsCount == 0 {
+			db.Model(&models.Child{}).
+				Where("status != ?", "Not Checked In").
+				Updates(map[string]interface{}{
+					"status":         "Not Checked In",
+					"active_code":    "",
+					"check_in_time":  "",
+					"check_out_time": "",
+				})
+		}
 		lastResetDate = todayDate
 	}
 
