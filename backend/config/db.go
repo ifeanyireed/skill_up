@@ -59,14 +59,17 @@ func InitDB() *gorm.DB {
 	// Auto Migrate schemas
 	fmt.Println("[DB] AutoMigrating schema tables...")
 
-	// Purge duplicate attendance records if any exist before applying unique index constraint
+	// Purge duplicate attendance records if any exist
 	_ = db.Exec(`
-		DELETE a1 FROM attendance_logs a1
-		INNER JOIN attendance_logs a2 
-		ON a1.student_id = a2.student_id 
-		AND a1.date = a2.date 
-		AND a1.id < a2.id
+		DELETE FROM attendance_logs WHERE id NOT IN (
+			SELECT max_id FROM (
+				SELECT MAX(id) as max_id FROM attendance_logs GROUP BY student_id, date
+			) as tmp
+		)
 	`)
+
+	// Safely drop old unique index if present so standard composite index can be created
+	_ = db.Exec("ALTER TABLE attendance_logs DROP INDEX idx_student_date")
 
 	err = db.AutoMigrate(
 		&models.Child{},

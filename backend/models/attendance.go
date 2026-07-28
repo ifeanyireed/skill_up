@@ -8,8 +8,8 @@ import (
 
 type AttendanceLog struct {
 	ID             uint           `gorm:"primaryKey" json:"id"`
-	Date           string         `gorm:"type:varchar(20);uniqueIndex:idx_student_date;not null" json:"date"`
-	StudentID      string         `gorm:"type:varchar(50);uniqueIndex:idx_student_date;not null" json:"student_id"`
+	Date           string         `gorm:"type:varchar(20);index:idx_student_date;not null" json:"date"`
+	StudentID      string         `gorm:"type:varchar(50);index:idx_student_date;not null" json:"student_id"`
 	ChildName      string         `gorm:"type:varchar(150);not null" json:"child_name"`
 	Photo          string         `gorm:"type:varchar(255)" json:"photo"`
 	Center             string         `gorm:"type:varchar(100)" json:"center"` // Raji Rasaki Centre, Festac Centre
