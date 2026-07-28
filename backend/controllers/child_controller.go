@@ -24,20 +24,49 @@ func getWATNow() time.Time {
 	return time.Now().In(loc)
 }
 
+var lastResetDate string
+
 // CheckAndAutoTransitionWaitingPickup automatically transitions all "Checked In" students
-// to "Waiting Pickup" once local time reaches 14:00 (2:00 PM).
+// to "Waiting Pickup" once local time reaches 14:00 (2:00 PM), auto-clears past days' logs to "Checked Out",
+// and resets all students to "Not Checked In" at the start of each new date.
 func CheckAndAutoTransitionWaitingPickup(db *gorm.DB) {
 	if db == nil {
 		return
 	}
 	now := getWATNow()
+	todayDate := now.Format("2006-01-02")
+
+	// 1. Transition past days' un-cleared attendance logs to "Checked Out"
+	db.Model(&models.AttendanceLog{}).
+		Where("date < ? AND status IN ('Checked In', 'Waiting Pickup')", todayDate).
+		Updates(map[string]interface{}{
+			"status":               "Checked Out",
+			"check_out_time":       "05:00 PM",
+			"pickup_adult":         "Parent / Authorized Pickup",
+			"check_out_instructor": "System Auto-Clear",
+		})
+
+	// 2. DAILY MORNING RESET: Reset all students to "Not Checked In" at the start of a new date
+	if lastResetDate != todayDate {
+		db.Model(&models.Child{}).
+			Where("status != ?", "Not Checked In").
+			Updates(map[string]interface{}{
+				"status":         "Not Checked In",
+				"active_code":    "",
+				"check_in_time":  "",
+				"check_out_time": "",
+			})
+		lastResetDate = todayDate
+	}
+
+	// 3. Transition today's "Checked In" to "Waiting Pickup" after 2:00 PM (14:00)
 	if now.Hour() >= 14 {
 		db.Model(&models.Child{}).
 			Where("status = ?", "Checked In").
 			Update("status", "Waiting Pickup")
 
 		db.Model(&models.AttendanceLog{}).
-			Where("status = ? AND date = ?", "Checked In", now.Format("2006-01-02")).
+			Where("status = ? AND date = ?", "Checked In", todayDate).
 			Update("status", "Waiting Pickup")
 	}
 }
