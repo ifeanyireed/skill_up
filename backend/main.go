@@ -32,9 +32,12 @@ func main() {
 
 	// Background ticker: Automatically transitions Checked In students to Waiting Pickup at 2 PM
 	go func() {
-		ticker := time.NewTicker(30 * time.Second)
+		ticker := time.NewTicker(5 * time.Minute)
 		for range ticker.C {
-			controllers.CheckAndAutoTransitionWaitingPickup(db)
+			// Save DB queries: only trigger database transition logic if it's 2 PM or later
+			if time.Now().Hour() >= 14 {
+				controllers.CheckAndAutoTransitionWaitingPickup(db)
+			}
 		}
 	}()
 

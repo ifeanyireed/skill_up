@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
@@ -84,5 +85,14 @@ func InitDB() *gorm.DB {
 	}
 
 	DB = db
+
+	// Implement aggressive connection pooling to prevent hitting max_connections_per_hour
+	sqlDB, err := db.DB()
+	if err == nil {
+		sqlDB.SetMaxOpenConns(10)
+		sqlDB.SetMaxIdleConns(10)
+		sqlDB.SetConnMaxLifetime(4 * time.Hour)
+	}
+
 	return db
 }

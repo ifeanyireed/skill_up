@@ -79,8 +79,6 @@ func CheckAndAutoTransitionWaitingPickup(db *gorm.DB) {
 
 // GET /api/children
 func GetChildren(c *gin.Context) {
-	CheckAndAutoTransitionWaitingPickup(config.DB)
-
 	var children []models.Child
 	db := config.DB.Model(&models.Child{})
 
