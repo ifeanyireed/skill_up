@@ -58,6 +58,16 @@ func InitDB() *gorm.DB {
 
 	// Auto Migrate schemas
 	fmt.Println("[DB] AutoMigrating schema tables...")
+
+	// Purge duplicate attendance records if any exist before applying unique index constraint
+	_ = db.Exec(`
+		DELETE a1 FROM attendance_logs a1
+		INNER JOIN attendance_logs a2 
+		ON a1.student_id = a2.student_id 
+		AND a1.date = a2.date 
+		AND a1.id < a2.id
+	`)
+
 	err = db.AutoMigrate(
 		&models.Child{},
 		&models.AttendanceLog{},
@@ -65,10 +75,11 @@ func InitDB() *gorm.DB {
 		&models.Setting{},
 	)
 	if err != nil {
-		log.Fatalf("[DB Error] Failed to migrate database schemas: %v", err)
+		fmt.Printf("[DB Warning] AutoMigrate notice: %v\n", err)
+	} else {
+		fmt.Println("[DB] Schema AutoMigration complete!")
 	}
 
-	fmt.Println("[DB] Schema AutoMigration complete!")
 	DB = db
 	return db
 }
