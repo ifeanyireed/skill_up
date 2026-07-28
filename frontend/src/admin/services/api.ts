@@ -290,7 +290,9 @@ export async function getAttendanceLogs(
   search?: string,
   status?: string,
   group?: string,
-  center?: string
+  center?: string,
+  page?: number,
+  limit?: number
 ): Promise<BackendAttendanceLog[]> {
   const params = new URLSearchParams()
   if (date) params.append('date', date)
@@ -298,6 +300,8 @@ export async function getAttendanceLogs(
   if (status && status !== 'all') params.append('status', status)
   if (group && group !== 'all') params.append('group', group)
   if (center && center !== 'all') params.append('center', center)
+  if (page) params.append('page', page.toString())
+  if (limit) params.append('limit', limit.toString())
 
   const res = await fetch(`${API_BASE_URL}/attendance?${params.toString()}`)
   if (!res.ok) throw new Error('Failed to fetch attendance logs')

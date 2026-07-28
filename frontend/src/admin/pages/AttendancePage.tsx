@@ -16,6 +16,7 @@ import {
 import '../admin.css'
 import { getChildren, updateChildStatus, BackendChild } from '../services/api'
 import { useAdminStore } from '../store/useAdminStore'
+import { PaginationController } from '../components/PaginationController'
 
 const getStatusBadge = (status: string) => {
   switch (status) {
@@ -38,6 +39,10 @@ export function AttendancePage() {
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<'all' | 'Checked In' | 'Waiting Pickup' | 'Checked Out' | 'Not Checked In'>('all')
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+
   const loadData = async () => {
     setLoading(true)
     try {
@@ -54,6 +59,10 @@ export function AttendancePage() {
     loadData()
   }, [search, statusFilter])
 
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [search, statusFilter, pageSize])
+
   const handleMarkWaitingPickup = async (id: number) => {
     try {
       const instructorName = session.user?.fullName || 'Administrator'
@@ -68,6 +77,15 @@ export function AttendancePage() {
   const waitingCount = children.filter((c) => c.status === 'Waiting Pickup').length
   const checkedOutCount = children.filter((c) => c.status === 'Checked Out').length
   const notCheckedInCount = children.filter((c) => c.status === 'Not Checked In').length
+
+  // Pagination calculations
+  const totalItems = children.length
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize))
+  const safeCurrentPage = Math.min(currentPage, totalPages)
+
+  const startIndex = (safeCurrentPage - 1) * pageSize
+  const endIndex = Math.min(startIndex + pageSize, totalItems)
+  const currentChildren = children.slice(startIndex, endIndex)
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -173,14 +191,14 @@ export function AttendancePage() {
                     <Loader2 size={16} className="animate-spin" style={{ margin: '0 auto' }} /> Loading real-time attendance...
                   </td>
                 </tr>
-              ) : children.length === 0 ? (
+              ) : currentChildren.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="admin-table-empty">
                     No attendance records found
                   </td>
                 </tr>
               ) : (
-                children.map((c) => (
+                currentChildren.map((c) => (
                   <tr key={c.id}>
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
@@ -255,6 +273,17 @@ export function AttendancePage() {
           </table>
         </div>
       </div>
+
+      {/* Pagination Controller */}
+      <PaginationController
+        currentPage={safeCurrentPage}
+        totalPages={totalPages}
+        totalItems={totalItems}
+        pageSize={pageSize}
+        onPageChange={setCurrentPage}
+        onPageSizeChange={setPageSize}
+        itemLabel="students"
+      />
     </div>
   )
 }

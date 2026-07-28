@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/csv"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 
@@ -43,6 +44,17 @@ func GetAttendanceLogs(c *gin.Context) {
 	center := c.Query("center")
 	if center != "" && center != "all" {
 		query = query.Where("center = ?", center)
+	}
+
+	pageStr := c.Query("page")
+	limitStr := c.Query("limit")
+	if pageStr != "" && limitStr != "" {
+		page, _ := strconv.Atoi(pageStr)
+		limit, _ := strconv.Atoi(limitStr)
+		if page > 0 && limit > 0 {
+			offset := (page - 1) * limit
+			query = query.Offset(offset).Limit(limit)
+		}
 	}
 
 	if err := query.Order("id desc").Find(&logs).Error; err != nil {

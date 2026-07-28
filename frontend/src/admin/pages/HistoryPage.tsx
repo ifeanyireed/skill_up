@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import '../admin.css'
 import { getAttendanceLogs, getAttendanceExportCSVURL, BackendAttendanceLog } from '../services/api'
+import { PaginationController } from '../components/PaginationController'
 
 const getTodayLocalString = () => {
   const d = new Date()
@@ -393,112 +394,15 @@ export function HistoryPage() {
       </div>
 
       {/* Pagination Controller */}
-      {totalItems > 0 && (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: '1rem',
-            background: 'var(--adm-surface)',
-            padding: '0.75rem 1.25rem',
-            borderRadius: 'var(--adm-radius)',
-            border: '1px solid var(--adm-border)',
-            fontSize: '13px',
-            color: 'var(--adm-text-2)'
-          }}
-        >
-          {/* Left: Range and Items Per Page */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-            <div>
-              Showing <span style={{ fontWeight: 600, color: 'var(--adm-text-1)' }}>{startIndex + 1}</span> to{' '}
-              <span style={{ fontWeight: 600, color: 'var(--adm-text-1)' }}>{endIndex}</span> of{' '}
-              <span style={{ fontWeight: 600, color: 'var(--adm-text-1)' }}>{totalItems}</span> entries
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ fontSize: '12px', color: 'var(--adm-text-3)' }}>Rows per page:</span>
-              <select
-                className="admin-select"
-                style={{ width: 'auto', height: '30px', fontSize: '12px', padding: '0 0.5rem' }}
-                value={pageSize}
-                onChange={(e) => setPageSize(Number(e.target.value))}
-              >
-                <option value={10}>10</option>
-                <option value={20}>20</option>
-                <option value={50}>50</option>
-                <option value={100}>100</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Right: Page Navigation Controls */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
-            <button
-              className="admin-btn admin-btn-ghost admin-btn-sm"
-              onClick={() => setCurrentPage(1)}
-              disabled={safeCurrentPage === 1}
-              title="First Page"
-              style={{ padding: '0.25rem 0.4rem' }}
-            >
-              <ChevronsLeft size={14} />
-            </button>
-
-            <button
-              className="admin-btn admin-btn-ghost admin-btn-sm"
-              onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-              disabled={safeCurrentPage === 1}
-              title="Previous Page"
-              style={{ padding: '0.25rem 0.5rem' }}
-            >
-              <ChevronLeft size={14} /> Previous
-            </button>
-
-            <div style={{ display: 'flex', gap: '0.25rem', padding: '0 0.25rem' }}>
-              {Array.from({ length: totalPages }, (_, i) => i + 1)
-                .filter((p) => p === 1 || p === totalPages || Math.abs(p - safeCurrentPage) <= 1)
-                .map((p, idx, arr) => {
-                  const showEllipsisBefore = idx > 0 && p - arr[idx - 1] > 1
-                  return (
-                    <React.Fragment key={p}>
-                      {showEllipsisBefore && (
-                        <span style={{ padding: '0.25rem 0.25rem', color: 'var(--adm-text-3)', fontSize: '12px' }}>...</span>
-                      )}
-                      <button
-                        className={`admin-btn admin-btn-sm ${safeCurrentPage === p ? 'admin-btn-primary' : 'admin-btn-ghost'}`}
-                        onClick={() => setCurrentPage(p)}
-                        style={{ minWidth: '28px', height: '28px', padding: '0 0.375rem', justifyContent: 'center' }}
-                      >
-                        {p}
-                      </button>
-                    </React.Fragment>
-                  )
-                })}
-            </div>
-
-            <button
-              className="admin-btn admin-btn-ghost admin-btn-sm"
-              onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
-              disabled={safeCurrentPage === totalPages}
-              title="Next Page"
-              style={{ padding: '0.25rem 0.5rem' }}
-            >
-              Next <ChevronRight size={14} />
-            </button>
-
-            <button
-              className="admin-btn admin-btn-ghost admin-btn-sm"
-              onClick={() => setCurrentPage(totalPages)}
-              disabled={safeCurrentPage === totalPages}
-              title="Last Page"
-              style={{ padding: '0.25rem 0.4rem' }}
-            >
-              <ChevronsRight size={14} />
-            </button>
-          </div>
-        </div>
-      )}
+      <PaginationController
+        currentPage={safeCurrentPage}
+        totalPages={totalPages}
+        totalItems={totalItems}
+        pageSize={pageSize}
+        onPageChange={setCurrentPage}
+        onPageSizeChange={setPageSize}
+        itemLabel="entries"
+      />
     </div>
   )
 }
