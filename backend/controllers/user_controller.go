@@ -97,22 +97,13 @@ func Login(c *gin.Context) {
 
 	var user models.User
 	if err := config.DB.Where("LOWER(email) = ? AND status = ?", cleanEmail, "Active").First(&user).Error; err != nil {
-		// Fallback admin login helper
-		fullName := "Christiana Okokon"
-		if strings.Contains(cleanEmail, "ifeanyi") {
-			fullName = "Ifeanyi Reed"
-		} else if strings.Contains(cleanEmail, "grace") {
-			fullName = "Grace Solomon"
-		}
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials or account disabled"})
+		return
+	}
 
-		user = models.User{
-			ID:            1,
-			FullName:      fullName,
-			Email:         payload.Email,
-			Role:          "Administrator",
-			Status:        "Active",
-			AssignedGroup: "Head Administrator",
-		}
+	if user.PasswordHash != payload.Password {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
