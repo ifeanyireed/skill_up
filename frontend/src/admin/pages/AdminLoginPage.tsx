@@ -27,18 +27,26 @@ export function AdminLoginPage() {
       return
     }
 
-    login(email, password)
-    navigate('/admin', { replace: true })
+    const success = await login(email, password)
+    if (success) {
+      navigate('/admin', { replace: true })
+    } else {
+      setError('Invalid credentials or account disabled.')
+      setLoading(false)
+    }
   }
 
-  const handleQuickLogin = (demoEmail: string) => {
+  const handleQuickLogin = async (demoEmail: string) => {
     setEmail(demoEmail)
     setPassword('skillup2026')
     setLoading(true)
-    setTimeout(() => {
-      login(demoEmail, 'skillup2026')
+    const success = await login(demoEmail, 'skillup2026')
+    if (success) {
       navigate('/admin', { replace: true })
-    }, 250)
+    } else {
+      setError('Invalid credentials or account disabled.')
+      setLoading(false)
+    }
   }
 
   return (
