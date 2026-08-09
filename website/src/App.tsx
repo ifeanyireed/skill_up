@@ -22,27 +22,36 @@ function ScrollToTop() {
   return null
 }
 
+function MainLayout() {
+  const { pathname } = useLocation()
+  const isEmbedPage = pathname === '/puzzlepro'
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      {!isEmbedPage && <Header />}
+      <main style={{ flex: 1 }}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/courses" element={<CoursesPage />} />
+          <Route path="/instructors" element={<InstructorsPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/puzzlepro" element={<PuzzleProPage />} />
+          <Route path="*" element={<HomePage />} />
+        </Routes>
+      </main>
+      {!isEmbedPage && <Footer />}
+    </div>
+  )
+}
+
 export function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-        <Header />
-        <main style={{ flex: 1 }}>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/courses" element={<CoursesPage />} />
-            <Route path="/instructors" element={<InstructorsPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/pricing" element={<PricingPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/puzzlepro" element={<PuzzleProPage />} />
-            <Route path="*" element={<HomePage />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+      <MainLayout />
     </BrowserRouter>
   )
 }
