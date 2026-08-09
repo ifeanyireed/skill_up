@@ -1,5 +1,5 @@
 official skillup website - nenehappiness84@gmail.com
-check-in website - reedbreeddigital@gmail.com
+kids academy website - reedbreeddigital@gmail.com
 
 ### Registered Admin Accounts:
 
