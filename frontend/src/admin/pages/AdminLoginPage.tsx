@@ -196,7 +196,7 @@ export function AdminLoginPage() {
                 fontWeight: 300
               }}
             >
-              <strong style={{ fontWeight: 800, color: '#fff' }}>Future Programs For Kids</strong>
+              <strong style={{ fontWeight: 800, color: '#fff' }}>Future Programs</strong>
               <br />
               <span style={{ color: 'rgba(255,255,255,0.65)', fontWeight: 300, fontSize: '0.82em' }}>For Kids.</span>
             </h1>
