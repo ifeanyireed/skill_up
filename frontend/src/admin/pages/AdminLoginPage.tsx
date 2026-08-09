@@ -196,7 +196,7 @@ export function AdminLoginPage() {
                 fontWeight: 300
               }}
             >
-              <strong style={{ fontWeight: 800, color: '#fff' }}>Kiddies Academy</strong>
+              <strong style={{ fontWeight: 800, color: '#fff' }}>Future Programs For Kids</strong>
               <br />
               <span style={{ color: 'rgba(255,255,255,0.65)', fontWeight: 300, fontSize: '0.82em' }}>For Kids.</span>
             </h1>
@@ -395,7 +395,7 @@ export function AdminLoginPage() {
                 <form onSubmit={handleKidSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
                   <div style={{ borderBottom: '1px solid rgba(255,255,255,0.12)', paddingBottom: '0.75rem', marginBottom: '0.25rem' }}>
                     <div style={{ fontSize: '0.6875rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--adm-accent, #C40000)', marginBottom: '0.25rem' }}>
-                      KIDDIES STUDENT PORTAL
+                      STUDENT PORTAL
                     </div>
                     <div style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.8)' }}>
                       Enter your 8-digit student code to sign in.

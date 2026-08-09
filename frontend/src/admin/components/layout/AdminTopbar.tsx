@@ -20,7 +20,7 @@ const pageTitles: Record<string, string> = {
 export function AdminTopbar() {
   const { session, setSearchOpen } = useAdminStore()
   const { pathname } = useLocation()
-  const title = pageTitles[pathname] ?? 'Kiddies Academy Portal (kids.skilluplearningacademy.com)'
+  const title = pageTitles[pathname] ?? 'Future Programs For Kids Portal'
   const initials = session.user?.fullName
     ? session.user.fullName.split(' ').map((n: string) => n[0]).join('').slice(0, 2)
     : 'SJ'

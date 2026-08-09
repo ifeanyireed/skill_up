@@ -69,8 +69,7 @@ export function AdminSidebar() {
           />
           {!sidebarCollapsed && (
             <div>
-              <div style={{ fontSize: '13px', fontWeight: 800, color: 'var(--adm-text-1)', lineHeight: 1.1 }}>Kiddies Academy</div>
-              <div style={{ fontSize: '10px', color: 'var(--adm-text-3)', fontWeight: 600 }}>kids.skilluplearningacademy.com</div>
+              <div style={{ fontSize: '12px', fontWeight: 800, color: 'var(--adm-text-1)', lineHeight: 1.1 }}>Future Programs For Kids</div>
             </div>
           )}
         </div>
