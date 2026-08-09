@@ -122,7 +122,7 @@ const INITIAL_STUDENTS: SchoolStudent[] = [
 ]
 
 export function SchoolPuzzleProPage() {
-  const [activeTab, setActiveTab] = useState<'students' | 'groups' | 'centres' | 'profile'>('students')
+  const [activeTab, setActiveTab] = useState<'students' | 'groups' | 'centres'>('students')
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCentreFilter, setSelectedCentreFilter] = useState<string>('ALL')
   const [selectedGroupFilter, setSelectedGroupFilter] = useState<string>('ALL')
@@ -424,25 +424,6 @@ export function SchoolPuzzleProPage() {
             }}
           >
             <Building2 size={16} /> Campus Centres & Locations
-          </button>
-
-          <button
-            onClick={() => setActiveTab('profile')}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              fontSize: '0.8125rem',
-              fontWeight: 600,
-              padding: '0.5rem 0',
-              border: 'none',
-              borderBottom: activeTab === 'profile' ? '2px solid var(--adm-accent, #C40000)' : '2px solid transparent',
-              color: activeTab === 'profile' ? 'var(--adm-accent, #C40000)' : 'var(--adm-text-2)',
-              backgroundColor: 'transparent',
-              cursor: 'pointer',
-            }}
-          >
-            <Settings size={16} /> Profile & Subscription
           </button>
         </div>
 
@@ -797,82 +778,6 @@ export function SchoolPuzzleProPage() {
                 ))}
               </tbody>
             </table>
-          </div>
-        </div>
-      )}
-
-      {/* ── TAB 4: PROFILE & SUBSCRIPTION ── */}
-      {activeTab === 'profile' && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
-          <div className="admin-card">
-            <div className="admin-card-title">School Profile & Branding</div>
-            {profileSaved && (
-              <div className="admin-badge admin-badge-green" style={{ marginBottom: '1rem' }}>
-                Profile settings updated!
-              </div>
-            )}
-            <form
-              onSubmit={(e) => {
-                e.preventDefault()
-                setProfileSaved(true)
-                setTimeout(() => setProfileSaved(false), 3000)
-              }}
-              style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
-            >
-              <div>
-                <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--adm-text-2)' }}>School Name</label>
-                <input
-                  type="text"
-                  value={profileForm.name}
-                  onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
-                  style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid var(--adm-border)', marginTop: '4px' }}
-                />
-              </div>
-              <div>
-                <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--adm-text-2)' }}>Domain Origin</label>
-                <input
-                  type="text"
-                  value={profileForm.domain}
-                  onChange={(e) => setProfileForm({ ...profileForm, domain: e.target.value })}
-                  style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid var(--adm-border)', marginTop: '4px' }}
-                />
-              </div>
-              <div>
-                <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--adm-text-2)' }}>Contact Email</label>
-                <input
-                  type="email"
-                  value={profileForm.contactEmail}
-                  onChange={(e) => setProfileForm({ ...profileForm, contactEmail: e.target.value })}
-                  style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid var(--adm-border)', marginTop: '4px' }}
-                />
-              </div>
-              <button type="submit" className="admin-btn admin-btn-primary" style={{ marginTop: '0.5rem' }}>
-                Save Profile Changes
-              </button>
-            </form>
-          </div>
-
-          <div className="admin-card">
-            <div className="admin-card-title">School Subscription & Seats</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <div>
-                <div style={{ fontSize: '0.8125rem', color: 'var(--adm-text-3)' }}>Current Subscription Plan</div>
-                <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--adm-accent, #C40000)' }}>
-                  {profileForm.plan}
-                </div>
-              </div>
-
-              <div>
-                <div style={{ fontSize: '0.8125rem', color: 'var(--adm-text-3)' }}>Allocated Student Seats</div>
-                <div style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--adm-text-1)' }}>
-                  {students.length} / {profileForm.seats} Seats Used
-                </div>
-              </div>
-
-              <div className="admin-badge admin-badge-green" style={{ width: 'fit-content' }}>
-                <ShieldCheck size={14} /> Active School License
-              </div>
-            </div>
           </div>
         </div>
       )}
