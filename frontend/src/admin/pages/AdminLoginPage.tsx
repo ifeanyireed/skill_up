@@ -193,7 +193,7 @@ export function AdminLoginPage() {
             >
               <strong style={{ fontWeight: 800, color: '#fff' }}>Kiddies Academy</strong>
               <br />
-              <span style={{ color: 'rgba(255,255,255,0.65)', fontWeight: 300, fontSize: '0.82em' }}>kids.skilluplearningacademy.com</span>
+              <span style={{ color: 'rgba(255,255,255,0.65)', fontWeight: 300, fontSize: '0.82em' }}>For Kids.</span>
             </h1>
 
             {/* Subhead Body */}
@@ -206,7 +206,7 @@ export function AdminLoginPage() {
                 lineHeight: '1.55'
               }}
             >
-              Digital child safety & attendance management portal for kids.skilluplearningacademy.com. Capture guardian drop-off details and verify 8-digit student codes.
+              Get access to On-Demand Future Skills and Programs for kids, join exclusive workshops, interactive learning tools, and safe daily child check-ins.
             </p>
 
             {/* Parent Call-to-Action Card */}
