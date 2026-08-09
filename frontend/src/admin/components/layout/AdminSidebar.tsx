@@ -55,17 +55,25 @@ export function AdminSidebar() {
   return (
     <nav className="admin-sidebar">
       {/* Brand Header & Caret Toggle */}
-      <div className="admin-sidebar-logo">
-        <img
-          src="/logo.avif"
-          alt="Skill Up Academy"
-          style={{
-            height: sidebarCollapsed ? '28px' : '34px',
-            width: 'auto',
-            objectFit: 'contain',
-            transition: 'height 0.2s'
-          }}
-        />
+      <div className="admin-sidebar-logo" style={{ flexWrap: 'wrap', gap: '4px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <img
+            src="/logo.avif"
+            alt="Kiddies Academy"
+            style={{
+              height: sidebarCollapsed ? '26px' : '32px',
+              width: 'auto',
+              objectFit: 'contain',
+              transition: 'height 0.2s'
+            }}
+          />
+          {!sidebarCollapsed && (
+            <div>
+              <div style={{ fontSize: '13px', fontWeight: 800, color: 'var(--adm-text-1)', lineHeight: 1.1 }}>Kiddies Academy</div>
+              <div style={{ fontSize: '10px', color: 'var(--adm-text-3)', fontWeight: 600 }}>kids.skilluplearningacademy.com</div>
+            </div>
+          )}
+        </div>
 
         <button
           onClick={toggleSidebar}

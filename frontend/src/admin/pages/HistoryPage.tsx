@@ -10,10 +10,6 @@ import {
   Loader2,
   Filter,
   X,
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
   RotateCcw
 } from 'lucide-react'
 import '../admin.css'

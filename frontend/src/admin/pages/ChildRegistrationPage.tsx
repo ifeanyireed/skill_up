@@ -32,6 +32,15 @@ export function ChildRegistrationPage() {
   const [selectedAvatar, setSelectedAvatar] = useState<string>(AVATAR_CHARACTERS[0])
   const [customPhotoUrl, setCustomPhotoUrl] = useState<string>('')
 
+  const [parentName, setParentName] = useState('')
+  const [parentPhone, setParentPhone] = useState('')
+  const [parentEmail, setParentEmail] = useState('')
+  const [relationship, setRelationship] = useState('Mother')
+
+  const [emergencyName, setEmergencyName] = useState('')
+  const [emergencyPhone, setEmergencyPhone] = useState('')
+  const [medicalNotes, setMedicalNotes] = useState('')
+
   if (!isAdmin) {
     return (
       <div style={{ maxWidth: '600px', margin: '3rem auto', textAlign: 'center' }}>
@@ -64,15 +73,6 @@ export function ChildRegistrationPage() {
       </div>
     )
   }
-
-  const [parentName, setParentName] = useState('')
-  const [parentPhone, setParentPhone] = useState('')
-  const [parentEmail, setParentEmail] = useState('')
-  const [relationship, setRelationship] = useState('Mother')
-
-  const [emergencyName, setEmergencyName] = useState('')
-  const [emergencyPhone, setEmergencyPhone] = useState('')
-  const [medicalNotes, setMedicalNotes] = useState('')
 
   const activePhoto = photoMode === 'upload' && customPhotoUrl ? customPhotoUrl : selectedAvatar
 

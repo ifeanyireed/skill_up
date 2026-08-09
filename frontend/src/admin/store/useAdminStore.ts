@@ -22,6 +22,7 @@ interface AdminStore {
   // Auth
   session: AdminSession
   login: (email: string, password: string) => Promise<boolean>
+  kidLogin: (code: string) => Promise<boolean>
   logout: () => void
 
   // Sidebar
@@ -102,6 +103,31 @@ export const useAdminStore = create<AdminStore>((set, get) => ({
       console.error('Login error', err)
       return false
     }
+  },
+
+  kidLogin: async (code: string) => {
+    // Validate 8-digit numeric code
+    const cleanCode = code.trim().replace(/\D/g, '')
+    if (cleanCode.length !== 8) {
+      return false
+    }
+
+    const kidUser: AdminUser = {
+      id: `kid-${cleanCode}`,
+      fullName: `Kiddies Student (${cleanCode})`,
+      email: `student@kids.skilluplearningacademy.com`,
+      role: 'Student',
+      avatar: '/avatars/character1.jpg',
+      status: 'active',
+      lastLogin: new Date().toISOString()
+    }
+
+    const sessionObj = { isAuthenticated: true, user: kidUser }
+    try {
+      localStorage.setItem('skillup_admin_session', JSON.stringify(sessionObj))
+    } catch (e) {}
+    set({ session: sessionObj })
+    return true
   },
 
   logout: () => {

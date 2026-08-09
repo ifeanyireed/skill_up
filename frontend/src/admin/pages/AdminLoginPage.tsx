@@ -1,28 +1,49 @@
 // ============================================================================
-// Skill Up Academy Check-in portal — Page 1: Login & Parent Registration Link
+// Kiddies Academy — Check-in & Learning Portal (kids.skilluplearningacademy.com)
+// Landing Page with Kids 8-Digit Code Login Toggle & PuzzlePro Header Link
 // ============================================================================
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowRight, Sparkles, UserCheck, KeyRound, ShieldCheck, UserPlus } from 'lucide-react'
+import {
+  ArrowRight,
+  Sparkles,
+  KeyRound,
+  ShieldCheck,
+  UserPlus,
+  Puzzle,
+  Globe,
+  Smile,
+  GraduationCap
+} from 'lucide-react'
 import '../admin.css'
 import { useAdminStore } from '../store/useAdminStore'
 
 export function AdminLoginPage() {
-  const { login } = useAdminStore()
+  const { login, kidLogin } = useAdminStore()
   const navigate = useNavigate()
+
+  // Toggle between 'kid' and 'staff' login mode
+  const [loginMode, setLoginMode] = useState<'kid' | 'staff'>('kid')
+
+  // Staff credentials
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+  // Kids 8-digit student code
+  const [kidCode, setKidCode] = useState('')
+
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Handle Staff Submission
+  const handleStaffSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError('')
-    await new Promise((r) => setTimeout(r, 300))
+    await new Promise((r) => setTimeout(r, 250))
 
     if (!email.trim() || !password.trim()) {
-      setError('Please enter your email and password.')
+      setError('Please enter your staff email and password.')
       setLoading(false)
       return
     }
@@ -31,20 +52,43 @@ export function AdminLoginPage() {
     if (success) {
       navigate('/admin', { replace: true })
     } else {
-      setError('Invalid credentials or account disabled.')
+      setError('Invalid staff credentials or account disabled.')
       setLoading(false)
     }
   }
 
-  const handleQuickLogin = async (demoEmail: string) => {
-    setEmail(demoEmail)
-    setPassword('skillup2026')
+  // Handle Kids 8-Digit Code Submission
+  const handleKidSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
     setLoading(true)
-    const success = await login(demoEmail, 'skillup2026')
+    setError('')
+    await new Promise((r) => setTimeout(r, 250))
+
+    const cleanCode = kidCode.replace(/\D/g, '')
+    if (cleanCode.length !== 8) {
+      setError('Please enter a valid 8-digit student code.')
+      setLoading(false)
+      return
+    }
+
+    const success = await kidLogin(cleanCode)
     if (success) {
       navigate('/admin', { replace: true })
     } else {
-      setError('Invalid credentials or account disabled.')
+      setError('Invalid 8-digit student code.')
+      setLoading(false)
+    }
+  }
+
+  const handleQuickKidLogin = async (demoCode: string) => {
+    setKidCode(demoCode)
+    setLoading(true)
+    setError('')
+    const success = await kidLogin(demoCode)
+    if (success) {
+      navigate('/admin', { replace: true })
+    } else {
+      setError('Invalid code.')
       setLoading(false)
     }
   }
@@ -67,7 +111,7 @@ export function AdminLoginPage() {
         <div aria-hidden style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
           <img
             src="/cbt-centre.jpeg"
-            alt="Skill Up Academy CBT Centre"
+            alt="Kiddies Academy CBT Learning Centre"
             style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 40%' }}
             loading="eager"
           />
@@ -76,7 +120,8 @@ export function AdminLoginPage() {
             style={{
               position: 'absolute',
               inset: 0,
-              background: 'linear-gradient(105deg, rgba(11, 14, 78, 0.96) 0%, rgba(13, 16, 96, 0.82) 50%, rgba(11, 14, 78, 0.5) 100%)',
+              background:
+                'linear-gradient(105deg, rgba(11, 14, 78, 0.96) 0%, rgba(13, 16, 96, 0.85) 50%, rgba(11, 14, 78, 0.55) 100%)',
             }}
           />
           {/* Bottom vignette */}
@@ -84,10 +129,10 @@ export function AdminLoginPage() {
             style={{
               position: 'absolute',
               inset: 0,
-              background: 'linear-gradient(to top, rgba(11, 14, 78, 0.9) 0%, transparent 50%)',
+              background: 'linear-gradient(to top, rgba(11, 14, 78, 0.92) 0%, transparent 50%)',
             }}
           />
-          {/* Red accent — thin left rule */}
+          {/* Accent border */}
           <div
             aria-hidden
             style={{
@@ -96,13 +141,80 @@ export function AdminLoginPage() {
               top: 0,
               bottom: 0,
               width: '4px',
-              background: 'var(--adm-accent, #C40000)',
+              background: 'linear-gradient(180deg, #FACC15 0%, #C40000 100%)',
               zIndex: 10,
             }}
           />
         </div>
 
-        {/* ── Full-Width Flex Container — Form pushed to Extreme Right with little padding ── */}
+        {/* ── Top Header Navigation Bar ── */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 10,
+            padding: '1.25rem max(1.5rem, 3.5vw)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <img
+              src="/logo.avif"
+              alt="Kiddies Academy"
+              style={{
+                height: '42px',
+                width: 'auto',
+                objectFit: 'contain',
+                filter: 'brightness(0) invert(1) drop-shadow(0 2px 8px rgba(0,0,0,0.5))',
+              }}
+            />
+            <div
+              style={{
+                background: 'rgba(255, 255, 255, 0.12)',
+                border: '1px solid rgba(255, 255, 255, 0.25)',
+                padding: '0.35rem 0.75rem',
+                borderRadius: '20px',
+                color: '#FFF',
+                fontSize: '12px',
+                fontWeight: 700,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.375rem',
+              }}
+            >
+              <Globe size={13} color="#FACC15" /> kids.skilluplearningacademy.com
+            </div>
+          </div>
+
+          {/* PuzzlePro Quick Header Button */}
+          <a
+            href="https://www.skilliplearningacademy.com/puzzlepro"
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              background: 'linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%)',
+              color: '#FFF',
+              border: '1px solid rgba(255,255,255,0.3)',
+              borderRadius: '20px',
+              padding: '0.5rem 1rem',
+              fontSize: '13px',
+              fontWeight: 800,
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              boxShadow: '0 4px 15px rgba(124, 58, 237, 0.4)',
+            }}
+          >
+            <Puzzle size={16} color="#FACC15" /> PuzzlePro
+          </a>
+        </div>
+
+        {/* ── Main Flex Container ── */}
         <div
           style={{
             position: 'relative',
@@ -110,39 +222,44 @@ export function AdminLoginPage() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '2rem',
-            paddingTop: '2.5rem',
+            gap: '2.5rem',
+            paddingTop: '6rem',
             paddingBottom: '2.5rem',
             paddingLeft: 'max(1.5rem, 3.5vw)',
             paddingRight: '1.25rem',
             width: '100%',
             boxSizing: 'border-box',
-            flexWrap: 'wrap'
+            flexWrap: 'wrap',
           }}
         >
-          {/* ── Left — Hero Title & Brand Info ── */}
+          {/* ── Left — Hero Title & Kiddies Academy Info ── */}
           <div
             style={{
               flex: '1 1 480px',
-              maxWidth: '560px',
-              color: '#FFFFFF'
+              maxWidth: '580px',
+              color: '#FFFFFF',
             }}
           >
-            {/* Logo Display */}
-            <div style={{ marginBottom: '1.25rem' }}>
-              <img
-                src="/logo.avif"
-                alt="Skill Up Academy Logo"
-                style={{
-                  height: '56px',
-                  width: 'auto',
-                  objectFit: 'contain',
-                  filter: 'brightness(0) invert(1) drop-shadow(0 4px 12px rgba(0,0,0,0.5))'
-                }}
-              />
+            {/* Domain Pill Badge */}
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                background: 'rgba(250, 204, 21, 0.15)',
+                border: '1px solid rgba(250, 204, 21, 0.4)',
+                borderRadius: '30px',
+                padding: '0.4rem 0.875rem',
+                marginBottom: '1.25rem',
+                fontSize: '13px',
+                fontWeight: 800,
+                color: '#FACC15',
+              }}
+            >
+              <Sparkles size={15} /> Welcome to Kiddies Academy Portal
             </div>
 
-            {/* Headline — Clean Editorial Title */}
+            {/* Headline Title */}
             <h1
               style={{
                 color: '#fff',
@@ -150,48 +267,50 @@ export function AdminLoginPage() {
                 fontSize: 'clamp(2.5rem, 4.2vw, 3.8rem)',
                 lineHeight: '1.1',
                 letterSpacing: '-0.02em',
-                fontWeight: 300
+                fontWeight: 300,
               }}
             >
-              <strong style={{ fontWeight: 800, color: '#fff' }}>Check-In Portal</strong>
+              <strong style={{ fontWeight: 900, color: '#fff' }}>Kiddies Academy</strong>
               <br />
-              <span style={{ color: 'rgba(255,255,255,0.65)', fontWeight: 300, fontSize: '0.82em' }}>for Every Student.</span>
+              <span style={{ color: 'rgba(255,255,255,0.75)', fontWeight: 300, fontSize: '0.82em' }}>
+                kids.skilluplearningacademy.com
+              </span>
             </h1>
 
             {/* Subhead Body */}
             <p
               style={{
-                maxWidth: '480px',
+                maxWidth: '500px',
                 marginBottom: '1.75rem',
                 fontSize: '1.0625rem',
-                color: 'rgba(255,255,255,0.8)',
-                lineHeight: '1.55'
+                color: 'rgba(255,255,255,0.85)',
+                lineHeight: '1.55',
               }}
             >
-              Digital child safety & attendance management system. Capture guardian drop-off details and issue 6-digit daily verification PINs for authorized pick-up.
+              Digital child safety, attendance tracking & learning management hub. Kids log in with their 8-digit student code for instant access to lessons and daily check-ins!
             </p>
 
-            {/* Parent Call-to-Action Card */}
+            {/* Parent Registration Card */}
             <div
               style={{
-                marginBottom: '1.75rem',
                 padding: '1rem 1.25rem',
                 background: 'rgba(255, 255, 255, 0.08)',
                 border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: '8px',
+                borderRadius: '10px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 gap: '1rem',
-                maxWidth: '480px'
+                maxWidth: '500px',
+                marginBottom: '2rem',
               }}
             >
               <div>
                 <div style={{ fontSize: '14px', fontWeight: 700, color: '#FFFFFF' }}>
-                  Are you a parent registering a child?
+                  Registering a new student?
                 </div>
                 <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)' }}>
-                  Upload child photo & guardian emergency contact details from your phone.
+                  Upload child photo & guardian contact details online.
                 </div>
               </div>
               <button
@@ -200,7 +319,7 @@ export function AdminLoginPage() {
                   background: 'var(--adm-accent, #C40000)',
                   color: '#fff',
                   border: 'none',
-                  borderRadius: '4px',
+                  borderRadius: '6px',
                   padding: '0.5rem 0.875rem',
                   fontSize: '12.5px',
                   fontWeight: 700,
@@ -209,7 +328,7 @@ export function AdminLoginPage() {
                   alignItems: 'center',
                   gap: '0.375rem',
                   whiteSpace: 'nowrap',
-                  flexShrink: 0
+                  flexShrink: 0,
                 }}
               >
                 <UserPlus size={14} /> Register Child
@@ -226,14 +345,14 @@ export function AdminLoginPage() {
                   padding: '0.5rem 0.875rem',
                   background: 'rgba(255,255,255,0.08)',
                   border: '1px solid rgba(255,255,255,0.15)',
-                  borderRadius: '4px',
+                  borderRadius: '6px',
                   fontSize: '0.8125rem',
                   fontWeight: 600,
-                  color: '#fff'
+                  color: '#fff',
                 }}
               >
-                <KeyRound size={15} color="#C40000" />
-                <span>6-Digit Verification PINs</span>
+                <KeyRound size={15} color="#FACC15" />
+                <span>8-Digit Kids Student Code</span>
               </div>
 
               <div
@@ -244,166 +363,328 @@ export function AdminLoginPage() {
                   padding: '0.5rem 0.875rem',
                   background: 'rgba(255,255,255,0.08)',
                   border: '1px solid rgba(255,255,255,0.15)',
-                  borderRadius: '4px',
+                  borderRadius: '6px',
                   fontSize: '0.8125rem',
                   fontWeight: 600,
-                  color: '#fff'
+                  color: '#fff',
                 }}
               >
                 <ShieldCheck size={15} color="#16A34A" />
-                <span>Real-Time Child Safety</span>
-              </div>
-            </div>
-
-            {/* Trust rating */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-              <div style={{ color: 'var(--adm-accent, #C40000)', fontSize: '1rem', letterSpacing: '0.1em' }}>★★★★★</div>
-              <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#fff' }}>Secure & Certified</div>
-              <div style={{ width: '4px', height: '4px', background: 'rgba(255,255,255,0.3)', borderRadius: '50%', flexShrink: 0 }} />
-              <div style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.6)', maxWidth: '300px', lineHeight: 1.4 }}>
-                Trusted by instructors, parents, and administrators for safe daily student check-in.
+                <span>Safe Check-In Verification</span>
               </div>
             </div>
           </div>
 
-          {/* ── Extreme Right — Staff Login Form Card ── */}
+          {/* ── Right — Login Form Card with KIDS / STAFF Mode Toggle ── */}
           <div
             style={{
               flex: '0 0 auto',
               width: '100%',
-              maxWidth: '420px',
-              marginLeft: 'auto'
+              maxWidth: '430px',
+              marginLeft: 'auto',
             }}
           >
             <div
               style={{
                 width: '100%',
-                background: 'rgba(13, 16, 96, 0.88)',
-                border: '1px solid rgba(255, 255, 255, 0.18)',
-                borderRadius: '4px',
+                background: 'rgba(13, 16, 96, 0.92)',
+                border: '1.5px solid rgba(255, 255, 255, 0.22)',
+                borderRadius: '12px',
                 padding: '1.75rem 1.5rem',
-                backdropFilter: 'blur(16px)',
-                boxShadow: '0 24px 64px rgba(0, 0, 0, 0.5)',
+                backdropFilter: 'blur(20px)',
+                boxShadow: '0 24px 64px rgba(0, 0, 0, 0.6)',
                 color: '#fff',
-                boxSizing: 'border-box'
+                boxSizing: 'border-box',
               }}
             >
-              {/* Card Header */}
-              <div style={{ marginBottom: '1.25rem', borderBottom: '1px solid rgba(255,255,255,0.12)', paddingBottom: '1rem' }}>
-                <div
-                  style={{
-                    fontSize: '0.6875rem',
-                    fontWeight: 800,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    color: 'var(--adm-accent, #C40000)',
-                    marginBottom: '0.375rem'
-                  }}
-                >
-                  STAFF PORTAL
-                </div>
-                <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#fff', letterSpacing: '-0.01em', margin: 0 }}>
-                  Sign in to your account
-                </h2>
-                <div style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.7)', marginTop: '0.25rem' }}>
-                  Enter your staff credentials to access the check-in portal.
-                </div>
-              </div>
-
-              {error && (
-                <div style={{ padding: '0.625rem', background: 'rgba(220, 38, 38, 0.25)', border: '1px solid #DC2626', borderRadius: '4px', color: '#FECACA', fontSize: '12px', marginBottom: '1rem' }}>
-                  {error}
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'rgba(255,255,255,0.8)', marginBottom: '0.375rem' }}>
-                    Email Address <span style={{ color: 'var(--adm-accent)' }}>*</span>
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    autoComplete="email"
-                    placeholder="instructor@skillup.org"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    style={{
-                      width: '100%',
-                      background: 'rgba(255, 255, 255, 0.08)',
-                      border: '1.5px solid rgba(255, 255, 255, 0.2)',
-                      borderRadius: '3px',
-                      padding: '0.625rem 0.875rem',
-                      color: '#fff',
-                      fontSize: '13px',
-                      outline: 'none',
-                      boxSizing: 'border-box'
-                    }}
-                  />
-                </div>
-
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.375rem' }}>
-                    <label style={{ fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'rgba(255,255,255,0.8)' }}>
-                      Password <span style={{ color: 'var(--adm-accent)' }}>*</span>
-                    </label>
-                    <a
-                      href="#forgot"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        alert('Password reset link sent to demo email address.')
-                      }}
-                      style={{ fontSize: '11px', color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}
-                    >
-                      Forgot?
-                    </a>
-                  </div>
-                  <input
-                    type="password"
-                    required
-                    autoComplete="current-password"
-                    placeholder="Enter password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    style={{
-                      width: '100%',
-                      background: 'rgba(255, 255, 255, 0.08)',
-                      border: '1.5px solid rgba(255, 255, 255, 0.2)',
-                      borderRadius: '3px',
-                      padding: '0.625rem 0.875rem',
-                      color: '#fff',
-                      fontSize: '13px',
-                      outline: 'none',
-                      boxSizing: 'border-box'
-                    }}
-                  />
-                </div>
-
+              {/* Mode Selector Toggle Tabs (Kids vs Staff) */}
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  background: 'rgba(255, 255, 255, 0.08)',
+                  borderRadius: '8px',
+                  padding: '4px',
+                  marginBottom: '1.25rem',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                }}
+              >
                 <button
-                  type="submit"
-                  disabled={loading}
+                  type="button"
+                  onClick={() => {
+                    setLoginMode('kid')
+                    setError('')
+                  }}
                   style={{
-                    width: '100%',
-                    background: 'var(--adm-accent, #C40000)',
-                    color: '#fff',
+                    background: loginMode === 'kid' ? '#FACC15' : 'transparent',
+                    color: loginMode === 'kid' ? '#0F172A' : 'rgba(255,255,255,0.7)',
                     border: 'none',
-                    borderRadius: '3px',
-                    padding: '0.75rem 1.25rem',
-                    fontSize: '14px',
-                    fontWeight: 700,
+                    borderRadius: '6px',
+                    padding: '0.625rem 0.5rem',
+                    fontSize: '13px',
+                    fontWeight: 800,
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '0.5rem',
-                    marginTop: '0.5rem',
-                    transition: 'opacity 0.15s'
+                    gap: '0.375rem',
+                    transition: 'all 0.15s ease',
                   }}
                 >
-                  {loading ? 'Authenticating…' : 'Sign In to Portal'}
-                  <ArrowRight size={15} />
+                  <Smile size={16} /> Kids Login (8-Digit)
                 </button>
-              </form>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLoginMode('staff')
+                    setError('')
+                  }}
+                  style={{
+                    background: loginMode === 'staff' ? '#C40000' : 'transparent',
+                    color: loginMode === 'staff' ? '#FFFFFF' : 'rgba(255,255,255,0.7)',
+                    border: 'none',
+                    borderRadius: '6px',
+                    padding: '0.625rem 0.5rem',
+                    fontSize: '13px',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.375rem',
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  <GraduationCap size={16} /> Staff Login
+                </button>
+              </div>
+
+              {/* Error Alert */}
+              {error && (
+                <div
+                  style={{
+                    padding: '0.625rem',
+                    background: 'rgba(220, 38, 38, 0.25)',
+                    border: '1px solid #DC2626',
+                    borderRadius: '6px',
+                    color: '#FECACA',
+                    fontSize: '12.5px',
+                    marginBottom: '1rem',
+                  }}
+                >
+                  {error}
+                </div>
+              )}
+
+              {/* ── MODE A: KIDS LOGIN (ONLY 8-DIGIT CODE) ── */}
+              {loginMode === 'kid' ? (
+                <form onSubmit={handleKidSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <div style={{ textAlign: 'center', marginBottom: '0.25rem' }}>
+                    <div style={{ fontSize: '14px', fontWeight: 800, color: '#FACC15', marginBottom: '0.25rem' }}>
+                      🎒 Student Portal Sign-In
+                    </div>
+                    <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.75)' }}>
+                      Enter your unique <strong>8-digit student code</strong> to enter Kiddies Academy.
+                    </div>
+                  </div>
+
+                  <div>
+                    <label
+                      style={{
+                        display: 'block',
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em',
+                        color: 'rgba(255,255,255,0.85)',
+                        marginBottom: '0.5rem',
+                      }}
+                    >
+                      8-Digit Student Code <span style={{ color: '#FACC15' }}>*</span>
+                    </label>
+                    <input
+                      type="text"
+                      maxLength={8}
+                      required
+                      placeholder="e.g. 88776655"
+                      value={kidCode}
+                      onChange={(e) => setKidCode(e.target.value.replace(/\D/g, '').slice(0, 8))}
+                      style={{
+                        width: '100%',
+                        background: 'rgba(255, 255, 255, 0.1)',
+                        border: '2px solid #FACC15',
+                        borderRadius: '8px',
+                        padding: '0.75rem',
+                        color: '#FACC15',
+                        fontSize: '22px',
+                        fontWeight: 900,
+                        fontFamily: 'monospace',
+                        letterSpacing: '0.25em',
+                        textAlign: 'center',
+                        outline: 'none',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+
+                  {/* Demo Kid Code Button */}
+                  <button
+                    type="button"
+                    onClick={() => handleQuickKidLogin('88776655')}
+                    style={{
+                      background: 'rgba(250, 204, 21, 0.12)',
+                      border: '1px dashed rgba(250, 204, 21, 0.4)',
+                      borderRadius: '6px',
+                      color: '#FACC15',
+                      padding: '0.5rem',
+                      fontSize: '11.5px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    ✨ Try Demo Student Code: 88776655
+                  </button>
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    style={{
+                      width: '100%',
+                      background: '#FACC15',
+                      color: '#0F172A',
+                      border: 'none',
+                      borderRadius: '8px',
+                      padding: '0.85rem 1.25rem',
+                      fontSize: '14.5px',
+                      fontWeight: 900,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.5rem',
+                      marginTop: '0.25rem',
+                      boxShadow: '0 4px 14px rgba(250, 204, 21, 0.3)',
+                    }}
+                  >
+                    {loading ? 'Verifying Code…' : 'Enter Kiddies Portal 🚀'}
+                    <ArrowRight size={16} />
+                  </button>
+                </form>
+              ) : (
+                /* ── MODE B: STAFF LOGIN (EMAIL + PASSWORD) ── */
+                <form onSubmit={handleStaffSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+                  <div style={{ marginBottom: '0.25rem' }}>
+                    <div style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF' }}>
+                      🎓 Instructor & Admin Portal
+                    </div>
+                    <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)' }}>
+                      Enter staff credentials to manage child check-ins and security rules.
+                    </div>
+                  </div>
+
+                  <div>
+                    <label
+                      style={{
+                        display: 'block',
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em',
+                        color: 'rgba(255,255,255,0.8)',
+                        marginBottom: '0.375rem',
+                      }}
+                    >
+                      Email Address <span style={{ color: 'var(--adm-accent)' }}>*</span>
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      autoComplete="email"
+                      placeholder="instructor@kids.skilluplearningacademy.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      style={{
+                        width: '100%',
+                        background: 'rgba(255, 255, 255, 0.08)',
+                        border: '1.5px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: '6px',
+                        padding: '0.625rem 0.875rem',
+                        color: '#fff',
+                        fontSize: '13px',
+                        outline: 'none',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: '0.375rem',
+                      }}
+                    >
+                      <label
+                        style={{
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.05em',
+                          color: 'rgba(255,255,255,0.8)',
+                        }}
+                      >
+                        Password <span style={{ color: 'var(--adm-accent)' }}>*</span>
+                      </label>
+                    </div>
+                    <input
+                      type="password"
+                      required
+                      autoComplete="current-password"
+                      placeholder="Enter password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      style={{
+                        width: '100%',
+                        background: 'rgba(255, 255, 255, 0.08)',
+                        border: '1.5px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: '6px',
+                        padding: '0.625rem 0.875rem',
+                        color: '#fff',
+                        fontSize: '13px',
+                        outline: 'none',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    style={{
+                      width: '100%',
+                      background: 'var(--adm-accent, #C40000)',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '6px',
+                      padding: '0.75rem 1.25rem',
+                      fontSize: '14px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.5rem',
+                      marginTop: '0.5rem',
+                    }}
+                  >
+                    {loading ? 'Authenticating…' : 'Sign In as Staff'}
+                    <ArrowRight size={15} />
+                  </button>
+                </form>
+              )}
             </div>
           </div>
         </div>

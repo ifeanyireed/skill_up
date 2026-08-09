@@ -222,10 +222,13 @@ export function ParentRegistrationPage() {
         {/* Banner Header */}
         <div style={{ textAlign: 'center', marginBottom: '1.5rem', borderBottom: '2px solid #FEF2F2', paddingBottom: '1rem' }}>
           <h1 style={{ fontSize: '22px', fontWeight: 900, color: '#C40000', margin: '0 0 0.35rem 0', textTransform: 'uppercase', letterSpacing: '-0.02em' }}>
-            SKILLUP ACADEMY SUMMER TECH CAMP 2026
+            KIDDIES ACADEMY REGISTRATION PORTAL
           </h1>
+          <div style={{ fontSize: '12px', fontWeight: 800, color: '#4F46E5', marginBottom: '0.5rem' }}>
+            kids.skilluplearningacademy.com
+          </div>
           <p style={{ fontSize: '13.5px', color: '#475569', margin: 0, lineHeight: '1.5', maxWidth: '540px', marginLeft: 'auto', marginRight: 'auto' }}>
-            A 4-week hands-on Summer Camp designed for children aged 5–17+, focused on practical learning in technology, creativity, and digital skills.
+            Official registration portal for Kiddies Academy students (ages 5–17+). Register student details and receive your official 8-digit student code.
           </p>
         </div>
 
