@@ -14,6 +14,7 @@ import { HistoryPage } from './pages/HistoryPage'
 import { ChildRegistrationPage } from './pages/ChildRegistrationPage'
 import { InstructorsPage } from './pages/InstructorsPage'
 import { SettingsPage } from './pages/SettingsPage'
+import { SchoolPuzzleProPage } from './pages/SchoolPuzzleProPage'
 import { useAdminStore } from './store/useAdminStore'
 
 function AdminOnlyRoute({ children }: { children: React.ReactNode }) {
@@ -33,6 +34,7 @@ export function AdminRouter() {
       <Route path="login" element={<AdminLoginPage />} />
       <Route element={<AdminShell />}>
         <Route index element={<DashboardHome />} />
+        <Route path="school" element={<SchoolPuzzleProPage />} />
         <Route path="children" element={<ChildrenDirectoryPage />} />
         <Route path="checkin" element={<CheckInPage />} />
         <Route path="checkout" element={<CheckOutPage />} />

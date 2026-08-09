@@ -82,7 +82,7 @@ export function AdminLoginPage() {
         <div aria-hidden style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
           <img
             src="/cbt-centre.jpeg"
-            alt="Kiddies Academy CBT Centre"
+            alt="Future Programs For Kids CBT Centre"
             style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 40%' }}
             loading="eager"
           />
@@ -175,7 +175,7 @@ export function AdminLoginPage() {
             <div style={{ marginBottom: '1.25rem' }}>
               <img
                 src="/logo.avif"
-                alt="Kiddies Academy Logo"
+                alt="Future Programs For Kids Logo"
                 style={{
                   height: '56px',
                   width: 'auto',

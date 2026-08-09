@@ -15,12 +15,14 @@ import {
   KeyRound,
   UserPlus,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Puzzle
 } from 'lucide-react'
 import { useAdminStore } from '../../store/useAdminStore'
 
 const navItems = [
   { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
+  { to: '/admin/school', label: 'PuzzlePro', icon: Puzzle },
 ]
 
 const safetyItems = [
@@ -59,7 +61,7 @@ export function AdminSidebar() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <img
             src="/logo.avif"
-            alt="Kiddies Academy"
+            alt="Future Programs For Kids"
             style={{
               height: sidebarCollapsed ? '26px' : '32px',
               width: 'auto',

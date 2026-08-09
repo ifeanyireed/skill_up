@@ -114,7 +114,7 @@ export const useAdminStore = create<AdminStore>((set, get) => ({
 
     const kidUser: AdminUser = {
       id: `kid-${cleanCode}`,
-      fullName: `Kiddies Student (${cleanCode})`,
+      fullName: `Student (${cleanCode})`,
       email: `student@kids.skilluplearningacademy.com`,
       role: 'Student',
       avatar: '/avatars/character1.jpg',

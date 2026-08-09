@@ -25,6 +25,10 @@ export default function App() {
         <Route path="/register" element={<ParentRegistrationPage />} />
         <Route path="/parent-register" element={<ParentRegistrationPage />} />
 
+        {/* PuzzlePro School Routes */}
+        <Route path="/school" element={<Navigate to="/admin/school" replace />} />
+        <Route path="/puzzlepro" element={<Navigate to="/admin/school" replace />} />
+
         {/* Admin routes */}
         <Route path="/admin/*" element={<AdminRouter />} />
 
