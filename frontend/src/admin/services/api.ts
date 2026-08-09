@@ -9,10 +9,10 @@ const getApiBaseUrl = () => {
     url = url.replace(/\/+$/, '')
     return url
   }
-  return 'http://localhost:8080/api'
+  return 'https://skill-up-sano.onrender.com/api'
 }
 
-const API_BASE_URL = getApiBaseUrl()
+export const API_BASE_URL = getApiBaseUrl()
 
 export interface BackendChild {
   id: number

@@ -9,6 +9,15 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://skill-up-sano.onrender.com',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
   envPrefix: ['VITE_', 'NEXT_PUBLIC_'],
   resolve: {
     alias: {
