@@ -117,6 +117,34 @@ export function AdminLoginPage() {
           />
         </div>
 
+        {/* ── Extreme Top Right Corner PuzzlePro Button ── */}
+        <a
+          href="https://www.skilliplearningacademy.com/puzzlepro"
+          target="_blank"
+          rel="noreferrer"
+          style={{
+            position: 'absolute',
+            top: '1.25rem',
+            right: '1.25rem',
+            zIndex: 100,
+            background: 'var(--adm-accent, #C40000)',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '4px',
+            padding: '0.5rem 0.875rem',
+            fontSize: '12.5px',
+            fontWeight: 700,
+            textDecoration: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.375rem',
+            whiteSpace: 'nowrap',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
+          }}
+        >
+          <Puzzle size={14} /> PuzzlePro
+        </a>
+
         {/* ── Full-Width Flex Container — Form pushed to Extreme Right with little padding ── */}
         <div
           style={{
@@ -143,8 +171,8 @@ export function AdminLoginPage() {
               color: '#FFFFFF'
             }}
           >
-            {/* Logo Display & PuzzlePro Header Button */}
-            <div style={{ marginBottom: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+            {/* Logo Display */}
+            <div style={{ marginBottom: '1.25rem' }}>
               <img
                 src="/logo.avif"
                 alt="Kiddies Academy Logo"
@@ -155,29 +183,6 @@ export function AdminLoginPage() {
                   filter: 'brightness(0) invert(1) drop-shadow(0 4px 12px rgba(0,0,0,0.5))'
                 }}
               />
-
-              {/* Header PuzzlePro Button */}
-              <a
-                href="https://www.skilliplearningacademy.com/puzzlepro"
-                target="_blank"
-                rel="noreferrer"
-                style={{
-                  background: 'var(--adm-accent, #C40000)',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '0.5rem 0.875rem',
-                  fontSize: '12.5px',
-                  fontWeight: 700,
-                  textDecoration: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.375rem',
-                  whiteSpace: 'nowrap'
-                }}
-              >
-                <Puzzle size={14} /> PuzzlePro
-              </a>
             </div>
 
             {/* Headline — Clean Editorial Title */}
