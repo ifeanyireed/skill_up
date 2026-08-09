@@ -4,7 +4,7 @@
 // ============================================================================
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { Menu, X, LogIn, ArrowRight } from 'lucide-react'
+import { Menu, X, LogIn, ArrowRight, Puzzle } from 'lucide-react'
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -45,16 +45,23 @@ export function Header() {
           </nav>
 
           {/* Actions */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <a
               href="https://checkin.skilluplearningacademy.com/login"
               target="_blank"
               rel="noreferrer"
               className="btn-nets btn-nets-outline-white"
-              style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}
+              style={{ padding: '0.5rem 0.875rem', fontSize: '0.875rem' }}
             >
               <LogIn size={15} /> Check-In Portal
             </a>
+            <NavLink
+              to="/puzzlepro"
+              className={({ isActive }) => `btn-nets btn-nets-outline-white${isActive ? ' active' : ''}`}
+              style={{ padding: '0.5rem 0.875rem', fontSize: '0.875rem', borderColor: 'rgba(251,191,36,0.6)', color: '#FBBF24' }}
+            >
+              <Puzzle size={15} /> PuzzlePro
+            </NavLink>
             <NavLink to="/contact" className="btn-nets btn-nets-red" style={{ padding: '0.5rem 1.125rem', fontSize: '0.875rem' }}>
               Enroll Now <ArrowRight size={15} />
             </NavLink>
@@ -96,6 +103,14 @@ export function Header() {
             >
               <LogIn size={16} /> Check-In Portal
             </a>
+            <NavLink
+              to="/puzzlepro"
+              onClick={() => setMobileOpen(false)}
+              className="btn-nets btn-nets-outline-white"
+              style={{ width: '100%', justifyContent: 'center', borderColor: 'rgba(251,191,36,0.6)', color: '#FBBF24' }}
+            >
+              <Puzzle size={16} /> PuzzlePro
+            </NavLink>
             <NavLink
               to="/contact"
               onClick={() => setMobileOpen(false)}

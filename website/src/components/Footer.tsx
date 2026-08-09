@@ -4,7 +4,7 @@
 // ============================================================================
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import { Phone, Mail, MapPin, ShieldCheck, ArrowRight } from 'lucide-react'
+import { Phone, Mail, MapPin, ShieldCheck, ArrowRight, Puzzle } from 'lucide-react'
 
 export function Footer() {
   return (
@@ -32,6 +32,7 @@ export function Footer() {
               <li><NavLink to="/instructors" className="footer-link-nets">Instructors</NavLink></li>
               <li><NavLink to="/pricing" className="footer-link-nets">Pricing Plans</NavLink></li>
               <li><NavLink to="/contact" className="footer-link-nets">Contact Support</NavLink></li>
+              <li><NavLink to="/puzzlepro" className="footer-link-nets" style={{ color: '#FBBF24' }}>PuzzlePro Coding</NavLink></li>
             </ul>
           </div>
 
@@ -75,6 +76,13 @@ export function Footer() {
               >
                 Check-In Portal <ArrowRight size={13} />
               </a>
+              <NavLink
+                to="/puzzlepro"
+                className="btn-nets btn-nets-outline-white"
+                style={{ fontSize: '0.8125rem', padding: '0.5rem', marginTop: '0.25rem', borderColor: 'rgba(251,191,36,0.6)', color: '#FBBF24' }}
+              >
+                <Puzzle size={13} /> PuzzlePro <ArrowRight size={13} />
+              </NavLink>
             </div>
           </div>
         </div>
