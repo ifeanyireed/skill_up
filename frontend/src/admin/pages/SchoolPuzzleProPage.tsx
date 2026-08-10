@@ -156,10 +156,24 @@ export function SchoolPuzzleProPage() {
       // 3. Fetch Groups for org_4687
       const groupsRes = await fetch(`${PLAYER_SERVICE_URL}/groups?orgId=${activeOrgId}`)
       const groupsData = await groupsRes.json()
-      if (groupsData && Array.isArray(groupsData) && groupsData.length > 0) {
-        setGroups(groupsData)
-      } else if (groupsData && Array.isArray(groupsData.groups) && groupsData.groups.length > 0) {
-        setGroups(groupsData.groups)
+      const rawGroups = Array.isArray(groupsData) ? groupsData : groupsData?.groups || []
+      if (rawGroups.length > 0) {
+        const mappedGroups: SchoolGroup[] = rawGroups
+          .filter((g: any) =>
+            ['Festac Junior Camp', 'Festac Senior Camp', 'Raji Rasaki Junior Camp', 'Raji Rasaki Senior Camp'].includes(g.name)
+          )
+          .map((g: any) => {
+            const isFestac =
+              g.name.toLowerCase().includes('festac') || (g.centre_name && g.centre_name.toLowerCase().includes('festac'))
+            return {
+              id: g.id,
+              name: g.name,
+              centreId: isFestac ? 2 : 3,
+              centreName: isFestac ? 'Festac Centre' : 'Raji Rasaki Centre',
+              studentCount: 0,
+            }
+          })
+        setGroups(mappedGroups)
       }
 
       // 4. Fetch Users / Students for org_4687
@@ -1010,7 +1024,17 @@ export function SchoolPuzzleProPage() {
                     <td style={{ fontWeight: 700, color: 'var(--adm-text-1)' }}>{grp.name}</td>
                     <td style={{ fontSize: 13, color: 'var(--adm-text-2)' }}>{grp.centreName || 'Festac Centre'}</td>
                     <td style={{ fontWeight: 600 }}>
-                      {students.filter((s) => s.groupName === grp.name).length} Students
+                      {
+                        students.filter((s) => {
+                          if (s.groupName === grp.name) return true
+                          const isSeniorGrp = grp.name.toLowerCase().includes('senior')
+                          const isFestacGrp = grp.name.toLowerCase().includes('festac')
+                          const isSeniorStudent = s.groupName.toLowerCase().includes('senior')
+                          const isFestacStudent = s.centreName.toLowerCase().includes('festac')
+                          return isSeniorGrp === isSeniorStudent && isFestacGrp === isFestacStudent
+                        }).length
+                      }{' '}
+                      Students
                     </td>
                     <td style={{ textAlign: 'right' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.25rem' }}>
