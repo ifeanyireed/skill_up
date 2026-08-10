@@ -47,13 +47,13 @@ export function Header() {
           {/* Actions */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <a
-              href="https://checkin.skilluplearningacademy.com/login"
+              href="https://kids.skilluplearningacademy.com"
               target="_blank"
               rel="noreferrer"
               className="btn-nets btn-nets-outline-white"
               style={{ padding: '0.5rem 0.875rem', fontSize: '0.875rem' }}
             >
-              <LogIn size={15} /> Check-In Portal
+              <LogIn size={15} /> Kid's Portal
             </a>
             <NavLink
               to="/puzzlepro"
@@ -95,13 +95,13 @@ export function Header() {
           ))}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1rem' }}>
             <a
-              href="https://checkin.skilluplearningacademy.com/login"
+              href="https://kids.skilluplearningacademy.com"
               target="_blank"
               rel="noreferrer"
               className="btn-nets btn-nets-outline-white"
               style={{ width: '100%', justifyContent: 'center' }}
             >
-              <LogIn size={16} /> Check-In Portal
+              <LogIn size={16} /> Kid's Portal
             </a>
             <NavLink
               to="/puzzlepro"

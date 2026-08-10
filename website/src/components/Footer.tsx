@@ -68,13 +68,13 @@ export function Footer() {
                 <span>hello@skilluplearningacademy.com</span>
               </div>
               <a
-                href="https://checkin.skilluplearningacademy.com/login"
+                href="https://kids.skilluplearningacademy.com"
                 target="_blank"
                 rel="noreferrer"
                 className="btn-nets btn-nets-outline-white"
                 style={{ fontSize: '0.8125rem', padding: '0.5rem', marginTop: '0.5rem' }}
               >
-                Check-In Portal <ArrowRight size={13} />
+                Kid's Portal <ArrowRight size={13} />
               </a>
               <NavLink
                 to="/puzzlepro"
