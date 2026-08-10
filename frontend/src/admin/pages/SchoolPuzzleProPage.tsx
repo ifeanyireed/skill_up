@@ -154,17 +154,23 @@ export function SchoolPuzzleProPage() {
       if (usersData && usersData.success && Array.isArray(usersData.users)) {
         const mappedStudents: SchoolStudent[] = usersData.users
           .filter((u: any) => u.role === 'student' || u.role === 'Student')
-          .map((u: any, idx: number) => ({
-            id: String(u.id),
-            name: u.username || u.name,
-            avatar: u.avatar && u.avatar.startsWith('/') ? u.avatar : AVATARS[idx % AVATARS.length],
-            studentCode: u.access_code || u.studentCode || u.accessCode || '88776655',
-            groupName: u.group_name || u.groupName || 'Grade 5 Coding Class',
-            centreId: u.centre_id || u.centreId || 2,
-            centreName: u.centre_name || u.centreName || 'Festac Centre',
-            assignedWorldId: u.assigned_world_id || u.assignedWorldId || 1,
-            totalXP: u.total_xp || u.totalXP || 100,
-          }))
+          .map((u: any, idx: number) => {
+            const group = u.group_name || u.groupName || 'Junior Camp (5–10 years)'
+            const isSenior = group.toLowerCase().includes('senior')
+            const worldId = isSenior ? 2 : 1
+
+            return {
+              id: String(u.id),
+              name: u.username || u.name,
+              avatar: u.avatar && u.avatar.startsWith('/') ? u.avatar : AVATARS[idx % AVATARS.length],
+              studentCode: u.access_code || u.studentCode || u.accessCode || '88776655',
+              groupName: group,
+              centreId: u.centre_id || u.centreId || 2,
+              centreName: u.centre_name || u.centreName || 'Festac Centre',
+              assignedWorldId: u.assigned_world_id || u.assignedWorldId || worldId,
+              totalXP: u.total_xp || u.totalXP || 100,
+            }
+          })
 
         setStudents(mappedStudents)
       }
@@ -321,14 +327,17 @@ export function SchoolPuzzleProPage() {
     setCentres((prev) => prev.filter((c) => c.id !== id))
   }
 
-  // Filtered Students
+  // Filtered Students according to Group and Centre
   const filteredStudents = students.filter((s) => {
     const matchesSearch =
       s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       s.studentCode.includes(searchQuery) ||
       s.groupName.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesGroup = selectedGroupFilter === 'ALL' || s.groupName === selectedGroupFilter
-    const matchesCentre = selectedCentreFilter === 'ALL' || s.centreId.toString() === selectedCentreFilter
+    const matchesCentre =
+      selectedCentreFilter === 'ALL' ||
+      s.centreId.toString() === selectedCentreFilter ||
+      s.centreName === selectedCentreFilter
     return matchesSearch && matchesGroup && matchesCentre
   })
 
