@@ -119,7 +119,7 @@ export function AdminLoginPage() {
 
         {/* ── Extreme Top Right Corner PuzzlePro Button ── */}
         <a
-          href="https://www.skilliplearningacademy.com/puzzlepro"
+          href="https://www.skilluplearningacademy.com/puzzlepro"
           target="_blank"
           rel="noreferrer"
           style={{
