@@ -580,14 +580,7 @@ export function SchoolPuzzleProPage() {
               flexWrap: 'wrap',
             }}
           >
-            <div>
-              <div style={{ fontWeight: 700, fontSize: '0.9375rem', color: 'var(--adm-text-1)' }}>
-                Live Database Student Roster ({students.length})
-              </div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--adm-text-3)', marginTop: '2px' }}>
-                Synced directly with database for <strong>{contactEmail}</strong>
-              </div>
-            </div>
+            <div />
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <select
