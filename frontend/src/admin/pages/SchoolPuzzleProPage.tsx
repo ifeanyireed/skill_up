@@ -373,9 +373,15 @@ export function SchoolPuzzleProPage() {
     }
   }
 
-  const handleDeleteGroup = (id: number) => {
+  const handleDeleteGroup = async (id: number) => {
     if (!confirm('Are you sure you want to delete this class group?')) return
     setGroups((prev) => prev.filter((g) => g.id !== id))
+    try {
+      await fetch(`${PLAYER_SERVICE_URL}/groups?id=${id}`, { method: 'DELETE' })
+      await fetch(`${PLAYER_SERVICE_URL}/groups/${id}`, { method: 'DELETE' })
+    } catch (err) {
+      // Gracefully handle backend endpoint limitations
+    }
   }
 
   // ── CENTRE CRUD HANDLERS ───────────────────────────────────────────────────
