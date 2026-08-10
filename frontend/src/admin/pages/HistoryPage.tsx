@@ -336,7 +336,7 @@ export function HistoryPage() {
                   <td>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
                       <img
-                        src={getChildAvatar(l.photo, l.child_id || l.student_id || l.child_name)}
+                        src={getChildAvatar(l.photo, l.student_id || l.child_name || l.id)}
                         alt={l.child_name}
                         style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }}
                       />

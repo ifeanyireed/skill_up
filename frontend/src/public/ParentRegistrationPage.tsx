@@ -305,60 +305,34 @@ export function ParentRegistrationPage() {
                 </div>
               </div>
 
-              {photoMode === 'avatar' ? (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(10, 1fr)', gap: '6px', maxHeight: '110px', overflowY: 'auto', paddingRight: '4px' }}>
-                  {AVATAR_CHARACTERS.map((avatar, idx) => (
-                    <img
-                      key={idx}
-                      src={avatar}
-                      alt={`Character ${idx + 1}`}
-                      onClick={() => setSelectedAvatar(avatar)}
-                      style={{
-                        width: '100%',
-                        aspectRatio: '1',
-                        borderRadius: '50%',
-                        objectFit: 'cover',
-                        cursor: 'pointer',
-                        border: selectedAvatar === avatar ? '3px solid #C40000' : '1.5px solid #CBD5E1',
-                        opacity: selectedAvatar === avatar ? 1 : 0.75,
-                        transform: selectedAvatar === avatar ? 'scale(1.08)' : 'scale(1)',
-                        transition: 'all 0.15s ease'
-                      }}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div style={{ textAlign: 'center', padding: '0.75rem', border: '1.5px dashed #CBD5E1', borderRadius: '6px', background: '#FFF' }}>
-                  <input ref={fileInputRef} type="file" accept="image/*" onChange={handlePhotoSelect} style={{ display: 'none' }} />
-                  {customPhotoUrl ? (
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem' }}>
-                      <img src={customPhotoUrl} alt="Uploaded preview" style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #C40000' }} />
-                      <button
-                        type="button"
-                        onClick={() => fileInputRef.current?.click()}
-                        style={{ padding: '4px 10px', borderRadius: '4px', border: '1px solid #CBD5E1', background: '#F8FAFC', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}
-                      >
-                        Change Photo
-                      </button>
-                    </div>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      style={{ border: 'none', background: 'transparent', color: '#64748B', fontSize: '12px', fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.375rem' }}
-                    >
-                      <Upload size={16} /> Click to select or capture student photo
-                    </button>
-                  )}
-                </div>
-              )}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(10, 1fr)', gap: '6px', maxHeight: '110px', overflowY: 'auto', paddingRight: '4px' }}>
+                {AVATAR_CHARACTERS.map((avatar, idx) => (
+                  <img
+                    key={idx}
+                    src={avatar}
+                    alt={`Character ${idx + 1}`}
+                    onClick={() => setSelectedAvatar(avatar)}
+                    style={{
+                      width: '100%',
+                      aspectRatio: '1',
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                      cursor: 'pointer',
+                      border: selectedAvatar === avatar ? '3px solid #C40000' : '1.5px solid #CBD5E1',
+                      opacity: selectedAvatar === avatar ? 1 : 0.75,
+                      transform: selectedAvatar === avatar ? 'scale(1.08)' : 'scale(1)',
+                      transition: 'all 0.15s ease'
+                    }}
+                  />
+                ))}
+              </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.75rem', paddingTop: '0.5rem', borderTop: '1px solid #E2E8F0' }}>
                 <img src={activePhoto} alt="Selected avatar preview" style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #C40000' }} />
                 <div>
-                  <div style={{ fontSize: '11.5px', fontWeight: 700, color: '#0F172A' }}>Active Student Image</div>
+                  <div style={{ fontSize: '11.5px', fontWeight: 700, color: '#0F172A' }}>Selected Character Avatar</div>
                   <div style={{ fontSize: '10.5px', color: '#64748B' }}>
-                    {photoMode === 'avatar' ? `Selected Preset Avatar (#${AVATAR_CHARACTERS.indexOf(selectedAvatar) + 1})` : 'Custom Uploaded Photo'}
+                    Preset Avatar (#{AVATAR_CHARACTERS.indexOf(selectedAvatar) + 1})
                   </div>
                 </div>
               </div>
