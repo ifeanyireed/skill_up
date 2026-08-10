@@ -428,9 +428,6 @@ export function SchoolPuzzleProPage() {
             </span>
           </div>
           <div className="admin-page-title">{schoolName}</div>
-          <div className="admin-page-desc">
-            Live database sync for <strong>{contactEmail}</strong> — Campus locations, class groups, 8-digit access codes, and XP tracking
-          </div>
         </div>
 
         <div className="admin-page-actions">
