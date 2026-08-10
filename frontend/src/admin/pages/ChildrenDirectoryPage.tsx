@@ -19,7 +19,7 @@ import {
   Trash2
 } from 'lucide-react'
 import '../admin.css'
-import { getChildren, deleteChild, updateChildCenter, BackendChild } from '../services/api'
+import { getChildren, deleteChild, updateChildCenter, getChildAvatar, BackendChild } from '../services/api'
 import { useAdminStore } from '../store/useAdminStore'
 
 const getStatusBadgeClass = (status: string) => {
@@ -317,7 +317,7 @@ export function ChildrenDirectoryPage() {
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                         <img
-                          src={child.photo || '/avatars/character1.jpg'}
+                          src={getChildAvatar(child.photo, child.id || child.student_id || child.full_name)}
                           alt={child.full_name}
                           style={{ width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover', border: '1.5px solid var(--adm-accent)' }}
                         />
@@ -481,7 +481,7 @@ export function ChildrenDirectoryPage() {
             {/* Profile Header */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'var(--adm-surface-2)', padding: '1rem', borderRadius: '10px', border: '1px solid var(--adm-border)' }}>
               <img
-                src={selectedChild.photo || '/avatars/character1.jpg'}
+                src={getChildAvatar(selectedChild.photo, selectedChild.id || selectedChild.student_id || selectedChild.full_name)}
                 alt={selectedChild.full_name}
                 style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover', border: '2.5px solid var(--adm-accent)' }}
               />

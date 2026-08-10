@@ -125,25 +125,7 @@ export function ParentRegistrationPage() {
   const [submitted, setSubmitted] = useState(false)
   const [registeredStudentId, setRegisteredStudentId] = useState('')
 
-  const activePhoto = photoMode === 'upload' && customPhotoUrl ? customPhotoUrl : selectedAvatar
-
-  // Handle Photo File Upload
-  const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        alert('Please select an image smaller than 5MB.')
-        return
-      }
-
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setCustomPhotoUrl(reader.result as string)
-        setPhotoMode('upload')
-      }
-      reader.readAsDataURL(file)
-    }
-  }
+  const activePhoto = selectedAvatar
 
   const allConsentsChecked = Object.values(consents).every(Boolean)
 

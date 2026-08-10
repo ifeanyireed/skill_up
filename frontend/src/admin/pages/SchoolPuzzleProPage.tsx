@@ -22,6 +22,7 @@ import {
   RefreshCw
 } from 'lucide-react'
 import '../admin.css'
+import { getChildAvatar } from '../services/api'
 
 const PLAYER_SERVICE_URL = 'https://player-service-bttg.onrender.com/api/v1'
 
@@ -194,7 +195,7 @@ export function SchoolPuzzleProPage() {
             return {
               id: String(u.id),
               name: u.username || u.name,
-              avatar: u.avatar && u.avatar.startsWith('/') ? u.avatar : AVATARS[idx % AVATARS.length],
+              avatar: getChildAvatar(u.avatar || u.photo, u.id || u.username || u.name),
               studentCode: u.access_code || u.studentCode || u.accessCode || '88776655',
               groupName: group,
               centreId: cId,

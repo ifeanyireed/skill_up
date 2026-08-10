@@ -14,7 +14,7 @@ import {
   Loader2
 } from 'lucide-react'
 import '../admin.css'
-import { getChildren, updateChildStatus, BackendChild } from '../services/api'
+import { getChildren, updateChildStatus, getChildAvatar, BackendChild } from '../services/api'
 import { useAdminStore } from '../store/useAdminStore'
 import { PaginationController } from '../components/PaginationController'
 
@@ -203,7 +203,7 @@ export function AttendancePage() {
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
                         <img
-                          src={c.photo || 'https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?auto=format&fit=crop&q=80&w=250'}
+                          src={getChildAvatar(c.photo, c.id || c.student_id || c.full_name)}
                           alt={c.full_name}
                           style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }}
                         />

@@ -20,7 +20,7 @@ import {
   UserCog
 } from 'lucide-react'
 import '../admin.css'
-import { getChildren, getAttendanceLogs, BackendChild, BackendAttendanceLog } from '../services/api'
+import { getChildren, getAttendanceLogs, getChildAvatar, BackendChild, BackendAttendanceLog } from '../services/api'
 import { useAdminStore } from '../store/useAdminStore'
 
 const getStatusBadgeClass = (status: string) => {
@@ -318,7 +318,7 @@ export function DashboardHome() {
                       <td>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
                           <img
-                            src={child.photo || 'https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?auto=format&fit=crop&q=80&w=250'}
+                            src={getChildAvatar(child.photo, child.id || child.student_id || child.full_name)}
                             alt={child.full_name}
                             style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }}
                           />

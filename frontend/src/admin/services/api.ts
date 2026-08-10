@@ -14,6 +14,20 @@ const getApiBaseUrl = () => {
 
 export const API_BASE_URL = getApiBaseUrl()
 
+export function getChildAvatar(photo?: string, identifier?: string | number): string {
+  if (photo && photo.startsWith('/avatars/character')) {
+    return photo
+  }
+  const str = String(identifier || photo || '1')
+  let hash = 0
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i)
+    hash |= 0
+  }
+  const avatarIndex = (Math.abs(hash) % 20) + 1
+  return `/avatars/character${avatarIndex}.jpg`
+}
+
 export interface BackendChild {
   id: number
   student_id: string
@@ -108,10 +122,13 @@ export async function getChildren(status?: string, search?: string, center?: str
 }
 
 export async function createChild(data: Partial<BackendChild>): Promise<BackendChild> {
+  const avatarPath = getChildAvatar(data.photo, data.full_name)
+  const payload = { ...data, photo: avatarPath }
+
   const res = await fetch(`${API_BASE_URL}/children`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
+    body: JSON.stringify(payload),
   })
   const text = await res.text()
   if (!res.ok) {
@@ -149,7 +166,7 @@ export async function createChild(data: Partial<BackendChild>): Promise<BackendC
       body: JSON.stringify({
         username: studentName,
         name: studentName,
-        avatar: created.photo || data.photo || '/avatars/character1.jpg',
+        avatar: getChildAvatar(created.photo || data.photo, studentName),
         access_code: code,
         accessCode: code,
         studentCode: code,

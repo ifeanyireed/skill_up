@@ -13,7 +13,7 @@ import {
   RotateCcw
 } from 'lucide-react'
 import '../admin.css'
-import { getAttendanceLogs, getAttendanceExportCSVURL, BackendAttendanceLog } from '../services/api'
+import { getAttendanceLogs, getAttendanceExportCSVURL, getChildAvatar, BackendAttendanceLog } from '../services/api'
 import { PaginationController } from '../components/PaginationController'
 
 const getTodayLocalString = () => {
@@ -336,7 +336,7 @@ export function HistoryPage() {
                   <td>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
                       <img
-                        src={l.photo || 'https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?auto=format&fit=crop&q=80&w=250'}
+                        src={getChildAvatar(l.photo, l.child_id || l.student_id || l.child_name)}
                         alt={l.child_name}
                         style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }}
                       />

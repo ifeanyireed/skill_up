@@ -17,7 +17,7 @@ import {
   Building2
 } from 'lucide-react'
 import '../admin.css'
-import { getChildren, checkInChild, BackendChild } from '../services/api'
+import { getChildren, checkInChild, getChildAvatar, BackendChild } from '../services/api'
 import { useAdminStore } from '../store/useAdminStore'
 
 export function CheckInPage() {
@@ -319,7 +319,7 @@ export function CheckInPage() {
                         }}
                       >
                         <img
-                          src={c.photo || 'https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?auto=format&fit=crop&q=80&w=250'}
+                          src={getChildAvatar(c.photo, c.id || c.student_id || c.full_name)}
                           alt={c.full_name}
                           style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }}
                         />
@@ -351,7 +351,7 @@ export function CheckInPage() {
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
                   <img
-                    src={selectedChild.photo || 'https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?auto=format&fit=crop&q=80&w=250'}
+                    src={getChildAvatar(selectedChild.photo, selectedChild.id || selectedChild.student_id || selectedChild.full_name)}
                     alt={selectedChild.full_name}
                     style={{ width: '42px', height: '42px', borderRadius: '50%', objectFit: 'cover' }}
                   />

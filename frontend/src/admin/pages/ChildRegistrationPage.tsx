@@ -74,7 +74,7 @@ export function ChildRegistrationPage() {
     )
   }
 
-  const activePhoto = photoMode === 'upload' && customPhotoUrl ? customPhotoUrl : selectedAvatar
+  const activePhoto = selectedAvatar
 
   const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -155,45 +155,8 @@ export function ChildRegistrationPage() {
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
               <label style={{ fontSize: '12px', fontWeight: 800, color: 'var(--adm-text-1)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                Student Photo / Avatar (Optional)
+                Student Character Avatar Selection
               </label>
-              <div style={{ display: 'flex', gap: '4px', background: 'var(--adm-surface)', padding: '3px', borderRadius: '6px' }}>
-                <button
-                  type="button"
-                  onClick={() => setPhotoMode('avatar')}
-                  style={{
-                    padding: '4px 10px',
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    borderRadius: '4px',
-                    border: 'none',
-                    cursor: 'pointer',
-                    background: photoMode === 'avatar' ? 'var(--adm-accent)' : 'transparent',
-                    color: photoMode === 'avatar' ? '#FFFFFF' : 'var(--adm-text-2)'
-                  }}
-                >
-                  <UserCheck size={12} style={{ display: 'inline', marginRight: '4px' }} /> Pick Avatar
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setPhotoMode('upload')
-                    fileInputRef.current?.click()
-                  }}
-                  style={{
-                    padding: '4px 10px',
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    borderRadius: '4px',
-                    border: 'none',
-                    cursor: 'pointer',
-                    background: photoMode === 'upload' ? 'var(--adm-accent)' : 'transparent',
-                    color: photoMode === 'upload' ? '#FFFFFF' : 'var(--adm-text-2)'
-                  }}
-                >
-                  <Upload size={12} style={{ display: 'inline', marginRight: '4px' }} /> Upload Photo
-                </button>
-              </div>
             </div>
 
             <input
