@@ -117,9 +117,9 @@ export function AdminLoginPage() {
           />
         </div>
 
-        {/* ── Extreme Top Right Corner PuzzlePro Button ── */}
+        {/* ── Extreme Top Right Corner Kid's Portal Button ── */}
         <a
-          href="https://www.skilliplearningacademy.com/puzzlepro"
+          href="https://kids.skilluplearningacademy.com"
           target="_blank"
           rel="noreferrer"
           style={{
@@ -142,7 +142,7 @@ export function AdminLoginPage() {
             boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
           }}
         >
-          <Puzzle size={14} /> PuzzlePro
+          <Smile size={14} /> Kid's Portal
         </a>
 
         {/* ── Full-Width Flex Container — Form pushed to Extreme Right with little padding ── */}
