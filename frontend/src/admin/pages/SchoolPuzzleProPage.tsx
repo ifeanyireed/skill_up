@@ -1,32 +1,27 @@
 // ============================================================================
 // SkillUp Check-In Portal — Native Schools Dashboard Component Page
 // Route: /admin/school & /school
-// Exact native React components matching the /schools Educator & School Portal
+// Live database integration for info@skilluplearningacademy.com / SkillUp Academy
 // ============================================================================
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Users,
   School,
   Building2,
-  Settings,
   Plus,
   Search,
   Copy,
   Check,
   Globe,
-  Award,
   Edit2,
   Trash2,
-  Sparkles,
-  KeyRound,
-  ShieldCheck,
-  Mail,
-  Phone,
-  Lock,
-  ChevronRight,
-  X
+  Loader2,
+  X,
+  RefreshCw
 } from 'lucide-react'
 import '../admin.css'
+
+const PLAYER_SERVICE_URL = 'https://player-service-bttg.onrender.com'
 
 export interface SchoolStudent {
   id: string
@@ -63,62 +58,14 @@ const AVATARS = [
   '/avatars/character5.jpg',
 ]
 
-const INITIAL_CENTRES: SchoolCentre[] = [
-  { id: 1, name: 'Raji Rasaki Campus', location: 'Raji Rasaki Road, Amuwo Odofin', code: 'RAJI-CAMPUS' },
-  { id: 2, name: 'CBT Training Complex', location: 'CBT Training Complex Hub', code: 'CBT-HUB' },
+const DEFAULT_CENTRES: SchoolCentre[] = [
+  { id: 2, name: 'Festac Centre', location: 'House 32, 2nd Avenue, Amuwo-Odofin, Festac, Lagos', code: 'festac-centre' },
+  { id: 1, name: 'Raji Rasaki Campus', location: 'Raji Rasaki Road, Amuwo Odofin', code: 'raji-campus' },
 ]
 
-const INITIAL_GROUPS: SchoolGroup[] = [
-  { id: 1, name: 'Grade 5 Coding Class', centreId: 1, centreName: 'Raji Rasaki Campus', studentCount: 32 },
-  { id: 2, name: 'Senior Coders Club', centreId: 1, centreName: 'Raji Rasaki Campus', studentCount: 28 },
-  { id: 3, name: 'STEM Lab 1', centreId: 2, centreName: 'CBT Training Complex', studentCount: 35 },
-]
-
-const INITIAL_STUDENTS: SchoolStudent[] = [
-  {
-    id: 'std-1',
-    name: 'Alex Johnson',
-    avatar: 'https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?auto=format&fit=crop&q=80&w=250',
-    studentCode: '83920193',
-    groupName: 'Grade 5 Coding Class',
-    centreId: 1,
-    centreName: 'Raji Rasaki Campus',
-    assignedWorldId: 2,
-    totalXP: 1450,
-  },
-  {
-    id: 'std-2',
-    name: 'Sarah Williams',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250',
-    studentCode: '47201948',
-    groupName: 'Senior Coders Club',
-    centreId: 1,
-    centreName: 'Raji Rasaki Campus',
-    assignedWorldId: 3,
-    totalXP: 2820,
-  },
-  {
-    id: 'std-3',
-    name: 'David Chen',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=250',
-    studentCode: '91823746',
-    groupName: 'STEM Lab 1',
-    centreId: 2,
-    centreName: 'CBT Training Complex',
-    assignedWorldId: 5,
-    totalXP: 4200,
-  },
-  {
-    id: 'std-4',
-    name: 'Emma Thompson',
-    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=250',
-    studentCode: '58291034',
-    groupName: 'Grade 5 Coding Class',
-    centreId: 1,
-    centreName: 'Raji Rasaki Campus',
-    assignedWorldId: 1,
-    totalXP: 980,
-  },
+const DEFAULT_GROUPS: SchoolGroup[] = [
+  { id: 1, name: 'Grade 5 Coding Class', centreId: 2, centreName: 'Festac Centre', studentCount: 1 },
+  { id: 2, name: 'Junior Champions Group A', centreId: 2, centreName: 'Festac Centre', studentCount: 1 },
 ]
 
 export function SchoolPuzzleProPage() {
@@ -127,10 +74,15 @@ export function SchoolPuzzleProPage() {
   const [selectedCentreFilter, setSelectedCentreFilter] = useState<string>('ALL')
   const [selectedGroupFilter, setSelectedGroupFilter] = useState<string>('ALL')
   const [copiedCodeId, setCopiedCodeId] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  const [centres, setCentres] = useState<SchoolCentre[]>(INITIAL_CENTRES)
-  const [groups, setGroups] = useState<SchoolGroup[]>(INITIAL_GROUPS)
-  const [students, setStudents] = useState<SchoolStudent[]>(INITIAL_STUDENTS)
+  // DB State
+  const [activeOrgId, setActiveOrgId] = useState<string>('org_4687')
+  const [schoolName, setSchoolName] = useState<string>('SkillUp Learning Academy')
+  const [contactEmail, setContactEmail] = useState<string>('info@skilluplearningacademy.com')
+  const [centres, setCentres] = useState<SchoolCentre[]>(DEFAULT_CENTRES)
+  const [groups, setGroups] = useState<SchoolGroup[]>(DEFAULT_GROUPS)
+  const [students, setStudents] = useState<SchoolStudent[]>([])
 
   // Student Modal
   const [isStudentModalOpen, setIsStudentModalOpen] = useState(false)
@@ -138,30 +90,19 @@ export function SchoolPuzzleProPage() {
   const [studentForm, setStudentForm] = useState({
     name: '',
     studentCode: '',
-    groupName: INITIAL_GROUPS[0]?.name || 'Grade 5 Coding Class',
+    groupName: 'Grade 5 Coding Class',
     assignedWorldId: 1,
   })
 
   // Group Modal
   const [isGroupModalOpen, setIsGroupModalOpen] = useState(false)
   const [editingGroup, setEditingGroup] = useState<SchoolGroup | null>(null)
-  const [groupForm, setGroupForm] = useState({ name: '', centreId: 1 })
+  const [groupForm, setGroupForm] = useState({ name: '', centreId: 2 })
 
   // Centre Modal
   const [isCentreModalOpen, setIsCentreModalOpen] = useState(false)
   const [editingCentre, setEditingCentre] = useState<SchoolCentre | null>(null)
   const [centreForm, setCentreForm] = useState({ name: '', location: '', code: '' })
-
-  // Profile Form
-  const [profileForm, setProfileForm] = useState({
-    name: 'Future Programs For Kids Academy',
-    domain: 'skilluplearningacademy.com',
-    contactEmail: 'contact@skilluplearningacademy.com',
-    contactPhone: '+1 (555) 019-2831',
-    seats: 100,
-    plan: 'School Enterprise',
-  })
-  const [profileSaved, setProfileSaved] = useState(false)
 
   const generate8DigitCode = () => {
     return Math.floor(10000000 + Math.random() * 90000000).toString()
@@ -171,6 +112,182 @@ export function SchoolPuzzleProPage() {
     navigator.clipboard.writeText(code)
     setCopiedCodeId(id)
     setTimeout(() => setCopiedCodeId(null), 2000)
+  }
+
+  // Load live data from Render Database
+  const loadDatabaseData = async () => {
+    setLoading(true)
+    try {
+      // 1. Fetch Organisations
+      const orgRes = await fetch(`${PLAYER_SERVICE_URL}/api/v1/organisations`)
+      const orgData = await orgRes.json()
+      if (orgData && orgData.success && Array.isArray(orgData.organisations)) {
+        const matchingOrg = orgData.organisations.find(
+          (o: any) =>
+            o.contact_email === 'info@skilluplearningacademy.com' ||
+            o.contact_email === 'contact@skilluplearningacademy.com' ||
+            o.domain === 'skilluplearningacademy.com' ||
+            o.id === 'org_4687' ||
+            o.id === 'org_skil_9901'
+        ) || orgData.organisations[0]
+
+        if (matchingOrg) {
+          setActiveOrgId(matchingOrg.id)
+          setSchoolName(matchingOrg.name)
+          setContactEmail(matchingOrg.contact_email || 'info@skilluplearningacademy.com')
+        }
+      }
+
+      // 2. Fetch Centres
+      const centresRes = await fetch(`${PLAYER_SERVICE_URL}/api/v1/centres?orgId=${activeOrgId}`)
+      const centresData = await centresRes.json()
+      if (centresData && Array.isArray(centresData)) {
+        setCentres(centresData)
+      }
+
+      // 3. Fetch Groups
+      const groupsRes = await fetch(`${PLAYER_SERVICE_URL}/api/v1/groups?orgId=${activeOrgId}`)
+      const groupsData = await groupsRes.json()
+      if (groupsData && Array.isArray(groupsData)) {
+        setGroups(groupsData)
+      }
+
+      // 4. Fetch Users / Students
+      const usersRes = await fetch(`${PLAYER_SERVICE_URL}/api/v1/users?orgId=${activeOrgId}`)
+      const usersData = await usersRes.json()
+      if (usersData && usersData.success && Array.isArray(usersData.users)) {
+        const mappedStudents: SchoolStudent[] = usersData.users
+          .filter((u: any) => u.role === 'student')
+          .map((u: any) => ({
+            id: String(u.id),
+            name: u.username || u.name,
+            avatar: u.avatar || '/avatars/character1.jpg',
+            studentCode: u.access_code || u.studentCode,
+            groupName: u.group_name || u.groupName || 'Grade 5 Coding Class',
+            centreId: u.centre_id || 2,
+            centreName: u.centre_name || 'Festac Centre',
+            assignedWorldId: u.assigned_world_id || u.assignedWorldId || 1,
+            totalXP: u.total_xp || u.totalXP || 100,
+          }))
+        setStudents(mappedStudents)
+      }
+    } catch (err) {
+      console.warn('Error fetching database data from Render:', err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    loadDatabaseData()
+  }, [activeOrgId])
+
+  // Handlers
+  const handleSaveStudent = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!studentForm.name) return
+    const finalCode = studentForm.studentCode || generate8DigitCode()
+
+    try {
+      await fetch(`${PLAYER_SERVICE_URL}/api/v1/users`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: editingStudent ? editingStudent.id : undefined,
+          name: studentForm.name,
+          avatar: AVATARS[Math.floor(Math.random() * AVATARS.length)],
+          studentCode: finalCode,
+          role: 'student',
+          organisationId: activeOrgId,
+          groupName: studentForm.groupName,
+          assignedWorldId: studentForm.assignedWorldId,
+        }),
+      })
+      await loadDatabaseData()
+    } catch (err) {
+      console.error('Error saving student:', err)
+    }
+
+    setIsStudentModalOpen(false)
+    setEditingStudent(null)
+    setStudentForm({ name: '', studentCode: '', groupName: groups[0]?.name || '', assignedWorldId: 1 })
+  }
+
+  const handleDeleteStudent = async (id: string) => {
+    if (confirm('Delete student account?')) {
+      try {
+        await fetch(`${PLAYER_SERVICE_URL}/api/v1/users?id=${id}`, { method: 'DELETE' })
+        await loadDatabaseData()
+      } catch (err) {
+        console.error('Error deleting student:', err)
+      }
+    }
+  }
+
+  const handleAssignWorld = async (id: string, worldId: number) => {
+    try {
+      await fetch(`${PLAYER_SERVICE_URL}/api/v1/users/assign-world`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, worldId }),
+      })
+      await loadDatabaseData()
+    } catch (err) {
+      console.error('Error assigning world:', err)
+    }
+  }
+
+  const handleSaveGroup = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!groupForm.name) return
+    const targetCentre = centres.find((c) => c.id === groupForm.centreId)
+
+    try {
+      await fetch(`${PLAYER_SERVICE_URL}/api/v1/groups`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: editingGroup ? editingGroup.id : 0,
+          organisationId: activeOrgId,
+          centreId: groupForm.centreId,
+          centreName: targetCentre?.name || '',
+          name: groupForm.name,
+        }),
+      })
+      await loadDatabaseData()
+    } catch (err) {
+      console.error('Error saving group:', err)
+    }
+
+    setIsGroupModalOpen(false)
+    setEditingGroup(null)
+    setGroupForm({ name: '', centreId: centres[0]?.id || 2 })
+  }
+
+  const handleSaveCentre = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!centreForm.name) return
+
+    try {
+      await fetch(`${PLAYER_SERVICE_URL}/api/v1/centres`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: editingCentre ? editingCentre.id : 0,
+          organisationId: activeOrgId,
+          name: centreForm.name,
+          location: centreForm.location,
+          code: centreForm.code,
+        }),
+      })
+      await loadDatabaseData()
+    } catch (err) {
+      console.error('Error saving centre:', err)
+    }
+
+    setIsCentreModalOpen(false)
+    setEditingCentre(null)
+    setCentreForm({ name: '', location: '', code: '' })
   }
 
   // Filtered Students
@@ -184,114 +301,6 @@ export function SchoolPuzzleProPage() {
     return matchesSearch && matchesGroup && matchesCentre
   })
 
-  // Handlers
-  const handleSaveStudent = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!studentForm.name) return
-    const finalCode = studentForm.studentCode || generate8DigitCode()
-    const targetGroup = groups.find((g) => g.name === studentForm.groupName)
-
-    if (editingStudent) {
-      setStudents((prev) =>
-        prev.map((s) =>
-          s.id === editingStudent.id
-            ? {
-                ...s,
-                name: studentForm.name,
-                groupName: studentForm.groupName,
-                assignedWorldId: studentForm.assignedWorldId,
-                centreId: targetGroup?.centreId || 1,
-                centreName: targetGroup?.centreName || 'Raji Rasaki Campus',
-              }
-            : s
-        )
-      )
-    } else {
-      const newStd: SchoolStudent = {
-        id: `std-${Date.now()}`,
-        name: studentForm.name,
-        avatar: AVATARS[Math.floor(Math.random() * AVATARS.length)],
-        studentCode: finalCode,
-        groupName: studentForm.groupName,
-        centreId: targetGroup?.centreId || 1,
-        centreName: targetGroup?.centreName || 'Raji Rasaki Campus',
-        assignedWorldId: studentForm.assignedWorldId,
-        totalXP: 100,
-      }
-      setStudents((prev) => [newStd, ...prev])
-    }
-
-    setIsStudentModalOpen(false)
-    setEditingStudent(null)
-    setStudentForm({ name: '', studentCode: '', groupName: groups[0]?.name || '', assignedWorldId: 1 })
-  }
-
-  const handleDeleteStudent = (id: string) => {
-    if (confirm('Delete student account?')) {
-      setStudents((prev) => prev.filter((s) => s.id !== id))
-    }
-  }
-
-  const handleAssignWorld = (id: string, worldId: number) => {
-    setStudents((prev) => prev.map((s) => (s.id === id ? { ...s, assignedWorldId: worldId } : s)))
-  }
-
-  const handleSaveGroup = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!groupForm.name) return
-    const targetCentre = centres.find((c) => c.id === groupForm.centreId)
-
-    if (editingGroup) {
-      setGroups((prev) =>
-        prev.map((g) =>
-          g.id === editingGroup.id
-            ? { ...g, name: groupForm.name, centreId: groupForm.centreId, centreName: targetCentre?.name || '' }
-            : g
-        )
-      )
-    } else {
-      const newGrp: SchoolGroup = {
-        id: Date.now(),
-        name: groupForm.name,
-        centreId: groupForm.centreId,
-        centreName: targetCentre?.name || 'Raji Rasaki Campus',
-        studentCount: 0,
-      }
-      setGroups((prev) => [...prev, newGrp])
-    }
-
-    setIsGroupModalOpen(false)
-    setEditingGroup(null)
-    setGroupForm({ name: '', centreId: 1 })
-  }
-
-  const handleSaveCentre = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!centreForm.name) return
-
-    if (editingCentre) {
-      setCentres((prev) =>
-        prev.map((c) =>
-          c.id === editingCentre.id
-            ? { ...c, name: centreForm.name, location: centreForm.location, code: centreForm.code }
-            : c
-        )
-      )
-    } else {
-      const newCentre: SchoolCentre = {
-        id: Date.now(),
-        name: centreForm.name,
-        location: centreForm.location,
-        code: centreForm.code || `CENTRE-${Date.now()}`,
-      }
-      setCentres((prev) => [...prev, newCentre])
-    }
-
-    setIsCentreModalOpen(false)
-    setEditingCentre(null)
-    setCentreForm({ name: '', location: '', code: '' })
-  }
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* ── 1. Page Header ── */}
@@ -299,18 +308,21 @@ export function SchoolPuzzleProPage() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
             <span className="admin-badge admin-badge-accent">
-              <School size={12} /> SCHOOL EDUCATOR PORTAL
+              <School size={12} /> PUZZLEPRO DATABASE PORTAL
             </span>
           </div>
-          <div className="admin-page-title">{profileForm.name}</div>
+          <div className="admin-page-title">{schoolName}</div>
           <div className="admin-page-desc">
-            Manage school campus locations, class groups, 8-digit student access codes, and assigned learning worlds
+            Live database sync for <strong>{contactEmail}</strong> — Campus locations, class groups, 8-digit access codes, and XP tracking
           </div>
         </div>
 
         <div className="admin-page-actions">
+          <button className="admin-btn admin-btn-ghost" onClick={loadDatabaseData} title="Refresh Database Data">
+            <RefreshCw size={14} className={loading ? 'animate-spin' : ''} /> Sync Database
+          </button>
           <button
-            className="admin-btn admin-btn-ghost"
+            className="admin-btn admin-btn-primary"
             onClick={() => {
               setEditingStudent(null)
               setStudentForm({
@@ -335,7 +347,7 @@ export function SchoolPuzzleProPage() {
             <Building2 size={16} color="var(--adm-text-3)" />
           </div>
           <div className="admin-stat-value">{centres.length} Locations</div>
-          <div className="admin-stat-sub">Active school campuses</div>
+          <div className="admin-stat-sub">Active school campuses in DB</div>
         </div>
 
         <div className="admin-stat-card" style={{ borderColor: 'rgba(196, 0, 0, 0.3)' }}>
@@ -353,7 +365,7 @@ export function SchoolPuzzleProPage() {
             <Users size={16} color="var(--adm-success)" />
           </div>
           <div className="admin-stat-value" style={{ color: 'var(--adm-success)' }}>{students.length} Students</div>
-          <div className="admin-stat-sub">8-Digit access codes active</div>
+          <div className="admin-stat-sub">8-Digit access codes active in DB</div>
         </div>
 
         <div className="admin-stat-card" style={{ borderColor: 'rgba(217, 119, 6, 0.4)' }}>
@@ -385,7 +397,7 @@ export function SchoolPuzzleProPage() {
               cursor: 'pointer',
             }}
           >
-            <Users size={16} /> Student Roster & Access Codes
+            <Users size={16} /> Student Roster & Access Codes ({students.length})
           </button>
 
           <button
@@ -404,7 +416,7 @@ export function SchoolPuzzleProPage() {
               cursor: 'pointer',
             }}
           >
-            <School size={16} /> School Classes & Groups
+            <School size={16} /> School Classes & Groups ({groups.length})
           </button>
 
           <button
@@ -423,7 +435,7 @@ export function SchoolPuzzleProPage() {
               cursor: 'pointer',
             }}
           >
-            <Building2 size={16} /> Campus Centres & Locations
+            <Building2 size={16} /> Campus Centres & Locations ({centres.length})
           </button>
         </div>
 
@@ -431,7 +443,7 @@ export function SchoolPuzzleProPage() {
           <Search size={14} color="var(--adm-text-3)" />
           <input
             type="text"
-            placeholder="Search students..."
+            placeholder="Search database..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             style={{ width: '180px' }}
@@ -457,10 +469,10 @@ export function SchoolPuzzleProPage() {
           >
             <div>
               <div style={{ fontWeight: 700, fontSize: '0.9375rem', color: 'var(--adm-text-1)' }}>
-                Student Roster Directory
+                Live Database Student Roster ({students.length})
               </div>
               <div style={{ fontSize: '0.75rem', color: 'var(--adm-text-3)', marginTop: '2px' }}>
-                Manage 8-digit access codes, assign Learning Worlds, and track student XP
+                Synced directly with database for <strong>{contactEmail}</strong>
               </div>
             </div>
 
@@ -531,17 +543,23 @@ export function SchoolPuzzleProPage() {
                 <tr>
                   <th>Student Name</th>
                   <th>8-Digit Access Code</th>
-                  <th>Class & Location Centre</th>
+                  <th>Class Roster</th>
                   <th>Assigned World</th>
                   <th>XP Score</th>
                   <th style={{ textAlign: 'right' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredStudents.length === 0 ? (
+                {loading ? (
                   <tr>
                     <td colSpan={6} className="admin-table-empty">
-                      No matching student records found
+                      <Loader2 size={16} className="animate-spin" style={{ margin: '0 auto' }} /> Fetching live database roster...
+                    </td>
+                  </tr>
+                ) : filteredStudents.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="admin-table-empty">
+                      No matching student records found in database
                     </td>
                   </tr>
                 ) : (
@@ -576,7 +594,6 @@ export function SchoolPuzzleProPage() {
                       </td>
                       <td>
                         <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--adm-text-1)' }}>{st.groupName}</div>
-                        <div style={{ fontSize: 11, color: 'var(--adm-text-3)' }}>{st.centreName}</div>
                       </td>
                       <td>
                         <select
@@ -665,7 +682,7 @@ export function SchoolPuzzleProPage() {
               className="admin-btn admin-btn-primary admin-btn-sm"
               onClick={() => {
                 setEditingGroup(null)
-                setGroupForm({ name: '', centreId: centres[0]?.id || 1 })
+                setGroupForm({ name: '', centreId: centres[0]?.id || 2 })
                 setIsGroupModalOpen(true)
               }}
             >
@@ -687,7 +704,7 @@ export function SchoolPuzzleProPage() {
                 {groups.map((grp) => (
                   <tr key={grp.id}>
                     <td style={{ fontWeight: 700, color: 'var(--adm-text-1)' }}>{grp.name}</td>
-                    <td style={{ fontSize: 13, color: 'var(--adm-text-2)' }}>{grp.centreName}</td>
+                    <td style={{ fontSize: 13, color: 'var(--adm-text-2)' }}>{grp.centreName || 'Festac Centre'}</td>
                     <td style={{ fontWeight: 600 }}>
                       {students.filter((s) => s.groupName === grp.name).length} Students
                     </td>
@@ -826,7 +843,7 @@ export function SchoolPuzzleProPage() {
                 >
                   {groups.map((g) => (
                     <option key={g.id} value={g.name}>
-                      {g.name} ({g.centreName})
+                      {g.name} ({g.centreName || 'Festac Centre'})
                     </option>
                   ))}
                 </select>
@@ -852,7 +869,7 @@ export function SchoolPuzzleProPage() {
                   Cancel
                 </button>
                 <button type="submit" className="admin-btn admin-btn-primary">
-                  Save Student
+                  Save Student to Database
                 </button>
               </div>
             </form>
@@ -904,7 +921,7 @@ export function SchoolPuzzleProPage() {
                   Cancel
                 </button>
                 <button type="submit" className="admin-btn admin-btn-primary">
-                  Save Group
+                  Save Group to Database
                 </button>
               </div>
             </form>
@@ -929,7 +946,7 @@ export function SchoolPuzzleProPage() {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Raji Rasaki Campus"
+                  placeholder="e.g. Festac Centre"
                   value={centreForm.name}
                   onChange={(e) => setCentreForm({ ...centreForm, name: e.target.value })}
                   style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid var(--adm-border)', marginTop: '4px' }}
@@ -940,7 +957,7 @@ export function SchoolPuzzleProPage() {
                 <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--adm-text-2)' }}>Location Address</label>
                 <input
                   type="text"
-                  placeholder="e.g. Raji Rasaki Road"
+                  placeholder="e.g. Festac, Lagos"
                   value={centreForm.location}
                   onChange={(e) => setCentreForm({ ...centreForm, location: e.target.value })}
                   style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid var(--adm-border)', marginTop: '4px' }}
@@ -951,7 +968,7 @@ export function SchoolPuzzleProPage() {
                 <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--adm-text-2)' }}>Centre Code</label>
                 <input
                   type="text"
-                  placeholder="e.g. RAJI-CAMPUS"
+                  placeholder="e.g. festac-centre"
                   value={centreForm.code}
                   onChange={(e) => setCentreForm({ ...centreForm, code: e.target.value })}
                   style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid var(--adm-border)', marginTop: '4px' }}
@@ -963,7 +980,7 @@ export function SchoolPuzzleProPage() {
                   Cancel
                 </button>
                 <button type="submit" className="admin-btn admin-btn-primary">
-                  Save Campus
+                  Save Campus to Database
                 </button>
               </div>
             </form>
