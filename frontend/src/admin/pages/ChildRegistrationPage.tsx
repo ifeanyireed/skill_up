@@ -436,8 +436,8 @@ export function ChildRegistrationPage() {
           <div className="admin-form-group">
             <label className="admin-label admin-label-req">Training Group / Class</label>
             <select className="admin-select" value={group} onChange={(e) => setGroup(e.target.value)}>
-              <option value="Little Dragons (Ages 4-10)">Little Dragons (Ages 4-10)</option>
-              <option value="Junior Champions (Ages 11-19)">Junior Champions (Ages 11-19)</option>
+              <option value="Junior Camp (5–10 years)">Junior Camp (5–10 years)</option>
+              <option value="Senior Camp (11+ years)">Senior Camp (11+ years)</option>
             </select>
           </div>
         </div>

@@ -267,8 +267,8 @@ export function InstructorsPage() {
                       value={assignedGroup}
                       onChange={(e) => setAssignedGroup(e.target.value)}
                     >
-                      <option value="Little Dragons (Ages 4-10)">Little Dragons (Ages 4-10)</option>
-                      <option value="Junior Champions (Ages 11-19)">Junior Champions (Ages 11-19)</option>
+                      <option value="Junior Camp (5–10 years)">Junior Camp (5–10 years)</option>
+                      <option value="Senior Camp (11+ years)">Senior Camp (11+ years)</option>
                     </select>
                   </div>
                 </div>
