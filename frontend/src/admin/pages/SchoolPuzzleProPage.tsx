@@ -171,10 +171,11 @@ export function SchoolPuzzleProPage() {
           .map((u: any, idx: number) => {
             const group = u.group_name || u.groupName || 'Junior Camp (5–10 years)'
             const isSenior = group.toLowerCase().includes('senior')
+            const isFestac = group.toLowerCase().includes('festac') || (u.centre_name && u.centre_name.toLowerCase().includes('festac'))
             const worldId = isSenior ? 2 : 1
 
-            const cId = u.centre_id || u.centreId || (u.centre_name && u.centre_name.toLowerCase().includes('festac') ? 2 : 3)
-            const cName = u.centre_name || u.centreName || (cId === 2 ? 'Festac Centre' : 'Raji Rasaki Centre')
+            const cId = isFestac ? 2 : 3
+            const cName = isFestac ? 'Festac Centre' : 'Raji Rasaki Centre'
 
             return {
               id: String(u.id),
