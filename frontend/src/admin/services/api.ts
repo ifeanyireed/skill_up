@@ -143,6 +143,18 @@ export async function createChild(data: Partial<BackendChild>): Promise<BackendC
       code = ('88000000' + digits).slice(-8)
     }
 
+    const groupMap: Record<string, number> = {
+      'Senior Camp (11+ years)': 11,
+      'Junior Camp (5–10 years)': 12,
+      'Little Dragons (Ages 4-10)': 13,
+      'Grade 5 Coding Class': 14,
+      'Festac Junior Camp': 3,
+      'Festac Senior Camp': 7,
+      'Raji Rasaki Junior Camp': 9,
+      'Raji Rasaki Senior Camp': 10,
+    }
+    const groupId = groupMap[groupName] || (centreId === 2 ? 13 : 12)
+
     await fetch('https://player-service-bttg.onrender.com/api/v1/users', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -160,6 +172,8 @@ export async function createChild(data: Partial<BackendChild>): Promise<BackendC
         centreId: centreId,
         centre_name: centerName,
         centreName: centerName,
+        group_id: groupId,
+        groupId: groupId,
         group_name: groupName,
         groupName: groupName,
         assigned_world_id: worldId,
