@@ -1,8 +1,8 @@
 // ============================================================================
 // SkillUp Check-In Portal — Native Schools Dashboard Component Page
 // Route: /admin/school & /school
-// Connected 100% directly to single live database (https://skill-up-sano.onrender.com/api)
-// Full live CRUD capabilities across Students, Groups, and Campus Centres tabs
+// Connected 100% directly to Player Service API (https://player-service-bttg.onrender.com/api/v1/)
+// Organization: org_4687 (SkillUp Academy)
 // ============================================================================
 import React, { useState, useEffect } from 'react'
 import {
@@ -21,7 +21,8 @@ import {
   RefreshCw
 } from 'lucide-react'
 import '../admin.css'
-import { getChildren, createChild, deleteChild, BackendChild } from '../services/api'
+
+const PLAYER_SERVICE_URL = 'https://player-service-bttg.onrender.com/api/v1'
 
 export interface SchoolStudent {
   id: string
@@ -59,14 +60,14 @@ const AVATARS = [
 ]
 
 const DEFAULT_CENTRES: SchoolCentre[] = [
-  { id: 1, name: 'Raji Rasaki Centre', location: 'Raji Rasaki Road, Amuwo Odofin, Lagos', code: 'raji-campus' },
   { id: 2, name: 'Festac Centre', location: 'House 32, 2nd Avenue, Amuwo-Odofin, Festac, Lagos', code: 'festac-centre' },
+  { id: 1, name: 'Raji Rasaki Centre', location: 'Raji Rasaki Road, Amuwo Odofin, Lagos', code: 'raji-campus' },
 ]
 
 const DEFAULT_GROUPS: SchoolGroup[] = [
-  { id: 1, name: 'Senior Camp (11+ years)', centreId: 1, centreName: 'Raji Rasaki Centre', studentCount: 0 },
-  { id: 2, name: 'Junior Camp (5–10 years)', centreId: 1, centreName: 'Raji Rasaki Centre', studentCount: 0 },
-  { id: 3, name: 'Little Dragons (Ages 4-10)', centreId: 2, centreName: 'Festac Centre', studentCount: 0 },
+  { id: 1, name: 'Grade 5 Coding Class', centreId: 2, centreName: 'Festac Centre', studentCount: 0 },
+  { id: 2, name: 'Senior Camp (11+ years)', centreId: 1, centreName: 'Raji Rasaki Centre', studentCount: 0 },
+  { id: 3, name: 'Junior Camp (5–10 years)', centreId: 1, centreName: 'Raji Rasaki Centre', studentCount: 0 },
 ]
 
 export function SchoolPuzzleProPage() {
@@ -78,8 +79,9 @@ export function SchoolPuzzleProPage() {
   const [loading, setLoading] = useState(true)
   const [actionLoading, setActionLoading] = useState(false)
 
-  // DB State
-  const [schoolName] = useState<string>('SkillUp Learning Academy')
+  // DB State for org_4687 (SkillUp Academy)
+  const [activeOrgId] = useState<string>('org_4687')
+  const [schoolName, setSchoolName] = useState<string>('SkillUp Academy')
   const [centres, setCentres] = useState<SchoolCentre[]>(DEFAULT_CENTRES)
   const [groups, setGroups] = useState<SchoolGroup[]>(DEFAULT_GROUPS)
   const [students, setStudents] = useState<SchoolStudent[]>([])
@@ -90,14 +92,14 @@ export function SchoolPuzzleProPage() {
   const [studentForm, setStudentForm] = useState({
     name: '',
     studentCode: '',
-    groupName: 'Senior Camp (11+ years)',
+    groupName: 'Grade 5 Coding Class',
     assignedWorldId: 1,
   })
 
   // Group Modal
   const [isGroupModalOpen, setIsGroupModalOpen] = useState(false)
   const [editingGroup, setEditingGroup] = useState<SchoolGroup | null>(null)
-  const [groupForm, setGroupForm] = useState({ name: '', centreId: 1 })
+  const [groupForm, setGroupForm] = useState({ name: '', centreId: 2 })
 
   // Centre Modal
   const [isCentreModalOpen, setIsCentreModalOpen] = useState(false)
@@ -114,82 +116,60 @@ export function SchoolPuzzleProPage() {
     setTimeout(() => setCopiedCodeId(null), 2000)
   }
 
-  // Fetch live database roster (305 students) directly from single shared DB API
+  // Load live data directly from https://player-service-bttg.onrender.com/api/v1/ for org_4687
   const loadDatabaseData = async () => {
     setLoading(true)
     try {
-      const mainDbChildren: BackendChild[] = await getChildren('all', '', 'all')
+      // 1. Fetch Organisation Info
+      const orgRes = await fetch(`${PLAYER_SERVICE_URL}/organisations`)
+      const orgData = await orgRes.json()
+      if (orgData && orgData.success && Array.isArray(orgData.organisations)) {
+        const matchingOrg = orgData.organisations.find((o: any) => o.id === activeOrgId)
+        if (matchingOrg) {
+          setSchoolName(matchingOrg.name)
+        }
+      }
 
-      if (Array.isArray(mainDbChildren) && mainDbChildren.length > 0) {
-        const mappedStudents: SchoolStudent[] = mainDbChildren.map((c, index) => {
-          let code = c.active_code ? c.active_code.replace(/\D/g, '') : ''
-          if (code.length !== 8) {
-            const digits = (c.student_id || '').replace(/\D/g, '')
-            code = (`88000000` + digits).slice(-8)
-          }
+      // 2. Fetch Centres for org_4687
+      const centresRes = await fetch(`${PLAYER_SERVICE_URL}/centres?orgId=${activeOrgId}`)
+      const centresData = await centresRes.json()
+      if (centresData && Array.isArray(centresData) && centresData.length > 0) {
+        setCentres(centresData)
+      } else if (centresData && Array.isArray(centresData.centres) && centresData.centres.length > 0) {
+        setCentres(centresData.centres)
+      }
 
-          const avatarUrl = c.photo && c.photo.startsWith('http')
-            ? c.photo
-            : AVATARS[index % AVATARS.length]
+      // 3. Fetch Groups for org_4687
+      const groupsRes = await fetch(`${PLAYER_SERVICE_URL}/groups?orgId=${activeOrgId}`)
+      const groupsData = await groupsRes.json()
+      if (groupsData && Array.isArray(groupsData) && groupsData.length > 0) {
+        setGroups(groupsData)
+      } else if (groupsData && Array.isArray(groupsData.groups) && groupsData.groups.length > 0) {
+        setGroups(groupsData.groups)
+      }
 
-          const cName = c.center || 'Raji Rasaki Centre'
-          const cId = cName.includes('Festac') ? 2 : 1
-
-          return {
-            id: String(c.id),
-            name: c.full_name,
-            avatar: avatarUrl,
-            studentCode: code,
-            groupName: c.group || 'Junior Camp (5–10 years)',
-            centreId: cId,
-            centreName: cName,
-            assignedWorldId: (index % 5) + 1,
-            totalXP: 100 + ((c.id * 17) % 850),
-          }
-        })
+      // 4. Fetch Users / Students for org_4687
+      const usersRes = await fetch(`${PLAYER_SERVICE_URL}/users?orgId=${activeOrgId}`)
+      const usersData = await usersRes.json()
+      if (usersData && usersData.success && Array.isArray(usersData.users)) {
+        const mappedStudents: SchoolStudent[] = usersData.users
+          .filter((u: any) => u.role === 'student' || u.role === 'Student')
+          .map((u: any, idx: number) => ({
+            id: String(u.id),
+            name: u.username || u.name,
+            avatar: u.avatar && u.avatar.startsWith('/') ? u.avatar : AVATARS[idx % AVATARS.length],
+            studentCode: u.access_code || u.studentCode || u.accessCode || '88776655',
+            groupName: u.group_name || u.groupName || 'Grade 5 Coding Class',
+            centreId: u.centre_id || u.centreId || 2,
+            centreName: u.centre_name || u.centreName || 'Festac Centre',
+            assignedWorldId: u.assigned_world_id || u.assignedWorldId || 1,
+            totalXP: u.total_xp || u.totalXP || 100,
+          }))
 
         setStudents(mappedStudents)
-
-        // Compute dynamic class groups directly from live 305 database records
-        const groupCounts = new Map<string, number>()
-        mappedStudents.forEach((st) => {
-          groupCounts.set(st.groupName, (groupCounts.get(st.groupName) || 0) + 1)
-        })
-
-        const computedGroups: SchoolGroup[] = Array.from(groupCounts.entries()).map(([gName, count], idx) => ({
-          id: idx + 1,
-          name: gName,
-          centreId: gName.includes('Festac') ? 2 : 1,
-          centreName: gName.includes('Festac') ? 'Festac Centre' : 'Raji Rasaki Centre',
-          studentCount: count,
-        }))
-
-        DEFAULT_GROUPS.forEach((dg) => {
-          if (!computedGroups.some((cg) => cg.name === dg.name)) {
-            computedGroups.push(dg)
-          }
-        })
-        setGroups(computedGroups)
-
-        // Compute dynamic campus locations directly from live 305 database records
-        const centreMap = new Map<string, { id: number; name: string; location: string; code: string }>()
-        centreMap.set('Raji Rasaki Centre', {
-          id: 1,
-          name: 'Raji Rasaki Centre',
-          location: 'Raji Rasaki Road, Amuwo Odofin, Lagos',
-          code: 'raji-campus',
-        })
-        centreMap.set('Festac Centre', {
-          id: 2,
-          name: 'Festac Centre',
-          location: 'House 32, 2nd Avenue, Amuwo-Odofin, Festac, Lagos',
-          code: 'festac-centre',
-        })
-
-        setCentres(Array.from(centreMap.values()))
       }
     } catch (err) {
-      console.warn('Error fetching live database roster:', err)
+      console.warn('Error fetching live player service data from Render:', err)
     } finally {
       setLoading(false)
     }
@@ -197,37 +177,39 @@ export function SchoolPuzzleProPage() {
 
   useEffect(() => {
     loadDatabaseData()
-  }, [])
+  }, [activeOrgId])
 
-  // ── STUDENT CRUD HANDLERS ──────────────────────────────────────────────────
+  // ── STUDENT CRUD HANDLERS (PLAYER SERVICE LIVE DB) ───────────────────────
   const handleSaveStudent = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!studentForm.name.trim()) return
     setActionLoading(true)
 
     const finalCode = studentForm.studentCode.trim() || generate8DigitCode()
-    const targetCentre = centres.find((c) => c.name === studentForm.groupName) || centres[0]
 
     try {
-      // Save directly to live primary database
-      await createChild({
-        full_name: studentForm.name.trim(),
-        active_code: finalCode,
-        group: studentForm.groupName,
-        center: targetCentre?.name || 'Raji Rasaki Centre',
-        age: 10,
-        gender: 'Male',
-        parent_name: 'Academy Parent',
-        parent_phone: '+234 800 000 0000',
-        parent_email: 'parent@kids.skilluplearningacademy.com',
-        emergency_name: 'Emergency Contact',
-        emergency_phone: '+234 800 000 0000',
-        status: 'Not Checked In',
+      await fetch(`${PLAYER_SERVICE_URL}/users`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: editingStudent ? editingStudent.id : undefined,
+          username: studentForm.name.trim(),
+          name: studentForm.name.trim(),
+          avatar: editingStudent?.avatar || AVATARS[Math.floor(Math.random() * AVATARS.length)],
+          accessCode: finalCode,
+          studentCode: finalCode,
+          role: 'student',
+          organisationId: activeOrgId,
+          organisation_id: activeOrgId,
+          groupName: studentForm.groupName,
+          group_name: studentForm.groupName,
+          assignedWorldId: studentForm.assignedWorldId,
+        }),
       })
 
       await loadDatabaseData()
     } catch (err) {
-      console.error('Error saving student to live DB:', err)
+      console.error('Error saving student to player service:', err)
     } finally {
       setActionLoading(false)
       setIsStudentModalOpen(false)
@@ -237,15 +219,14 @@ export function SchoolPuzzleProPage() {
   }
 
   const handleDeleteStudent = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this student record from the live database?')) return
+    if (!confirm('Are you sure you want to delete this student record from player-service database?')) return
     setActionLoading(true)
 
     try {
-      // Delete directly from live primary database
-      await deleteChild(id)
+      await fetch(`${PLAYER_SERVICE_URL}/users?id=${id}`, { method: 'DELETE' })
       await loadDatabaseData()
     } catch (err) {
-      console.error('Error deleting student from live DB:', err)
+      console.error('Error deleting student from player service:', err)
     } finally {
       setActionLoading(false)
     }
@@ -253,31 +234,50 @@ export function SchoolPuzzleProPage() {
 
   const handleAssignWorld = async (id: string, worldId: number) => {
     setStudents((prev) => prev.map((s) => (s.id === id ? { ...s, assignedWorldId: worldId } : s)))
+
+    try {
+      await fetch(`${PLAYER_SERVICE_URL}/users/assign-world`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, worldId }),
+      })
+    } catch (err) {
+      console.error('Error assigning world in player service:', err)
+    }
   }
 
-  // ── GROUP CRUD HANDLERS ────────────────────────────────────────────────────
+  // ── GROUP CRUD HANDLERS (PLAYER SERVICE LIVE DB) ─────────────────────────
   const handleSaveGroup = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!groupForm.name.trim()) return
+    setActionLoading(true)
 
     const targetCentre = centres.find((c) => c.id === groupForm.centreId)
-    const newGroupObj: SchoolGroup = {
-      id: editingGroup ? editingGroup.id : Date.now(),
-      name: groupForm.name.trim(),
-      centreId: groupForm.centreId,
-      centreName: targetCentre?.name || 'Raji Rasaki Centre',
-      studentCount: editingGroup ? editingGroup.studentCount : 0,
-    }
 
-    if (editingGroup) {
-      setGroups((prev) => prev.map((g) => (g.id === editingGroup.id ? newGroupObj : g)))
-    } else {
-      setGroups((prev) => [...prev, newGroupObj])
-    }
+    try {
+      await fetch(`${PLAYER_SERVICE_URL}/groups`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: editingGroup ? editingGroup.id : 0,
+          organisationId: activeOrgId,
+          organisation_id: activeOrgId,
+          centreId: groupForm.centreId,
+          centre_id: groupForm.centreId,
+          centreName: targetCentre?.name || 'Festac Centre',
+          name: groupForm.name.trim(),
+        }),
+      })
 
-    setIsGroupModalOpen(false)
-    setEditingGroup(null)
-    setGroupForm({ name: '', centreId: centres[0]?.id || 1 })
+      await loadDatabaseData()
+    } catch (err) {
+      console.error('Error saving group to player service:', err)
+    } finally {
+      setActionLoading(false)
+      setIsGroupModalOpen(false)
+      setEditingGroup(null)
+      setGroupForm({ name: '', centreId: centres[0]?.id || 2 })
+    }
   }
 
   const handleDeleteGroup = (id: number) => {
@@ -285,27 +285,35 @@ export function SchoolPuzzleProPage() {
     setGroups((prev) => prev.filter((g) => g.id !== id))
   }
 
-  // ── CENTRE CRUD HANDLERS ───────────────────────────────────────────────────
+  // ── CENTRE CRUD HANDLERS (PLAYER SERVICE LIVE DB) ────────────────────────
   const handleSaveCentre = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!centreForm.name.trim()) return
+    setActionLoading(true)
 
-    const newCentreObj: SchoolCentre = {
-      id: editingCentre ? editingCentre.id : Date.now(),
-      name: centreForm.name.trim(),
-      location: centreForm.location.trim() || 'Lagos, Nigeria',
-      code: centreForm.code.trim() || centreForm.name.toLowerCase().replace(/\s+/g, '-'),
+    try {
+      await fetch(`${PLAYER_SERVICE_URL}/centres`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: editingCentre ? editingCentre.id : 0,
+          organisationId: activeOrgId,
+          organisation_id: activeOrgId,
+          name: centreForm.name.trim(),
+          location: centreForm.location.trim() || 'Lagos, Nigeria',
+          code: centreForm.code.trim() || centreForm.name.toLowerCase().replace(/\s+/g, '-'),
+        }),
+      })
+
+      await loadDatabaseData()
+    } catch (err) {
+      console.error('Error saving centre to player service:', err)
+    } finally {
+      setActionLoading(false)
+      setIsCentreModalOpen(false)
+      setEditingCentre(null)
+      setCentreForm({ name: '', location: '', code: '' })
     }
-
-    if (editingCentre) {
-      setCentres((prev) => prev.map((c) => (c.id === editingCentre.id ? newCentreObj : c)))
-    } else {
-      setCentres((prev) => [...prev, newCentreObj])
-    }
-
-    setIsCentreModalOpen(false)
-    setEditingCentre(null)
-    setCentreForm({ name: '', location: '', code: '' })
   }
 
   const handleDeleteCentre = (id: number) => {
@@ -359,7 +367,7 @@ export function SchoolPuzzleProPage() {
         </div>
       </div>
 
-      {/* ── 2. Metric KPI Cards (305 Live Students Sync) ── */}
+      {/* ── 2. Metric KPI Cards ── */}
       <div className="admin-grid-4">
         <div className="admin-stat-card">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
@@ -471,7 +479,7 @@ export function SchoolPuzzleProPage() {
         </div>
       </div>
 
-      {/* ── TAB 1: STUDENT ROSTER (305 LIVE STUDENTS) ── */}
+      {/* ── TAB 1: STUDENT ROSTER (PLAYER SERVICE DB) ── */}
       {activeTab === 'students' && (
         <div className="admin-card" style={{ padding: 0, overflow: 'hidden' }}>
           <div
@@ -566,13 +574,13 @@ export function SchoolPuzzleProPage() {
                 {loading ? (
                   <tr>
                     <td colSpan={6} className="admin-table-empty">
-                      <Loader2 size={16} className="animate-spin" style={{ margin: '0 auto' }} /> Fetching live database roster...
+                      <Loader2 size={16} className="animate-spin" style={{ margin: '0 auto' }} /> Fetching player-service roster...
                     </td>
                   </tr>
                 ) : filteredStudents.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="admin-table-empty">
-                      No matching student records found in database
+                      No student records found in player-service database
                     </td>
                   </tr>
                 ) : (
@@ -668,7 +676,7 @@ export function SchoolPuzzleProPage() {
         </div>
       )}
 
-      {/* ── TAB 2: SCHOOL CLASSES & GROUPS ── */}
+      {/* ── TAB 2: SCHOOL CLASSES & GROUPS (PLAYER SERVICE DB) ── */}
       {activeTab === 'groups' && (
         <div className="admin-card" style={{ padding: 0, overflow: 'hidden' }}>
           <div
@@ -695,7 +703,7 @@ export function SchoolPuzzleProPage() {
               className="admin-btn admin-btn-primary admin-btn-sm"
               onClick={() => {
                 setEditingGroup(null)
-                setGroupForm({ name: '', centreId: centres[0]?.id || 1 })
+                setGroupForm({ name: '', centreId: centres[0]?.id || 2 })
                 setIsGroupModalOpen(true)
               }}
             >
@@ -717,7 +725,7 @@ export function SchoolPuzzleProPage() {
                 {groups.map((grp) => (
                   <tr key={grp.id}>
                     <td style={{ fontWeight: 700, color: 'var(--adm-text-1)' }}>{grp.name}</td>
-                    <td style={{ fontSize: 13, color: 'var(--adm-text-2)' }}>{grp.centreName || 'Raji Rasaki Centre'}</td>
+                    <td style={{ fontSize: 13, color: 'var(--adm-text-2)' }}>{grp.centreName || 'Festac Centre'}</td>
                     <td style={{ fontWeight: 600 }}>
                       {students.filter((s) => s.groupName === grp.name).length} Students
                     </td>
@@ -750,7 +758,7 @@ export function SchoolPuzzleProPage() {
         </div>
       )}
 
-      {/* ── TAB 3: CAMPUS CENTRES & LOCATIONS ── */}
+      {/* ── TAB 3: CAMPUS CENTRES & LOCATIONS (PLAYER SERVICE DB) ── */}
       {activeTab === 'centres' && (
         <div className="admin-card" style={{ padding: 0, overflow: 'hidden' }}>
           <div
@@ -803,7 +811,7 @@ export function SchoolPuzzleProPage() {
                     <td style={{ fontSize: 13, color: 'var(--adm-text-2)' }}>{c.location}</td>
                     <td style={{ fontFamily: 'monospace', fontWeight: 600 }}>{c.code}</td>
                     <td style={{ fontWeight: 600 }}>
-                      {students.filter((s) => s.centreName === c.name || (c.name.includes('Raji') && s.centreId === 1)).length} Students
+                      {students.filter((s) => s.centreName === c.name || s.centreId === c.id).length} Students
                     </td>
                     <td style={{ textAlign: 'right' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.25rem' }}>
@@ -878,7 +886,7 @@ export function SchoolPuzzleProPage() {
                 >
                   {groups.map((g) => (
                     <option key={g.id} value={g.name}>
-                      {g.name} ({g.centreName || 'Raji Rasaki Centre'})
+                      {g.name} ({g.centreName || 'Festac Centre'})
                     </option>
                   ))}
                 </select>
@@ -904,7 +912,7 @@ export function SchoolPuzzleProPage() {
                   Cancel
                 </button>
                 <button type="submit" className="admin-btn admin-btn-primary" disabled={actionLoading}>
-                  {actionLoading ? 'Saving...' : 'Save Student to Live DB'}
+                  {actionLoading ? 'Saving...' : 'Save Student to Player Service'}
                 </button>
               </div>
             </form>
@@ -929,7 +937,7 @@ export function SchoolPuzzleProPage() {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Senior Camp (11+ years)"
+                  placeholder="e.g. Grade 5 Coding Class"
                   value={groupForm.name}
                   onChange={(e) => setGroupForm({ ...groupForm, name: e.target.value })}
                   style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid var(--adm-border)', marginTop: '4px' }}
@@ -981,7 +989,7 @@ export function SchoolPuzzleProPage() {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Raji Rasaki Centre"
+                  placeholder="e.g. Festac Centre"
                   value={centreForm.name}
                   onChange={(e) => setCentreForm({ ...centreForm, name: e.target.value })}
                   style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid var(--adm-border)', marginTop: '4px' }}
@@ -992,7 +1000,7 @@ export function SchoolPuzzleProPage() {
                 <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--adm-text-2)' }}>Location Address</label>
                 <input
                   type="text"
-                  placeholder="e.g. Raji Rasaki Road, Amuwo Odofin, Lagos"
+                  placeholder="e.g. Festac, Lagos"
                   value={centreForm.location}
                   onChange={(e) => setCentreForm({ ...centreForm, location: e.target.value })}
                   style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid var(--adm-border)', marginTop: '4px' }}
@@ -1003,7 +1011,7 @@ export function SchoolPuzzleProPage() {
                 <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--adm-text-2)' }}>Centre Code</label>
                 <input
                   type="text"
-                  placeholder="e.g. raji-campus"
+                  placeholder="e.g. festac-centre"
                   value={centreForm.code}
                   onChange={(e) => setCentreForm({ ...centreForm, code: e.target.value })}
                   style={{ width: '100%', padding: '0.5rem', borderRadius: '0.375rem', border: '1px solid var(--adm-border)', marginTop: '4px' }}
