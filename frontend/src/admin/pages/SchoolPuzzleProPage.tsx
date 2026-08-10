@@ -3,7 +3,7 @@
 // Route: /admin/school & /school
 // Connected 100% directly to Player Service API (https://player-service-bttg.onrender.com/api/v1/)
 // Organization: org_4687 (SkillUp Academy)
-// Includes Full Live CRUD + Bulk Select Actions (Bulk Assign World, Bulk Copy Codes, Bulk Delete)
+// Includes Full Live CRUD + Bulk Select Actions + Pagination Controller
 // ============================================================================
 import React, { useState, useEffect } from 'react'
 import {
@@ -84,6 +84,10 @@ export function SchoolPuzzleProPage() {
   const [selectedStudentIds, setSelectedStudentIds] = useState<string[]>([])
   const [bulkWorldId, setBulkWorldId] = useState<number>(1)
 
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+
   // DB State for org_4687 (SkillUp Academy)
   const [activeOrgId] = useState<string>('org_4687')
   const [schoolName, setSchoolName] = useState<string>('SkillUp Academy')
@@ -120,6 +124,11 @@ export function SchoolPuzzleProPage() {
     setCopiedCodeId(id)
     setTimeout(() => setCopiedCodeId(null), 2000)
   }
+
+  // Reset to Page 1 when filters or search change
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchQuery, selectedCentreFilter, selectedGroupFilter])
 
   // Load live data directly from https://player-service-bttg.onrender.com/api/v1/ for org_4687
   const loadDatabaseData = async () => {
@@ -400,6 +409,105 @@ export function SchoolPuzzleProPage() {
       s.centreName === selectedCentreFilter
     return matchesSearch && matchesGroup && matchesCentre
   })
+
+  // Paginated calculations
+  const totalPages = Math.ceil(filteredStudents.length / pageSize) || 1
+  const startIndex = (currentPage - 1) * pageSize
+  const endIndex = Math.min(startIndex + pageSize, filteredStudents.length)
+  const paginatedStudents = filteredStudents.slice(startIndex, endIndex)
+
+  // ── PAGINATION CONTROLLER COMPONENT ─────────────────────────────────────────
+  const renderPaginationBar = () => {
+    if (filteredStudents.length === 0) return null
+
+    return (
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0.75rem 1.25rem',
+          backgroundColor: 'var(--adm-surface)',
+          borderTop: '1px solid var(--adm-border)',
+          flexWrap: 'wrap',
+          gap: '1rem',
+          fontSize: '0.8125rem',
+          color: 'var(--adm-text-2)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <span>
+            Showing <strong>{startIndex + 1}</strong> – <strong>{endIndex}</strong> of <strong>{filteredStudents.length}</strong> students
+          </span>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+            <span style={{ fontSize: '0.75rem' }}>Rows per page:</span>
+            <select
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(parseInt(e.target.value, 10))
+                setCurrentPage(1)
+              }}
+              style={{
+                height: '28px',
+                borderRadius: '0.375rem',
+                border: '1px solid var(--adm-border)',
+                padding: '0 0.5rem',
+                fontSize: '0.75rem',
+                backgroundColor: 'var(--adm-surface-2)',
+                color: 'var(--adm-text-1)',
+              }}
+            >
+              <option value={10}>10</option>
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+            </select>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+          <button
+            className="admin-btn admin-btn-ghost admin-btn-sm"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(1)}
+            title="First Page"
+          >
+            « First
+          </button>
+          <button
+            className="admin-btn admin-btn-ghost admin-btn-sm"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            title="Previous Page"
+          >
+            ‹ Prev
+          </button>
+
+          <span style={{ padding: '0 0.5rem', fontWeight: 600 }}>
+            Page {currentPage} of {totalPages}
+          </span>
+
+          <button
+            className="admin-btn admin-btn-ghost admin-btn-sm"
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            title="Next Page"
+          >
+            Next ›
+          </button>
+          <button
+            className="admin-btn admin-btn-ghost admin-btn-sm"
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(totalPages)}
+            title="Last Page"
+          >
+            Last »
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -739,7 +847,7 @@ export function SchoolPuzzleProPage() {
                     </td>
                   </tr>
                 ) : (
-                  filteredStudents.map((st) => (
+                  paginatedStudents.map((st) => (
                     <tr
                       key={st.id}
                       style={{
@@ -841,6 +949,9 @@ export function SchoolPuzzleProPage() {
               </tbody>
             </table>
           </div>
+
+          {/* ── PAGINATION CONTROLLER FOOTER ── */}
+          {renderPaginationBar()}
         </div>
       )}
 
