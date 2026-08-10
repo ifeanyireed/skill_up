@@ -53,13 +53,10 @@ export interface SchoolCentre {
   code: string
 }
 
-const AVATARS = [
-  '/avatars/character1.jpg',
-  '/avatars/character2.jpg',
-  '/avatars/character3.jpg',
-  '/avatars/character4.jpg',
-  '/avatars/character5.jpg',
-]
+const AVATARS = Array.from(
+  { length: 20 },
+  (_, i) => `https://raw.githubusercontent.com/ifeanyireed/lae/main/frontend/public/images/character${i + 1}.jpg`
+)
 
 const DEFAULT_CENTRES: SchoolCentre[] = [
   { id: 2, name: 'Festac Centre', location: 'House 32, 2nd Avenue, Amuwo-Odofin, Festac, Lagos', code: 'festac-centre' },

@@ -22,7 +22,10 @@ import {
 } from 'lucide-react'
 import { createChild } from '../admin/services/api'
 
-const AVATAR_CHARACTERS = Array.from({ length: 20 }, (_, i) => `/avatars/character${i + 1}.jpg`)
+const AVATAR_CHARACTERS = Array.from(
+  { length: 20 },
+  (_, i) => `https://raw.githubusercontent.com/ifeanyireed/lae/main/frontend/public/images/character${i + 1}.jpg`
+)
 
 export function ParentRegistrationPage() {
   const navigate = useNavigate()

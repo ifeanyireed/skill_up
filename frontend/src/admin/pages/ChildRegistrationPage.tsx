@@ -9,7 +9,10 @@ import '../admin.css'
 import { createChild } from '../services/api'
 import { useAdminStore } from '../store/useAdminStore'
 
-const AVATAR_CHARACTERS = Array.from({ length: 20 }, (_, i) => `/avatars/character${i + 1}.jpg`)
+const AVATAR_CHARACTERS = Array.from(
+  { length: 20 },
+  (_, i) => `https://raw.githubusercontent.com/ifeanyireed/lae/main/frontend/public/images/character${i + 1}.jpg`
+)
 
 export function ChildRegistrationPage() {
   const navigate = useNavigate()
