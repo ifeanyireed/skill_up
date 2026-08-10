@@ -173,14 +173,17 @@ export function SchoolPuzzleProPage() {
             const isSenior = group.toLowerCase().includes('senior')
             const worldId = isSenior ? 2 : 1
 
+            const cId = u.centre_id || u.centreId || (u.centre_name && u.centre_name.toLowerCase().includes('festac') ? 2 : 3)
+            const cName = u.centre_name || u.centreName || (cId === 2 ? 'Festac Centre' : 'Raji Rasaki Centre')
+
             return {
               id: String(u.id),
               name: u.username || u.name,
               avatar: u.avatar && u.avatar.startsWith('/') ? u.avatar : AVATARS[idx % AVATARS.length],
               studentCode: u.access_code || u.studentCode || u.accessCode || '88776655',
               groupName: group,
-              centreId: u.centre_id || u.centreId || 2,
-              centreName: u.centre_name || u.centreName || 'Festac Centre',
+              centreId: cId,
+              centreName: cName,
               assignedWorldId: u.assigned_world_id || u.assignedWorldId || worldId,
               totalXP: u.total_xp || u.totalXP || 100,
             }
