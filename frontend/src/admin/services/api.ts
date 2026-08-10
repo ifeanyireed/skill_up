@@ -124,7 +124,53 @@ export async function createChild(data: Partial<BackendChild>): Promise<BackendC
     }
     throw new Error(errorMsg)
   }
-  return JSON.parse(text)
+
+  const created: BackendChild = JSON.parse(text)
+
+  // Automatically create student account on player-service according to Group, Centre, and World mapping
+  try {
+    const studentName = created.full_name || data.full_name || 'Student'
+    const groupName = created.group || data.group || 'Junior Camp (5–10 years)'
+    const centerName = created.center || data.center || 'Raji Rasaki Centre'
+
+    const isSenior = groupName.toLowerCase().includes('senior')
+    const worldId = isSenior ? 2 : 1
+    const centreId = centerName.toLowerCase().includes('festac') ? 2 : 3
+
+    let code = (created.active_code || data.active_code || '').replace(/\D/g, '')
+    if (code.length !== 8) {
+      const digits = (created.student_id || data.student_id || String(created.id || Date.now())).replace(/\D/g, '')
+      code = ('88000000' + digits).slice(-8)
+    }
+
+    await fetch('https://player-service-bttg.onrender.com/api/v1/users', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: studentName,
+        name: studentName,
+        avatar: created.photo || data.photo || '/avatars/character1.jpg',
+        access_code: code,
+        accessCode: code,
+        studentCode: code,
+        role: 'student',
+        organisation_id: 'org_4687',
+        organisationId: 'org_4687',
+        centre_id: centreId,
+        centreId: centreId,
+        centre_name: centerName,
+        centreName: centerName,
+        group_name: groupName,
+        groupName: groupName,
+        assigned_world_id: worldId,
+        assignedWorldId: worldId,
+      }),
+    })
+  } catch (err) {
+    console.warn('Player service automatic registration sync warning:', err)
+  }
+
+  return created
 }
 
 export async function deleteChild(id: number | string): Promise<{ message: string }> {
