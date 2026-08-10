@@ -3,6 +3,7 @@
 // Route: /admin/school & /school
 // Connected 100% directly to Player Service API (https://player-service-bttg.onrender.com/api/v1/)
 // Organization: org_4687 (SkillUp Academy)
+// Includes Full Live CRUD + Bulk Select Actions (Bulk Assign World, Bulk Copy Codes, Bulk Delete)
 // ============================================================================
 import React, { useState, useEffect } from 'react'
 import {
@@ -61,13 +62,13 @@ const AVATARS = [
 
 const DEFAULT_CENTRES: SchoolCentre[] = [
   { id: 2, name: 'Festac Centre', location: 'House 32, 2nd Avenue, Amuwo-Odofin, Festac, Lagos', code: 'festac-centre' },
-  { id: 1, name: 'Raji Rasaki Centre', location: 'Raji Rasaki Road, Amuwo Odofin, Lagos', code: 'raji-campus' },
+  { id: 3, name: 'Raji Rasaki Centre', location: 'Raji Rasaki Road, Amuwo Odofin, Lagos', code: 'raji-campus' },
 ]
 
 const DEFAULT_GROUPS: SchoolGroup[] = [
   { id: 1, name: 'Grade 5 Coding Class', centreId: 2, centreName: 'Festac Centre', studentCount: 0 },
-  { id: 2, name: 'Senior Camp (11+ years)', centreId: 1, centreName: 'Raji Rasaki Centre', studentCount: 0 },
-  { id: 3, name: 'Junior Camp (5–10 years)', centreId: 1, centreName: 'Raji Rasaki Centre', studentCount: 0 },
+  { id: 2, name: 'Senior Camp (11+ years)', centreId: 3, centreName: 'Raji Rasaki Centre', studentCount: 0 },
+  { id: 3, name: 'Junior Camp (5–10 years)', centreId: 3, centreName: 'Raji Rasaki Centre', studentCount: 0 },
 ]
 
 export function SchoolPuzzleProPage() {
@@ -78,6 +79,10 @@ export function SchoolPuzzleProPage() {
   const [copiedCodeId, setCopiedCodeId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [actionLoading, setActionLoading] = useState(false)
+
+  // Bulk Selection State
+  const [selectedStudentIds, setSelectedStudentIds] = useState<string[]>([])
+  const [bulkWorldId, setBulkWorldId] = useState<number>(1)
 
   // DB State for org_4687 (SkillUp Academy)
   const [activeOrgId] = useState<string>('org_4687')
@@ -185,7 +190,62 @@ export function SchoolPuzzleProPage() {
     loadDatabaseData()
   }, [activeOrgId])
 
-  // ── STUDENT CRUD HANDLERS (PLAYER SERVICE LIVE DB) ───────────────────────
+  // ── BULK SELECTION HANDLERS ───────────────────────────────────────────────
+  const toggleSelectAllStudents = () => {
+    if (selectedStudentIds.length === filteredStudents.length && filteredStudents.length > 0) {
+      setSelectedStudentIds([])
+    } else {
+      setSelectedStudentIds(filteredStudents.map((s) => s.id))
+    }
+  }
+
+  const toggleSelectStudent = (id: string) => {
+    setSelectedStudentIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    )
+  }
+
+  const handleBulkAssignWorld = async () => {
+    if (selectedStudentIds.length === 0) return
+    setActionLoading(true)
+    try {
+      for (const id of selectedStudentIds) {
+        await handleAssignWorld(id, bulkWorldId)
+      }
+      alert(`Successfully assigned ${selectedStudentIds.length} students to World ${bulkWorldId}!`)
+    } catch (err) {
+      console.error('Error in bulk world assignment:', err)
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
+  const handleBulkDeleteStudents = async () => {
+    if (selectedStudentIds.length === 0) return
+    if (!confirm(`Are you sure you want to delete ${selectedStudentIds.length} selected student records?`)) return
+    setActionLoading(true)
+
+    try {
+      for (const id of selectedStudentIds) {
+        await fetch(`${PLAYER_SERVICE_URL}/users?id=${id}`, { method: 'DELETE' })
+      }
+      setSelectedStudentIds([])
+      await loadDatabaseData()
+    } catch (err) {
+      console.error('Error in bulk delete:', err)
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
+  const handleBulkCopyCodes = () => {
+    const selectedStudents = students.filter((s) => selectedStudentIds.includes(s.id))
+    const codesText = selectedStudents.map((s) => `${s.name}: ${s.studentCode}`).join('\n')
+    navigator.clipboard.writeText(codesText)
+    alert(`Copied ${selectedStudents.length} access codes to clipboard!`)
+  }
+
+  // ── STUDENT CRUD HANDLERS ──────────────────────────────────────────────────
   const handleSaveStudent = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!studentForm.name.trim()) return
@@ -252,7 +312,7 @@ export function SchoolPuzzleProPage() {
     }
   }
 
-  // ── GROUP CRUD HANDLERS (PLAYER SERVICE LIVE DB) ─────────────────────────
+  // ── GROUP CRUD HANDLERS ────────────────────────────────────────────────────
   const handleSaveGroup = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!groupForm.name.trim()) return
@@ -291,7 +351,7 @@ export function SchoolPuzzleProPage() {
     setGroups((prev) => prev.filter((g) => g.id !== id))
   }
 
-  // ── CENTRE CRUD HANDLERS (PLAYER SERVICE LIVE DB) ────────────────────────
+  // ── CENTRE CRUD HANDLERS ───────────────────────────────────────────────────
   const handleSaveCentre = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!centreForm.name.trim()) return
@@ -488,6 +548,83 @@ export function SchoolPuzzleProPage() {
         </div>
       </div>
 
+      {/* ── BULK ACTIONS TOOLBAR ── */}
+      {activeTab === 'students' && selectedStudentIds.length > 0 && (
+        <div
+          className="admin-card"
+          style={{
+            padding: '0.75rem 1.25rem',
+            backgroundColor: 'rgba(196, 0, 0, 0.08)',
+            border: '1px solid var(--adm-accent)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '1rem',
+            flexWrap: 'wrap',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <span className="admin-badge admin-badge-accent" style={{ fontSize: '0.8125rem', padding: '0.35rem 0.65rem' }}>
+              <Users size={14} /> {selectedStudentIds.length} Students Selected
+            </span>
+            <button
+              className="admin-btn admin-btn-ghost admin-btn-sm"
+              onClick={() => setSelectedStudentIds([])}
+              style={{ fontSize: '0.75rem' }}
+            >
+              Clear Selection
+            </button>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+              <select
+                value={bulkWorldId}
+                onChange={(e) => setBulkWorldId(parseInt(e.target.value, 10))}
+                style={{
+                  height: '32px',
+                  borderRadius: '0.375rem',
+                  border: '1px solid var(--adm-border)',
+                  padding: '0 0.5rem',
+                  fontSize: '0.75rem',
+                  backgroundColor: 'var(--adm-surface)',
+                  color: 'var(--adm-text-1)',
+                }}
+              >
+                <option value={1}>World 1: Pipe Beginnings</option>
+                <option value={2}>World 2: Code Jungle</option>
+                <option value={3}>World 3: Web Kingdom</option>
+                <option value={4}>World 4: JS Galaxy</option>
+                <option value={5}>World 5: Python Temple</option>
+              </select>
+              <button
+                className="admin-btn admin-btn-secondary admin-btn-sm"
+                onClick={handleBulkAssignWorld}
+                disabled={actionLoading}
+              >
+                <Globe size={13} /> Assign World
+              </button>
+            </div>
+
+            <button
+              className="admin-btn admin-btn-secondary admin-btn-sm"
+              onClick={handleBulkCopyCodes}
+            >
+              <Copy size={13} /> Copy Selected Codes
+            </button>
+
+            <button
+              className="admin-btn admin-btn-primary admin-btn-sm"
+              onClick={handleBulkDeleteStudents}
+              disabled={actionLoading}
+              style={{ backgroundColor: 'var(--adm-accent)', borderColor: 'var(--adm-accent)' }}
+            >
+              <Trash2 size={13} /> Delete Selected ({selectedStudentIds.length})
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* ── TAB 1: STUDENT ROSTER (PLAYER SERVICE DB) ── */}
       {activeTab === 'students' && (
         <div className="admin-card" style={{ padding: 0, overflow: 'hidden' }}>
@@ -571,6 +708,15 @@ export function SchoolPuzzleProPage() {
             <table className="admin-table">
               <thead>
                 <tr>
+                  <th style={{ width: '40px', textAlign: 'center' }}>
+                    <input
+                      type="checkbox"
+                      checked={filteredStudents.length > 0 && selectedStudentIds.length === filteredStudents.length}
+                      onChange={toggleSelectAllStudents}
+                      style={{ cursor: 'pointer', width: '16px', height: '16px' }}
+                      title="Select All Students"
+                    />
+                  </th>
                   <th>Student Name</th>
                   <th>8-Digit Access Code</th>
                   <th>Class Roster</th>
@@ -582,19 +728,32 @@ export function SchoolPuzzleProPage() {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan={6} className="admin-table-empty">
+                    <td colSpan={7} className="admin-table-empty">
                       <Loader2 size={16} className="animate-spin" style={{ margin: '0 auto' }} /> Fetching player-service roster...
                     </td>
                   </tr>
                 ) : filteredStudents.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="admin-table-empty">
+                    <td colSpan={7} className="admin-table-empty">
                       No student records found in player-service database
                     </td>
                   </tr>
                 ) : (
                   filteredStudents.map((st) => (
-                    <tr key={st.id}>
+                    <tr
+                      key={st.id}
+                      style={{
+                        backgroundColor: selectedStudentIds.includes(st.id) ? 'rgba(196, 0, 0, 0.06)' : undefined,
+                      }}
+                    >
+                      <td style={{ textAlign: 'center' }}>
+                        <input
+                          type="checkbox"
+                          checked={selectedStudentIds.includes(st.id)}
+                          onChange={() => toggleSelectStudent(st.id)}
+                          style={{ cursor: 'pointer', width: '16px', height: '16px' }}
+                        />
+                      </td>
                       <td>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
                           <img
