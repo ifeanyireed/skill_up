@@ -1,6 +1,7 @@
 // ============================================================================
 // Skill Up Academy — Learners Portal (/learners)
 // Assignments, Notice Board & Events Calendar with RBAC
+// Styled strictly with NETS Admin Dashboard Design Tokens
 // ============================================================================
 import React, { useState, useEffect } from 'react'
 import {
@@ -16,14 +17,16 @@ import {
   Award,
   FileText,
   MapPin,
-  UserCheck,
   Trash2,
   ChevronLeft,
   ChevronRight,
   Send,
   AlertTriangle,
   Layers,
-  GraduationCap
+  GraduationCap,
+  X,
+  Check,
+  Filter
 } from 'lucide-react'
 import { useAdminStore, isLearnerUser, canManageLearners } from '../store/useAdminStore'
 import {
@@ -302,191 +305,134 @@ export function LearnersPage() {
   const pinnedNoticesCount = notices.filter((n) => n.is_pinned).length
 
   return (
-    <div className="admin-page-container" style={{ paddingBottom: '3rem' }}>
-      {/* ── Top Hero Welcome Banner ── */}
-      <div
-        style={{
-          background: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311b92 100%)',
-          borderRadius: '16px',
-          padding: '2rem 2.25rem',
-          color: '#fff',
-          marginBottom: '2rem',
-          position: 'relative',
-          overflow: 'hidden',
-          boxShadow: '0 10px 25px -5px rgba(15, 23, 42, 0.4)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-        }}
-      >
-        {/* Glow Accent Circle */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '-50px',
-            right: '-50px',
-            width: '240px',
-            height: '240px',
-            background: 'radial-gradient(circle, rgba(196, 0, 0, 0.35) 0%, rgba(99, 102, 241, 0) 70%)',
-            borderRadius: '50%',
-            pointerEvents: 'none',
-          }}
-        />
-
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem', position: 'relative', zIndex: 1 }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-              <span
-                style={{
-                  background: isLearner ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)',
-                  color: isLearner ? '#4ade80' : '#f87171',
-                  border: `1px solid ${isLearner ? 'rgba(34, 197, 94, 0.4)' : 'rgba(239, 68, 68, 0.4)'}`,
-                  padding: '4px 12px',
-                  borderRadius: '20px',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-              >
-                {isLearner ? <GraduationCap size={14} /> : <Sparkles size={14} />}
-                {isLearner ? 'Learner Student Portal' : `Staff View: ${user?.role || 'Instructor'}`}
-              </span>
-              <span style={{ fontSize: '13px', opacity: 0.8 }}>
-                {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
-              </span>
-            </div>
-
-            <h1 style={{ fontSize: '1.85rem', fontWeight: 800, margin: '0.25rem 0', letterSpacing: '-0.02em', color: '#fff' }}>
-              Welcome back, {user?.fullName || 'Learner'}! 👋
-            </h1>
-            <p style={{ opacity: 0.85, fontSize: '0.95rem', margin: 0, maxWidth: '600px' }}>
-              Access your weekly assignments, view official announcements, and stay updated with upcoming tech events and workshops.
-            </p>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      {/* ── Page Header ── */}
+      <div className="admin-page-header">
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.375rem' }}>
+            <span className={`admin-badge ${isLearner ? 'admin-badge-green' : 'admin-badge-accent'}`}>
+              {isLearner ? <GraduationCap size={12} /> : <Sparkles size={12} />}
+              {isLearner ? 'Learner Student Portal' : `Staff View: ${user?.role || 'Instructor'}`}
+            </span>
+            <span style={{ fontSize: '12px', color: 'var(--adm-text-3)' }}>
+              {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
+            </span>
           </div>
 
-          {/* Quick Action Button for Instructors / Admins */}
-          {canManage && (
-            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-              <button
-                onClick={() => setShowCreateAssignmentModal(true)}
-                className="admin-btn admin-btn-primary"
-                style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '0.6rem 1.1rem', fontSize: '13px' }}
-              >
-                <Plus size={16} /> Create Assignment
-              </button>
-              <button
-                onClick={() => setShowCreateNoticeModal(true)}
-                className="admin-btn"
-                style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(255,255,255,0.15)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '0.6rem 1.1rem', fontSize: '13px' }}
-              >
-                <Plus size={16} /> Post Notice
-              </button>
-              <button
-                onClick={() => setShowCreateEventModal(true)}
-                className="admin-btn"
-                style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(255,255,255,0.15)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '0.6rem 1.1rem', fontSize: '13px' }}
-              >
-                <Plus size={16} /> Add Event
-              </button>
-            </div>
-          )}
+          <h1 className="admin-page-title">
+            Learners Portal
+          </h1>
+          <div className="admin-page-desc">
+            Welcome back, {user?.fullName || 'Learner'}. Access weekly assignments, view official announcements, and stay updated with upcoming tech events.
+          </div>
         </div>
 
-        {/* ── Summary Stats Row ── */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-            gap: '1rem',
-            marginTop: '1.75rem',
-            paddingTop: '1.5rem',
-            borderTop: '1px solid rgba(255, 255, 255, 0.12)'
-          }}
-        >
-          <div style={{ background: 'rgba(255, 255, 255, 0.07)', borderRadius: '10px', padding: '0.875rem 1rem', display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
-            <div style={{ background: 'rgba(99, 102, 241, 0.3)', color: '#a5b4fc', padding: '10px', borderRadius: '8px' }}>
-              <BookOpen size={20} />
-            </div>
-            <div>
-              <div style={{ fontSize: '1.35rem', fontWeight: 800 }}>{assignments.length}</div>
-              <div style={{ fontSize: '12px', opacity: 0.8 }}>Total Assignments ({pendingAssignmentsCount} Pending)</div>
-            </div>
+        {/* Instructor / Admin Action Buttons */}
+        {canManage && (
+          <div className="admin-page-actions">
+            <button
+              onClick={() => setShowCreateAssignmentModal(true)}
+              className="admin-btn admin-btn-primary"
+            >
+              <Plus size={14} /> Create Assignment
+            </button>
+            <button
+              onClick={() => setShowCreateNoticeModal(true)}
+              className="admin-btn admin-btn-ghost"
+            >
+              <Plus size={14} /> Post Notice
+            </button>
+            <button
+              onClick={() => setShowCreateEventModal(true)}
+              className="admin-btn admin-btn-ghost"
+            >
+              <Plus size={14} /> Add Event
+            </button>
           </div>
+        )}
+      </div>
 
-          <div style={{ background: 'rgba(255, 255, 255, 0.07)', borderRadius: '10px', padding: '0.875rem 1rem', display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
-            <div style={{ background: 'rgba(245, 158, 11, 0.3)', color: '#fde047', padding: '10px', borderRadius: '8px' }}>
-              <Bell size={20} />
-            </div>
-            <div>
-              <div style={{ fontSize: '1.35rem', fontWeight: 800 }}>{notices.length}</div>
-              <div style={{ fontSize: '12px', opacity: 0.8 }}>Notices ({pinnedNoticesCount} Pinned)</div>
-            </div>
+      {/* ── Stat Cards Grid ── */}
+      <div className="admin-stat-grid" style={{ marginBottom: 0 }}>
+        <div className="admin-stat-card">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+            <span className="admin-stat-label">Active Assignments</span>
+            <BookOpen size={16} color="var(--adm-text-3)" />
           </div>
+          <div className="admin-stat-value">{assignments.length}</div>
+          <div className="admin-stat-sub">{pendingAssignmentsCount} Pending Submissions</div>
+        </div>
 
-          <div style={{ background: 'rgba(255, 255, 255, 0.07)', borderRadius: '10px', padding: '0.875rem 1rem', display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
-            <div style={{ background: 'rgba(236, 72, 153, 0.3)', color: '#f472b6', padding: '10px', borderRadius: '8px' }}>
-              <Calendar size={20} />
-            </div>
-            <div>
-              <div style={{ fontSize: '1.35rem', fontWeight: 800 }}>{events.length}</div>
-              <div style={{ fontSize: '12px', opacity: 0.8 }}>Upcoming Events</div>
-            </div>
+        <div className="admin-stat-card">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+            <span className="admin-stat-label">Notice Board</span>
+            <Bell size={16} color="var(--adm-text-3)" />
           </div>
+          <div className="admin-stat-value">{notices.length}</div>
+          <div className="admin-stat-sub">{pinnedNoticesCount} Pinned Announcements</div>
+        </div>
 
-          <div style={{ background: 'rgba(255, 255, 255, 0.07)', borderRadius: '10px', padding: '0.875rem 1rem', display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
-            <div style={{ background: 'rgba(34, 197, 94, 0.3)', color: '#86efac', padding: '10px', borderRadius: '8px' }}>
-              <Award size={20} />
-            </div>
-            <div>
-              <div style={{ fontSize: '1.35rem', fontWeight: 800 }}>{submittedAssignmentsCount * 100} pts</div>
-              <div style={{ fontSize: '12px', opacity: 0.8 }}>Learning Score</div>
-            </div>
+        <div className="admin-stat-card">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+            <span className="admin-stat-label">Upcoming Events</span>
+            <Calendar size={16} color="var(--adm-text-3)" />
           </div>
+          <div className="admin-stat-value">{events.length}</div>
+          <div className="admin-stat-sub">Scheduled for August 2026</div>
+        </div>
+
+        <div className="admin-stat-card" style={{ borderColor: 'rgba(196, 0, 0, 0.3)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+            <span className="admin-stat-label" style={{ color: 'var(--adm-accent)', fontWeight: 600 }}>Learning Score</span>
+            <Award size={16} color="var(--adm-accent)" />
+          </div>
+          <div className="admin-stat-value" style={{ color: 'var(--adm-accent)' }}>{submittedAssignmentsCount * 100} pts</div>
+          <div className="admin-stat-sub">{submittedAssignmentsCount} Completed Tasks</div>
         </div>
       </div>
 
-      {/* ── Main Tab Navigation Bar ── */}
-      <div style={{ display: 'flex', borderBottom: '2px solid var(--adm-border, #e2e8f0)', marginBottom: '1.5rem', gap: '0.5rem', overflowX: 'auto' }}>
+      {/* ── Main Tab Navigation ── */}
+      <div style={{ display: 'flex', borderBottom: '1px solid var(--adm-border)', gap: '0.25rem', overflowX: 'auto' }}>
         <button
           onClick={() => setActiveTab('overview')}
           style={{
-            padding: '0.75rem 1.25rem',
+            padding: '0.625rem 1rem',
             border: 'none',
             background: 'none',
-            fontWeight: activeTab === 'overview' ? 700 : 500,
-            color: activeTab === 'overview' ? 'var(--adm-accent, #C40000)' : 'var(--adm-text-muted, #64748b)',
-            borderBottom: activeTab === 'overview' ? '3px solid var(--adm-accent, #C40000)' : '3px solid transparent',
+            fontWeight: activeTab === 'overview' ? 600 : 500,
+            color: activeTab === 'overview' ? 'var(--adm-accent)' : 'var(--adm-text-2)',
+            borderBottom: activeTab === 'overview' ? '2px solid var(--adm-accent)' : '2px solid transparent',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            gap: '8px',
-            fontSize: '14px',
+            gap: '6px',
+            fontSize: '13.5px',
             whiteSpace: 'nowrap'
           }}
         >
-          <Layers size={18} /> Overview
+          <Layers size={16} /> Overview
         </button>
 
         <button
           onClick={() => setActiveTab('assignments')}
           style={{
-            padding: '0.75rem 1.25rem',
+            padding: '0.625rem 1rem',
             border: 'none',
             background: 'none',
-            fontWeight: activeTab === 'assignments' ? 700 : 500,
-            color: activeTab === 'assignments' ? 'var(--adm-accent, #C40000)' : 'var(--adm-text-muted, #64748b)',
-            borderBottom: activeTab === 'assignments' ? '3px solid var(--adm-accent, #C40000)' : '3px solid transparent',
+            fontWeight: activeTab === 'assignments' ? 600 : 500,
+            color: activeTab === 'assignments' ? 'var(--adm-accent)' : 'var(--adm-text-2)',
+            borderBottom: activeTab === 'assignments' ? '2px solid var(--adm-accent)' : '2px solid transparent',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            gap: '8px',
-            fontSize: '14px',
+            gap: '6px',
+            fontSize: '13.5px',
             whiteSpace: 'nowrap'
           }}
         >
-          <BookOpen size={18} /> Assignments
+          <BookOpen size={16} /> Assignments
           {pendingAssignmentsCount > 0 && (
-            <span style={{ background: 'var(--adm-accent, #C40000)', color: '#fff', fontSize: '11px', fontWeight: 700, padding: '2px 7px', borderRadius: '10px' }}>
+            <span className="admin-nav-badge" style={{ marginLeft: '4px' }}>
               {pendingAssignmentsCount}
             </span>
           )}
@@ -495,86 +441,89 @@ export function LearnersPage() {
         <button
           onClick={() => setActiveTab('notices')}
           style={{
-            padding: '0.75rem 1.25rem',
+            padding: '0.625rem 1rem',
             border: 'none',
             background: 'none',
-            fontWeight: activeTab === 'notices' ? 700 : 500,
-            color: activeTab === 'notices' ? 'var(--adm-accent, #C40000)' : 'var(--adm-text-muted, #64748b)',
-            borderBottom: activeTab === 'notices' ? '3px solid var(--adm-accent, #C40000)' : '3px solid transparent',
+            fontWeight: activeTab === 'notices' ? 600 : 500,
+            color: activeTab === 'notices' ? 'var(--adm-accent)' : 'var(--adm-text-2)',
+            borderBottom: activeTab === 'notices' ? '2px solid var(--adm-accent)' : '2px solid transparent',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            gap: '8px',
-            fontSize: '14px',
+            gap: '6px',
+            fontSize: '13.5px',
             whiteSpace: 'nowrap'
           }}
         >
-          <Bell size={18} /> Notice Board
+          <Bell size={16} /> Notice Board
         </button>
 
         <button
           onClick={() => setActiveTab('events')}
           style={{
-            padding: '0.75rem 1.25rem',
+            padding: '0.625rem 1rem',
             border: 'none',
             background: 'none',
-            fontWeight: activeTab === 'events' ? 700 : 500,
-            color: activeTab === 'events' ? 'var(--adm-accent, #C40000)' : 'var(--adm-text-muted, #64748b)',
-            borderBottom: activeTab === 'events' ? '3px solid var(--adm-accent, #C40000)' : '3px solid transparent',
+            fontWeight: activeTab === 'events' ? 600 : 500,
+            color: activeTab === 'events' ? 'var(--adm-accent)' : 'var(--adm-text-2)',
+            borderBottom: activeTab === 'events' ? '2px solid var(--adm-accent)' : '2px solid transparent',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            gap: '8px',
-            fontSize: '14px',
+            gap: '6px',
+            fontSize: '13.5px',
             whiteSpace: 'nowrap'
           }}
         >
-          <Calendar size={18} /> Events Calendar
+          <Calendar size={16} /> Events Calendar
         </button>
       </div>
 
       {/* ── TAB 1: OVERVIEW ── */}
       {activeTab === 'overview' && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem' }}>
           {/* Top Notice Highlights */}
           <div className="admin-card">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
-                <Bell size={18} color="var(--adm-accent, #C40000)" /> Featured Announcements
-              </h3>
+            <div className="admin-card-title">
+              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Bell size={16} color="var(--adm-accent)" /> Featured Announcements
+              </span>
               <button
                 onClick={() => setActiveTab('notices')}
-                style={{ border: 'none', background: 'none', color: 'var(--adm-accent, #C40000)', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}
+                style={{ border: 'none', background: 'none', color: 'var(--adm-accent)', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}
               >
                 View All
               </button>
             </div>
 
             {notices.length === 0 ? (
-              <p style={{ color: '#64748b', fontSize: '14px' }}>No notices at this time.</p>
+              <p style={{ color: 'var(--adm-text-3)', fontSize: '13px', margin: 0 }}>No announcements at this time.</p>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {notices.slice(0, 3).map((notice) => (
                   <div
                     key={notice.id}
                     onClick={() => setSelectedNotice(notice)}
                     style={{
-                      padding: '0.875rem 1rem',
-                      borderRadius: '10px',
-                      background: notice.is_pinned ? 'rgba(196, 0, 0, 0.04)' : '#f8fafc',
-                      border: notice.is_pinned ? '1px solid rgba(196, 0, 0, 0.2)' : '1px solid #e2e8f0',
-                      cursor: 'pointer',
-                      transition: 'transform 0.15s, boxShadow 0.15s'
+                      padding: '0.75rem 0.875rem',
+                      borderRadius: 'var(--adm-radius-sm)',
+                      background: notice.is_pinned ? 'var(--adm-accent-subtle)' : 'var(--adm-surface-2)',
+                      border: notice.is_pinned ? '1px solid rgba(196, 0, 0, 0.2)' : '1px solid var(--adm-border)',
+                      cursor: 'pointer'
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-                      <span style={{ fontSize: '11px', fontWeight: 700, padding: '2px 8px', borderRadius: '4px', background: '#e0e7ff', color: '#3730a3' }}>
+                      <span className="admin-badge admin-badge-gray">
                         {notice.category}
                       </span>
-                      {notice.is_pinned && <span style={{ fontSize: '11px', color: '#c40000', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '2px' }}><Pin size={12} /> Pinned</span>}
+                      {notice.is_pinned && (
+                        <span style={{ fontSize: '11px', color: 'var(--adm-accent)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '2px' }}>
+                          <Pin size={11} /> Pinned
+                        </span>
+                      )}
                     </div>
-                    <div style={{ fontWeight: 700, fontSize: '14px', color: '#1e293b' }}>{notice.title}</div>
-                    <div style={{ fontSize: '12.5px', color: '#64748b', marginTop: '4px', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                    <div style={{ fontWeight: 600, fontSize: '13.5px', color: 'var(--adm-text-1)' }}>{notice.title}</div>
+                    <div style={{ fontSize: '12.5px', color: 'var(--adm-text-2)', marginTop: '4px', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                       {notice.content}
                     </div>
                   </div>
@@ -583,53 +532,53 @@ export function LearnersPage() {
             )}
           </div>
 
-          {/* Pending Assignments */}
+          {/* Active Assignments */}
           <div className="admin-card">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
-                <BookOpen size={18} color="#2563eb" /> Active Assignments
-              </h3>
+            <div className="admin-card-title">
+              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <BookOpen size={16} color="var(--adm-text-1)" /> Active Assignments
+              </span>
               <button
                 onClick={() => setActiveTab('assignments')}
-                style={{ border: 'none', background: 'none', color: '#2563eb', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}
+                style={{ border: 'none', background: 'none', color: 'var(--adm-accent)', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}
               >
                 View All
               </button>
             </div>
 
             {assignments.length === 0 ? (
-              <p style={{ color: '#64748b', fontSize: '14px' }}>No active assignments.</p>
+              <p style={{ color: 'var(--adm-text-3)', fontSize: '13px', margin: 0 }}>No active assignments.</p>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {assignments.slice(0, 3).map((ass) => (
                   <div
                     key={ass.id}
                     onClick={() => setSelectedAssignment(ass)}
                     style={{
-                      padding: '0.875rem 1rem',
-                      borderRadius: '10px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      padding: '0.75rem 0.875rem',
+                      borderRadius: 'var(--adm-radius-sm)',
+                      background: 'var(--adm-surface-2)',
+                      border: '1px solid var(--adm-border)',
                       cursor: 'pointer'
                     }}
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                      <span style={{ fontSize: '11px', fontWeight: 700, color: '#2563eb', background: '#dbeafe', padding: '2px 8px', borderRadius: '4px' }}>
+                      <span className="admin-badge admin-badge-gray">
                         {ass.subject}
                       </span>
-                      <span style={{ fontSize: '11px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <Clock size={12} /> Due: {ass.due_date}
+                      <span style={{ fontSize: '11.5px', color: 'var(--adm-text-3)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <Clock size={11} /> Due: {ass.due_date}
                       </span>
                     </div>
-                    <div style={{ fontWeight: 700, fontSize: '14px', color: '#1e293b' }}>{ass.title}</div>
+                    <div style={{ fontWeight: 600, fontSize: '13.5px', color: 'var(--adm-text-1)' }}>{ass.title}</div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px' }}>
-                      <span style={{ fontSize: '12px', color: '#64748b' }}>Instructor: {ass.instructor}</span>
+                      <span style={{ fontSize: '12px', color: 'var(--adm-text-3)' }}>Instructor: {ass.instructor}</span>
                       {ass.user_submission ? (
-                        <span style={{ fontSize: '11px', fontWeight: 700, color: '#16a34a', background: '#dcfce7', padding: '2px 8px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '3px' }}>
-                          <CheckCircle2 size={12} /> Submitted
+                        <span className="admin-badge admin-badge-green">
+                          <CheckCircle2 size={11} /> Submitted
                         </span>
                       ) : (
-                        <span style={{ fontSize: '11px', fontWeight: 700, color: '#d97706', background: '#fef3c7', padding: '2px 8px', borderRadius: '12px' }}>
+                        <span className="admin-badge admin-badge-yellow">
                           Pending
                         </span>
                       )}
@@ -640,64 +589,64 @@ export function LearnersPage() {
             )}
           </div>
 
-          {/* Upcoming Events Teaser */}
+          {/* Upcoming Events */}
           <div className="admin-card">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
-                <Calendar size={18} color="#db2777" /> Next Events
-              </h3>
+            <div className="admin-card-title">
+              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Calendar size={16} color="var(--adm-text-1)" /> Next Events
+              </span>
               <button
                 onClick={() => setActiveTab('events')}
-                style={{ border: 'none', background: 'none', color: '#db2777', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}
+                style={{ border: 'none', background: 'none', color: 'var(--adm-accent)', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}
               >
                 Open Calendar
               </button>
             </div>
 
             {events.length === 0 ? (
-              <p style={{ color: '#64748b', fontSize: '14px' }}>No upcoming events scheduled.</p>
+              <p style={{ color: 'var(--adm-text-3)', fontSize: '13px', margin: 0 }}>No upcoming events scheduled.</p>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {events.slice(0, 3).map((evt) => (
                   <div
                     key={evt.id}
                     onClick={() => setSelectedEvent(evt)}
                     style={{
-                      padding: '0.875rem 1rem',
-                      borderRadius: '10px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      padding: '0.75rem 0.875rem',
+                      borderRadius: 'var(--adm-radius-sm)',
+                      background: 'var(--adm-surface-2)',
+                      border: '1px solid var(--adm-border)',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '1rem',
+                      gap: '0.875rem',
                       cursor: 'pointer'
                     }}
                   >
                     <div
                       style={{
-                        background: '#fce7f3',
-                        color: '#be185d',
-                        borderRadius: '8px',
-                        padding: '0.5rem 0.75rem',
+                        background: 'var(--adm-surface-3)',
+                        color: 'var(--adm-text-1)',
+                        borderRadius: 'var(--adm-radius-sm)',
+                        padding: '0.375rem 0.625rem',
                         textAlign: 'center',
-                        minWidth: '50px',
+                        minWidth: '45px',
                         flexShrink: 0
                       }}
                     >
-                      <div style={{ fontSize: '11px', textTransform: 'uppercase', fontWeight: 700 }}>
+                      <div style={{ fontSize: '10px', textTransform: 'uppercase', fontWeight: 700, color: 'var(--adm-text-3)' }}>
                         {new Date(evt.event_date).toLocaleString('default', { month: 'short' })}
                       </div>
-                      <div style={{ fontSize: '1.2rem', fontWeight: 800 }}>
+                      <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--adm-text-1)' }}>
                         {new Date(evt.event_date).getDate() || evt.event_date.split('-')[2]}
                       </div>
                     </div>
                     <div style={{ flexGrow: 1, minWidth: 0 }}>
-                      <div style={{ fontWeight: 700, fontSize: '13.5px', color: '#1e293b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      <div style={{ fontWeight: 600, fontSize: '13px', color: 'var(--adm-text-1)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {evt.title}
                       </div>
-                      <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span><Clock size={12} style={{ display: 'inline', marginRight: '3px' }} />{evt.start_time}</span>
-                        <span><MapPin size={12} style={{ display: 'inline', marginRight: '3px' }} />{evt.location}</span>
+                      <div style={{ fontSize: '12px', color: 'var(--adm-text-3)', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span><Clock size={11} style={{ display: 'inline', marginRight: '3px' }} />{evt.start_time}</span>
+                        <span><MapPin size={11} style={{ display: 'inline', marginRight: '3px' }} />{evt.location}</span>
                       </div>
                     </div>
                   </div>
@@ -711,53 +660,42 @@ export function LearnersPage() {
       {/* ── TAB 2: ASSIGNMENTS ── */}
       {activeTab === 'assignments' && (
         <div>
-          {/* Filter & Search Toolbar */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          {/* Toolbar */}
+          <div className="admin-toolbar">
+            <div className="admin-toolbar-search" style={{ width: '260px' }}>
+              <Search size={14} color="var(--adm-text-3)" />
+              <input
+                type="text"
+                placeholder="Search assignments..."
+                value={assignmentSearch}
+                onChange={(e) => setAssignmentSearch(e.target.value)}
+                style={{ border: 'none', background: 'transparent', outline: 'none', width: '100%', fontSize: '13px' }}
+              />
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.375rem' }}>
               {(['all', 'pending', 'submitted', 'graded'] as const).map((filter) => (
                 <button
                   key={filter}
                   onClick={() => setAssignmentFilter(filter)}
-                  style={{
-                    padding: '0.45rem 0.875rem',
-                    borderRadius: '20px',
-                    border: assignmentFilter === filter ? '1px solid var(--adm-accent, #C40000)' : '1px solid #cbd5e1',
-                    background: assignmentFilter === filter ? 'var(--adm-accent, #C40000)' : '#fff',
-                    color: assignmentFilter === filter ? '#fff' : '#475569',
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    textTransform: 'capitalize'
-                  }}
+                  className={`admin-btn ${assignmentFilter === filter ? 'admin-btn-primary' : 'admin-btn-ghost'} admin-btn-sm`}
+                  style={{ textTransform: 'capitalize' }}
                 >
                   {filter}
                 </button>
               ))}
             </div>
 
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-              <div style={{ position: 'relative' }}>
-                <Search size={16} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
-                <input
-                  type="text"
-                  placeholder="Search assignments..."
-                  value={assignmentSearch}
-                  onChange={(e) => setAssignmentSearch(e.target.value)}
-                  className="admin-input"
-                  style={{ paddingLeft: '32px', width: '220px', fontSize: '13px' }}
-                />
-              </div>
-
-              {canManage && (
+            {canManage && (
+              <div style={{ marginLeft: 'auto' }}>
                 <button
                   onClick={() => setShowCreateAssignmentModal(true)}
-                  className="admin-btn admin-btn-primary"
-                  style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px' }}
+                  className="admin-btn admin-btn-primary admin-btn-sm"
                 >
-                  <Plus size={16} /> New Assignment
+                  <Plus size={14} /> New Assignment
                 </button>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
           {/* Assignments Grid */}
@@ -769,25 +707,22 @@ export function LearnersPage() {
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  position: 'relative',
-                  border: ass.user_submission ? '1px solid #bbf7d0' : '1px solid #e2e8f0',
-                  background: ass.user_submission ? '#f0fdf4' : '#fff'
+                  justifyContent: 'space-between'
                 }}
               >
                 <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-                    <span style={{ fontSize: '11px', fontWeight: 700, padding: '3px 8px', borderRadius: '4px', background: '#dbeafe', color: '#1e40af' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                    <span className="admin-badge admin-badge-gray">
                       {ass.subject}
                     </span>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                       {ass.user_submission ? (
-                        <span style={{ fontSize: '11px', fontWeight: 700, color: '#16a34a', background: '#dcfce7', padding: '2px 8px', borderRadius: '12px', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                          <CheckCircle2 size={12} /> {ass.user_submission.status}
+                        <span className="admin-badge admin-badge-green">
+                          <CheckCircle2 size={11} /> {ass.user_submission.status}
                         </span>
                       ) : (
-                        <span style={{ fontSize: '11px', fontWeight: 700, color: '#d97706', background: '#fef3c7', padding: '2px 8px', borderRadius: '12px' }}>
+                        <span className="admin-badge admin-badge-yellow">
                           Pending
                         </span>
                       )}
@@ -795,27 +730,28 @@ export function LearnersPage() {
                       {canManage && (
                         <button
                           onClick={() => handleDeleteAssignmentItem(ass.id)}
-                          style={{ border: 'none', background: 'none', color: '#ef4444', cursor: 'pointer', padding: '2px' }}
+                          className="admin-btn admin-btn-ghost admin-btn-sm admin-btn-icon"
+                          style={{ color: 'var(--adm-danger)', borderColor: 'transparent' }}
                           title="Delete assignment"
                         >
-                          <Trash2 size={14} />
+                          <Trash2 size={13} />
                         </button>
                       )}
                     </div>
                   </div>
 
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#0f172a', margin: '0 0 0.5rem 0' }}>
+                  <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--adm-text-1)', margin: '0 0 0.5rem 0' }}>
                     {ass.title}
                   </h3>
 
-                  <p style={{ fontSize: '13px', color: '#64748b', lineHeight: 1.5, marginBottom: '1rem', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  <p style={{ fontSize: '13px', color: 'var(--adm-text-2)', lineHeight: 1.5, marginBottom: '1rem', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                     {ass.description}
                   </p>
                 </div>
 
-                <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '0.75rem', marginTop: '0.5rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#64748b', marginBottom: '0.75rem' }}>
-                    <span><Clock size={12} style={{ display: 'inline', marginRight: '4px' }} /> Due: {ass.due_date}</span>
+                <div style={{ borderTop: '1px solid var(--adm-border)', paddingTop: '0.75rem', marginTop: '0.5rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--adm-text-3)', marginBottom: '0.75rem' }}>
+                    <span><Clock size={11} style={{ display: 'inline', marginRight: '4px' }} /> Due: {ass.due_date}</span>
                     <span>Points: {ass.total_points}</span>
                   </div>
 
@@ -824,17 +760,10 @@ export function LearnersPage() {
                       setSelectedAssignment(ass)
                       setSubmissionText(ass.user_submission?.submission_text || '')
                     }}
-                    className="admin-btn"
-                    style={{
-                      width: '100%',
-                      justifyContent: 'center',
-                      background: ass.user_submission ? '#16a34a' : 'var(--adm-accent, #C40000)',
-                      color: '#fff',
-                      fontSize: '13px',
-                      fontWeight: 600
-                    }}
+                    className={`admin-btn ${ass.user_submission ? 'admin-btn-ghost' : 'admin-btn-primary'}`}
+                    style={{ width: '100%', justifyContent: 'center' }}
                   >
-                    {ass.user_submission ? 'View Submission & Grade' : 'Open & Submit Task'}
+                    {ass.user_submission ? 'View Submission' : 'Open & Submit Task'}
                   </button>
                 </div>
               </div>
@@ -846,87 +775,76 @@ export function LearnersPage() {
       {/* ── TAB 3: NOTICE BOARD ── */}
       {activeTab === 'notices' && (
         <div>
-          {/* Notice Filter Bar */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          {/* Toolbar */}
+          <div className="admin-toolbar">
+            <div className="admin-toolbar-search" style={{ width: '260px' }}>
+              <Search size={14} color="var(--adm-text-3)" />
+              <input
+                type="text"
+                placeholder="Search announcements..."
+                value={noticeSearch}
+                onChange={(e) => setNoticeSearch(e.target.value)}
+                style={{ border: 'none', background: 'transparent', outline: 'none', width: '100%', fontSize: '13px' }}
+              />
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.375rem', flexWrap: 'wrap' }}>
               {['all', 'General', 'Academic', 'Urgent', 'Event', 'Exam'].map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setNoticeFilter(cat)}
-                  style={{
-                    padding: '0.45rem 0.875rem',
-                    borderRadius: '20px',
-                    border: noticeFilter === cat ? '1px solid var(--adm-accent, #C40000)' : '1px solid #cbd5e1',
-                    background: noticeFilter === cat ? 'var(--adm-accent, #C40000)' : '#fff',
-                    color: noticeFilter === cat ? '#fff' : '#475569',
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    cursor: 'pointer'
-                  }}
+                  className={`admin-btn ${noticeFilter === cat ? 'admin-btn-primary' : 'admin-btn-ghost'} admin-btn-sm`}
                 >
                   {cat === 'all' ? 'All Notices' : cat}
                 </button>
               ))}
             </div>
 
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-              <div style={{ position: 'relative' }}>
-                <Search size={16} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
-                <input
-                  type="text"
-                  placeholder="Search announcements..."
-                  value={noticeSearch}
-                  onChange={(e) => setNoticeSearch(e.target.value)}
-                  className="admin-input"
-                  style={{ paddingLeft: '32px', width: '220px', fontSize: '13px' }}
-                />
-              </div>
-
-              {canManage && (
+            {canManage && (
+              <div style={{ marginLeft: 'auto' }}>
                 <button
                   onClick={() => setShowCreateNoticeModal(true)}
-                  className="admin-btn admin-btn-primary"
-                  style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px' }}
+                  className="admin-btn admin-btn-primary admin-btn-sm"
                 >
-                  <Plus size={16} /> Post Notice
+                  <Plus size={14} /> Post Notice
                 </button>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
           {/* Notice List */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
             {filteredNotices.map((notice) => (
               <div
                 key={notice.id}
                 className="admin-card"
                 onClick={() => setSelectedNotice(notice)}
                 style={{
-                  borderLeft: notice.is_pinned ? '4px solid var(--adm-accent, #C40000)' : '1px solid #e2e8f0',
-                  background: notice.is_pinned ? 'rgba(196, 0, 0, 0.02)' : '#fff',
+                  borderLeft: notice.is_pinned ? '4px solid var(--adm-accent)' : '1px solid var(--adm-border)',
+                  background: notice.is_pinned ? 'var(--adm-accent-subtle)' : 'var(--adm-surface)',
                   cursor: 'pointer'
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.5rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <span style={{ fontSize: '11px', fontWeight: 700, padding: '3px 9px', borderRadius: '12px', background: '#e0e7ff', color: '#3730a3' }}>
+                    <span className="admin-badge admin-badge-gray">
                       {notice.category}
                     </span>
 
                     {notice.urgency === 'High' || notice.urgency === 'Urgent' ? (
-                      <span style={{ fontSize: '11px', fontWeight: 700, padding: '3px 9px', borderRadius: '12px', background: '#fee2e2', color: '#991b1b', display: 'flex', alignItems: 'center', gap: '3px' }}>
-                        <AlertTriangle size={12} /> {notice.urgency}
+                      <span className="admin-badge admin-badge-red">
+                        <AlertTriangle size={11} /> {notice.urgency}
                       </span>
                     ) : null}
 
                     {notice.is_pinned && (
-                      <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--adm-accent, #C40000)', display: 'flex', alignItems: 'center', gap: '3px' }}>
-                        <Pin size={12} /> Pinned Announcement
+                      <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--adm-accent)', display: 'flex', alignItems: 'center', gap: '3px' }}>
+                        <Pin size={11} /> Pinned Announcement
                       </span>
                     )}
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '12px', color: '#64748b' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', fontSize: '12px', color: 'var(--adm-text-3)' }}>
                     <span>By: <strong>{notice.author}</strong></span>
                     <span>{new Date(notice.created_at).toLocaleDateString()}</span>
                     {canManage && (
@@ -935,20 +853,21 @@ export function LearnersPage() {
                           e.stopPropagation()
                           handleDeleteNoticeItem(notice.id)
                         }}
-                        style={{ border: 'none', background: 'none', color: '#ef4444', cursor: 'pointer' }}
+                        className="admin-btn admin-btn-ghost admin-btn-sm admin-btn-icon"
+                        style={{ color: 'var(--adm-danger)', borderColor: 'transparent' }}
                         title="Delete notice"
                       >
-                        <Trash2 size={14} />
+                        <Trash2 size={13} />
                       </button>
                     )}
                   </div>
                 </div>
 
-                <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', margin: '0.35rem 0 0.5rem 0' }}>
+                <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--adm-text-1)', margin: '0.25rem 0 0.375rem 0' }}>
                   {notice.title}
                 </h3>
 
-                <p style={{ fontSize: '14px', color: '#334155', lineHeight: 1.6, margin: 0 }}>
+                <p style={{ fontSize: '13.5px', color: 'var(--adm-text-2)', lineHeight: 1.5, margin: 0 }}>
                   {notice.content}
                 </p>
               </div>
@@ -961,27 +880,25 @@ export function LearnersPage() {
       {activeTab === 'events' && (
         <div>
           {/* Calendar Header Navigator */}
-          <div className="admin-card" style={{ marginBottom: '1.5rem' }}>
+          <div className="admin-card" style={{ marginBottom: '1.25rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <h2 style={{ fontSize: '1.35rem', fontWeight: 800, margin: 0, color: '#0f172a' }}>
-                  📅 {monthName}
+                <h2 style={{ fontSize: '16px', fontWeight: 600, margin: 0, color: 'var(--adm-text-1)' }}>
+                  {monthName}
                 </h2>
 
                 <div style={{ display: 'flex', gap: '4px' }}>
                   <button
                     onClick={() => setCalendarMonth(new Date(year, month - 1, 1))}
-                    className="admin-btn admin-btn-ghost"
-                    style={{ padding: '6px' }}
+                    className="admin-btn admin-btn-ghost admin-btn-icon"
                   >
-                    <ChevronLeft size={18} />
+                    <ChevronLeft size={16} />
                   </button>
                   <button
                     onClick={() => setCalendarMonth(new Date(year, month + 1, 1))}
-                    className="admin-btn admin-btn-ghost"
-                    style={{ padding: '6px' }}
+                    className="admin-btn admin-btn-ghost admin-btn-icon"
                   >
-                    <ChevronRight size={18} />
+                    <ChevronRight size={16} />
                   </button>
                 </div>
               </div>
@@ -989,10 +906,9 @@ export function LearnersPage() {
               {canManage && (
                 <button
                   onClick={() => setShowCreateEventModal(true)}
-                  className="admin-btn admin-btn-primary"
-                  style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px' }}
+                  className="admin-btn admin-btn-primary admin-btn-sm"
                 >
-                  <Plus size={16} /> Add Event
+                  <Plus size={14} /> Add Event
                 </button>
               )}
             </div>
@@ -1002,43 +918,42 @@ export function LearnersPage() {
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(7, 1fr)',
-                gap: '8px',
-                marginTop: '1.25rem',
+                gap: '6px',
+                marginTop: '1rem',
                 textAlign: 'center'
               }}
             >
               {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => (
-                <div key={d} style={{ fontSize: '12px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', padding: '6px 0' }}>
+                <div key={d} style={{ fontSize: '11px', fontWeight: 600, color: 'var(--adm-text-3)', textTransform: 'uppercase', padding: '4px 0' }}>
                   {d}
                 </div>
               ))}
 
               {/* Empty leading padding days */}
               {Array.from({ length: firstDayOfMonth }).map((_, i) => (
-                <div key={`empty-${i}`} style={{ background: '#f8fafc', borderRadius: '8px', minHeight: '80px', opacity: 0.4 }} />
+                <div key={`empty-${i}`} style={{ background: 'var(--adm-surface-2)', borderRadius: 'var(--adm-radius-sm)', minHeight: '75px', opacity: 0.5 }} />
               ))}
 
               {/* Days of Month */}
               {Array.from({ length: daysInMonth }).map((_, i) => {
                 const dayNum = i + 1
                 const dayEvents = getEventsForDay(dayNum)
-                const isToday = dayNum === 13 && month === 7 && year === 2026 // Today is Aug 13, 2026
+                const isToday = dayNum === 13 && month === 7 && year === 2026
 
                 return (
                   <div
                     key={dayNum}
                     style={{
-                      background: isToday ? '#eff6ff' : '#fff',
-                      border: isToday ? '2px solid #2563eb' : '1px solid #e2e8f0',
-                      borderRadius: '8px',
-                      minHeight: '85px',
+                      background: isToday ? 'var(--adm-accent-subtle)' : 'var(--adm-surface-2)',
+                      border: isToday ? '1.5px solid var(--adm-accent)' : '1px solid var(--adm-border)',
+                      borderRadius: 'var(--adm-radius-sm)',
+                      minHeight: '80px',
                       padding: '6px',
-                      textAlign: 'left',
-                      position: 'relative'
+                      textAlign: 'left'
                     }}
                   >
-                    <div style={{ fontSize: '12px', fontWeight: isToday ? 800 : 600, color: isToday ? '#2563eb' : '#475569', marginBottom: '4px' }}>
-                      {dayNum} {isToday && <span style={{ fontSize: '10px', background: '#2563eb', color: '#fff', padding: '1px 4px', borderRadius: '4px' }}>Today</span>}
+                    <div style={{ fontSize: '12px', fontWeight: isToday ? 700 : 500, color: isToday ? 'var(--adm-accent)' : 'var(--adm-text-2)', marginBottom: '4px' }}>
+                      {dayNum} {isToday && <span style={{ fontSize: '9px', background: 'var(--adm-accent)', color: '#fff', padding: '1px 4px', borderRadius: '3px', marginLeft: '2px' }}>Today</span>}
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
@@ -1047,12 +962,12 @@ export function LearnersPage() {
                           key={evt.id}
                           onClick={() => setSelectedEvent(evt)}
                           style={{
-                            fontSize: '11px',
-                            fontWeight: 700,
-                            padding: '2px 6px',
-                            borderRadius: '4px',
-                            background: evt.event_type === 'Workshop' ? '#dbeafe' : evt.event_type === 'Deadline' ? '#fee2e2' : '#fce7f3',
-                            color: evt.event_type === 'Workshop' ? '#1e40af' : evt.event_type === 'Deadline' ? '#991b1b' : '#be185d',
+                            fontSize: '10.5px',
+                            fontWeight: 600,
+                            padding: '2px 5px',
+                            borderRadius: '3px',
+                            background: evt.event_type === 'Workshop' ? 'rgba(37, 99, 235, 0.1)' : evt.event_type === 'Deadline' ? 'var(--adm-danger-subtle)' : 'var(--adm-surface-3)',
+                            color: evt.event_type === 'Workshop' ? '#2563eb' : evt.event_type === 'Deadline' ? 'var(--adm-danger)' : 'var(--adm-text-1)',
                             whiteSpace: 'nowrap',
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
@@ -1072,69 +987,68 @@ export function LearnersPage() {
 
           {/* Agenda List View */}
           <div className="admin-card">
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, margin: '0 0 1rem 0', color: '#0f172a' }}>
-              📋 Scheduled Events & Deadlines List
-            </h3>
+            <div className="admin-card-title">
+              Scheduled Events & Deadlines List
+            </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {filteredEvents.map((evt) => (
                 <div
                   key={evt.id}
                   onClick={() => setSelectedEvent(evt)}
                   style={{
-                    padding: '1rem',
-                    borderRadius: '10px',
-                    border: '1px solid #e2e8f0',
-                    background: '#f8fafc',
+                    padding: '0.875rem',
+                    borderRadius: 'var(--adm-radius-sm)',
+                    border: '1px solid var(--adm-border)',
+                    background: 'var(--adm-surface-2)',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     flexWrap: 'wrap',
-                    gap: '1rem',
+                    gap: '0.875rem',
                     cursor: 'pointer'
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
                     <div
                       style={{
-                        background: evt.event_type === 'Workshop' ? '#dbeafe' : evt.event_type === 'Deadline' ? '#fee2e2' : '#fce7f3',
-                        color: evt.event_type === 'Workshop' ? '#1e40af' : evt.event_type === 'Deadline' ? '#991b1b' : '#be185d',
-                        borderRadius: '8px',
-                        padding: '8px 12px',
+                        background: 'var(--adm-surface-3)',
+                        color: 'var(--adm-text-1)',
+                        borderRadius: 'var(--adm-radius-sm)',
+                        padding: '6px 10px',
                         textAlign: 'center',
-                        minWidth: '55px'
+                        minWidth: '50px'
                       }}
                     >
-                      <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase' }}>
+                      <div style={{ fontSize: '10px', fontWeight: 600, textTransform: 'uppercase', color: 'var(--adm-text-3)' }}>
                         {new Date(evt.event_date).toLocaleString('default', { month: 'short' })}
                       </div>
-                      <div style={{ fontSize: '1.25rem', fontWeight: 800 }}>
+                      <div style={{ fontSize: '1.15rem', fontWeight: 700 }}>
                         {evt.event_date.split('-')[2]}
                       </div>
                     </div>
 
                     <div>
-                      <div style={{ fontSize: '11px', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>
+                      <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--adm-text-3)', textTransform: 'uppercase' }}>
                         {evt.event_type} • {evt.target_group}
                       </div>
-                      <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0f172a' }}>
+                      <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--adm-text-1)' }}>
                         {evt.title}
                       </div>
-                      <div style={{ fontSize: '12.5px', color: '#64748b', marginTop: '2px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                        <span><Clock size={12} style={{ display: 'inline', marginRight: '3px' }} />{evt.start_time} - {evt.end_time}</span>
-                        <span><MapPin size={12} style={{ display: 'inline', marginRight: '3px' }} />{evt.location}</span>
+                      <div style={{ fontSize: '12px', color: 'var(--adm-text-3)', marginTop: '2px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                        <span><Clock size={11} style={{ display: 'inline', marginRight: '3px' }} />{evt.start_time} - {evt.end_time}</span>
+                        <span><MapPin size={11} style={{ display: 'inline', marginRight: '3px' }} />{evt.location}</span>
                       </div>
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <button
                       onClick={(e) => {
                         e.stopPropagation()
                         setSelectedEvent(evt)
                       }}
-                      className="admin-btn"
-                      style={{ fontSize: '12.5px', padding: '0.4rem 0.875rem' }}
+                      className="admin-btn admin-btn-ghost admin-btn-sm"
                     >
                       Details
                     </button>
@@ -1144,10 +1058,11 @@ export function LearnersPage() {
                           e.stopPropagation()
                           handleDeleteEventItem(evt.id)
                         }}
-                        style={{ border: 'none', background: 'none', color: '#ef4444', cursor: 'pointer' }}
+                        className="admin-btn admin-btn-ghost admin-btn-sm admin-btn-icon"
+                        style={{ color: 'var(--adm-danger)', borderColor: 'transparent' }}
                         title="Delete event"
                       >
-                        <Trash2 size={16} />
+                        <Trash2 size={14} />
                       </button>
                     )}
                   </div>
@@ -1161,75 +1076,72 @@ export function LearnersPage() {
       {/* ── MODAL 1: VIEW & SUBMIT ASSIGNMENT ── */}
       {selectedAssignment && (
         <div className="admin-modal-backdrop" onClick={() => setSelectedAssignment(null)}>
-          <div className="admin-modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '600px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <span style={{ fontSize: '12px', fontWeight: 700, padding: '3px 10px', borderRadius: '4px', background: '#dbeafe', color: '#1e40af' }}>
-                {selectedAssignment.subject}
-              </span>
-              <button onClick={() => setSelectedAssignment(null)} className="admin-btn admin-btn-ghost" style={{ padding: '4px' }}>✕</button>
+          <div className="admin-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '560px' }}>
+            <div className="admin-modal-header">
+              <span className="admin-modal-title">{selectedAssignment.title}</span>
+              <button onClick={() => setSelectedAssignment(null)} className="admin-btn admin-btn-ghost admin-btn-icon" style={{ border: 'none' }}>
+                <X size={16} />
+              </button>
             </div>
 
-            <h2 style={{ fontSize: '1.4rem', fontWeight: 800, margin: '0 0 0.5rem 0', color: '#0f172a' }}>
-              {selectedAssignment.title}
-            </h2>
-
-            <div style={{ fontSize: '12.5px', color: '#64748b', marginBottom: '1rem', display: 'flex', gap: '1rem' }}>
-              <span>Due: <strong>{selectedAssignment.due_date}</strong></span>
-              <span>Points: <strong>{selectedAssignment.total_points}</strong></span>
-              <span>Instructor: <strong>{selectedAssignment.instructor}</strong></span>
-            </div>
-
-            <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '14px', lineHeight: 1.6, marginBottom: '1.25rem' }}>
-              <strong>Instructions:</strong>
-              <p style={{ margin: '0.5rem 0 0 0', color: '#334155' }}>{selectedAssignment.description}</p>
-            </div>
-
-            {/* Submission Status or Form */}
-            {selectedAssignment.user_submission ? (
-              <div style={{ background: '#f0fdf4', padding: '1rem', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#16a34a', fontWeight: 700, marginBottom: '0.5rem' }}>
-                  <CheckCircle2 size={18} /> Submission Received ({selectedAssignment.user_submission.status})
-                </div>
-                <div style={{ fontSize: '13px', color: '#374151', whiteSpace: 'pre-wrap', background: '#fff', padding: '0.75rem', borderRadius: '6px', border: '1px solid #e5e7eb' }}>
-                  {selectedAssignment.user_submission.submission_text}
-                </div>
-                <div style={{ fontSize: '11px', color: '#6b7280', marginTop: '6px' }}>
-                  Submitted on: {new Date(selectedAssignment.user_submission.submitted_at).toLocaleString()}
-                </div>
+            <div className="admin-modal-body">
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <span className="admin-badge admin-badge-gray">{selectedAssignment.subject}</span>
+                <span style={{ fontSize: '12px', color: 'var(--adm-text-3)' }}>Due: {selectedAssignment.due_date} • Points: {selectedAssignment.total_points}</span>
               </div>
-            ) : (
-              <form onSubmit={handleSubmitAssignment}>
-                <h4 style={{ fontSize: '14px', fontWeight: 700, margin: '0 0 0.5rem 0' }}>Your Submission:</h4>
-                
-                <textarea
-                  required
-                  rows={4}
-                  placeholder="Type your solution code, answer, or notes here..."
-                  value={submissionText}
-                  onChange={(e) => setSubmissionText(e.target.value)}
-                  className="admin-input"
-                  style={{ width: '100%', fontSize: '13.5px', marginBottom: '0.75rem', fontFamily: 'monospace' }}
-                />
 
-                <input
-                  type="url"
-                  placeholder="Optional GitHub or Project URL (https://...)"
-                  value={submissionUrl}
-                  onChange={(e) => setSubmissionUrl(e.target.value)}
-                  className="admin-input"
-                  style={{ width: '100%', fontSize: '13px', marginBottom: '1.25rem' }}
-                />
+              <div style={{ background: 'var(--adm-surface-2)', padding: '0.875rem', borderRadius: 'var(--adm-radius-sm)', border: '1px solid var(--adm-border)', fontSize: '13px', lineHeight: 1.5 }}>
+                <strong style={{ color: 'var(--adm-text-1)' }}>Instructions:</strong>
+                <p style={{ margin: '0.375rem 0 0 0', color: 'var(--adm-text-2)' }}>{selectedAssignment.description}</p>
+              </div>
 
-                <button
-                  type="submit"
-                  disabled={submitting || submissionSuccess}
-                  className="admin-btn admin-btn-primary"
-                  style={{ width: '100%', justifyContent: 'center', display: 'flex', alignItems: 'center', gap: '8px' }}
-                >
-                  <Send size={16} /> {submitting ? 'Submitting Work...' : submissionSuccess ? 'Submitted Successfully! ✓' : 'Submit Assignment'}
-                </button>
-              </form>
-            )}
+              {selectedAssignment.user_submission ? (
+                <div style={{ background: 'var(--adm-success-subtle)', padding: '0.875rem', borderRadius: 'var(--adm-radius-sm)', border: '1px solid rgba(22,163,74,0.3)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--adm-success)', fontWeight: 600, fontSize: '13px', marginBottom: '0.375rem' }}>
+                    <CheckCircle2 size={16} /> Submission Received ({selectedAssignment.user_submission.status})
+                  </div>
+                  <div style={{ fontSize: '13px', color: 'var(--adm-text-1)', whiteSpace: 'pre-wrap', background: 'var(--adm-surface)', padding: '0.625rem', borderRadius: '4px', border: '1px solid var(--adm-border)' }}>
+                    {selectedAssignment.user_submission.submission_text}
+                  </div>
+                  <div style={{ fontSize: '11px', color: 'var(--adm-text-3)', marginTop: '6px' }}>
+                    Submitted on: {new Date(selectedAssignment.user_submission.submitted_at).toLocaleString()}
+                  </div>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmitAssignment} className="admin-form-group">
+                  <label className="admin-label admin-label-req">Your Submission</label>
+                  <textarea
+                    required
+                    rows={4}
+                    placeholder="Type your solution code, answer, or notes here..."
+                    value={submissionText}
+                    onChange={(e) => setSubmissionText(e.target.value)}
+                    className="admin-textarea"
+                    style={{ fontFamily: 'monospace', fontSize: '13px' }}
+                  />
+
+                  <label className="admin-label">Optional Project Link</label>
+                  <input
+                    type="url"
+                    placeholder="https://github.com/your-username/project"
+                    value={submissionUrl}
+                    onChange={(e) => setSubmissionUrl(e.target.value)}
+                    className="admin-input"
+                  />
+
+                  <div className="admin-modal-footer" style={{ padding: '1rem 0 0 0', borderTop: 'none' }}>
+                    <button type="button" onClick={() => setSelectedAssignment(null)} className="admin-btn admin-btn-ghost">Cancel</button>
+                    <button
+                      type="submit"
+                      disabled={submitting || submissionSuccess}
+                      className="admin-btn admin-btn-primary"
+                    >
+                      <Send size={14} /> {submitting ? 'Submitting...' : submissionSuccess ? 'Submitted! ✓' : 'Submit Assignment'}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -1237,25 +1149,27 @@ export function LearnersPage() {
       {/* ── MODAL 2: VIEW NOTICE ── */}
       {selectedNotice && (
         <div className="admin-modal-backdrop" onClick={() => setSelectedNotice(null)}>
-          <div className="admin-modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '550px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <span style={{ fontSize: '12px', fontWeight: 700, padding: '3px 10px', borderRadius: '4px', background: '#e0e7ff', color: '#3730a3' }}>
-                {selectedNotice.category}
-              </span>
-              <button onClick={() => setSelectedNotice(null)} className="admin-btn admin-btn-ghost" style={{ padding: '4px' }}>✕</button>
+          <div className="admin-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '520px' }}>
+            <div className="admin-modal-header">
+              <span className="admin-badge admin-badge-gray">{selectedNotice.category}</span>
+              <button onClick={() => setSelectedNotice(null)} className="admin-btn admin-btn-ghost admin-btn-icon" style={{ border: 'none' }}>
+                <X size={16} />
+              </button>
             </div>
 
-            <h2 style={{ fontSize: '1.35rem', fontWeight: 800, margin: '0 0 0.75rem 0', color: '#0f172a' }}>
-              {selectedNotice.title}
-            </h2>
+            <div className="admin-modal-body">
+              <h2 style={{ fontSize: '16px', fontWeight: 600, margin: 0, color: 'var(--adm-text-1)' }}>
+                {selectedNotice.title}
+              </h2>
 
-            <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '1.25rem', display: 'flex', gap: '1rem' }}>
-              <span>Author: <strong>{selectedNotice.author}</strong></span>
-              <span>Date: <strong>{new Date(selectedNotice.created_at).toLocaleDateString()}</strong></span>
-            </div>
+              <div style={{ fontSize: '12px', color: 'var(--adm-text-3)', display: 'flex', gap: '1rem' }}>
+                <span>Author: <strong>{selectedNotice.author}</strong></span>
+                <span>Date: <strong>{new Date(selectedNotice.created_at).toLocaleDateString()}</strong></span>
+              </div>
 
-            <div style={{ fontSize: '14.5px', color: '#334155', lineHeight: 1.7, whiteSpace: 'pre-line', background: '#f8fafc', padding: '1.25rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-              {selectedNotice.content}
+              <div style={{ fontSize: '13.5px', color: 'var(--adm-text-2)', lineHeight: 1.6, whiteSpace: 'pre-line', background: 'var(--adm-surface-2)', padding: '1rem', borderRadius: 'var(--adm-radius-sm)', border: '1px solid var(--adm-border)' }}>
+                {selectedNotice.content}
+              </div>
             </div>
           </div>
         </div>
@@ -1264,36 +1178,40 @@ export function LearnersPage() {
       {/* ── MODAL 3: VIEW EVENT DETAILS ── */}
       {selectedEvent && (
         <div className="admin-modal-backdrop" onClick={() => setSelectedEvent(null)}>
-          <div className="admin-modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '550px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <span style={{ fontSize: '12px', fontWeight: 700, padding: '3px 10px', borderRadius: '4px', background: '#fce7f3', color: '#be185d' }}>
-                {selectedEvent.event_type}
-              </span>
-              <button onClick={() => setSelectedEvent(null)} className="admin-btn admin-btn-ghost" style={{ padding: '4px' }}>✕</button>
+          <div className="admin-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '520px' }}>
+            <div className="admin-modal-header">
+              <span className="admin-badge admin-badge-gray">{selectedEvent.event_type}</span>
+              <button onClick={() => setSelectedEvent(null)} className="admin-btn admin-btn-ghost admin-btn-icon" style={{ border: 'none' }}>
+                <X size={16} />
+              </button>
             </div>
 
-            <h2 style={{ fontSize: '1.35rem', fontWeight: 800, margin: '0 0 0.75rem 0', color: '#0f172a' }}>
-              {selectedEvent.title}
-            </h2>
+            <div className="admin-modal-body">
+              <h2 style={{ fontSize: '16px', fontWeight: 600, margin: 0, color: 'var(--adm-text-1)' }}>
+                {selectedEvent.title}
+              </h2>
 
-            <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '13.5px', marginBottom: '1.25rem' }}>
-              <div>📅 Date: <strong>{selectedEvent.event_date}</strong></div>
-              <div>⏰ Time: <strong>{selectedEvent.start_time} - {selectedEvent.end_time}</strong></div>
-              <div>📍 Location: <strong>{selectedEvent.location}</strong></div>
-              <div>👤 Organizer: <strong>{selectedEvent.organizer}</strong></div>
+              <div style={{ background: 'var(--adm-surface-2)', padding: '0.875rem', borderRadius: 'var(--adm-radius-sm)', border: '1px solid var(--adm-border)', display: 'flex', flexDirection: 'column', gap: '0.375rem', fontSize: '13px' }}>
+                <div>Date: <strong>{selectedEvent.event_date}</strong></div>
+                <div>Time: <strong>{selectedEvent.start_time} - {selectedEvent.end_time}</strong></div>
+                <div>Location: <strong>{selectedEvent.location}</strong></div>
+                <div>Organizer: <strong>{selectedEvent.organizer}</strong></div>
+              </div>
+
+              <p style={{ fontSize: '13.5px', color: 'var(--adm-text-2)', lineHeight: 1.5, margin: 0 }}>
+                {selectedEvent.description}
+              </p>
+
+              <div className="admin-modal-footer" style={{ padding: '1rem 0 0 0', borderTop: 'none' }}>
+                <button
+                  onClick={() => alert(`Event "${selectedEvent.title}" added to your calendar!`)}
+                  className="admin-btn admin-btn-primary"
+                  style={{ width: '100%', justifyContent: 'center' }}
+                >
+                  <Calendar size={14} /> Add to My Calendar
+                </button>
+              </div>
             </div>
-
-            <p style={{ fontSize: '14px', color: '#334155', lineHeight: 1.6, margin: '0 0 1.25rem 0' }}>
-              {selectedEvent.description}
-            </p>
-
-            <button
-              onClick={() => alert(`Event "${selectedEvent.title}" added to your calendar!`)}
-              className="admin-btn admin-btn-primary"
-              style={{ width: '100%', justifyContent: 'center', display: 'flex', alignItems: 'center', gap: '8px' }}
-            >
-              <Calendar size={16} /> Add to My Calendar
-            </button>
           </div>
         </div>
       )}
@@ -1301,12 +1219,17 @@ export function LearnersPage() {
       {/* ── MODAL 4: INSTRUCTOR/ADMIN CREATE ASSIGNMENT ── */}
       {showCreateAssignmentModal && (
         <div className="admin-modal-backdrop" onClick={() => setShowCreateAssignmentModal(false)}>
-          <div className="admin-modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '550px' }}>
-            <h2 style={{ fontSize: '1.35rem', fontWeight: 800, margin: '0 0 1rem 0' }}>➕ Create New Assignment</h2>
+          <div className="admin-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '520px' }}>
+            <div className="admin-modal-header">
+              <span className="admin-modal-title">Create New Assignment</span>
+              <button onClick={() => setShowCreateAssignmentModal(false)} className="admin-btn admin-btn-ghost admin-btn-icon" style={{ border: 'none' }}>
+                <X size={16} />
+              </button>
+            </div>
 
-            <form onSubmit={handleCreateAssignmentSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <div>
-                <label className="admin-label">Assignment Title</label>
+            <form onSubmit={handleCreateAssignmentSubmit} className="admin-modal-body">
+              <div className="admin-form-group">
+                <label className="admin-label admin-label-req">Assignment Title</label>
                 <input
                   required
                   type="text"
@@ -1314,18 +1237,16 @@ export function LearnersPage() {
                   value={newAssignment.title}
                   onChange={(e) => setNewAssignment({ ...newAssignment, title: e.target.value })}
                   className="admin-input"
-                  style={{ width: '100%' }}
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.875rem' }}>
+                <div className="admin-form-group">
                   <label className="admin-label">Subject</label>
                   <select
                     value={newAssignment.subject}
                     onChange={(e) => setNewAssignment({ ...newAssignment, subject: e.target.value })}
-                    className="admin-input"
-                    style={{ width: '100%' }}
+                    className="admin-select"
                   >
                     <option value="Python Programming">Python Programming</option>
                     <option value="Scratch & Logic">Scratch & Logic</option>
@@ -1336,33 +1257,31 @@ export function LearnersPage() {
                   </select>
                 </div>
 
-                <div>
-                  <label className="admin-label">Due Date</label>
+                <div className="admin-form-group">
+                  <label className="admin-label admin-label-req">Due Date</label>
                   <input
                     required
                     type="date"
                     value={newAssignment.due_date}
                     onChange={(e) => setNewAssignment({ ...newAssignment, due_date: e.target.value })}
                     className="admin-input"
-                    style={{ width: '100%' }}
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="admin-label">Description & Instructions</label>
+              <div className="admin-form-group">
+                <label className="admin-label admin-label-req">Instructions</label>
                 <textarea
                   required
                   rows={4}
-                  placeholder="Detailed instructions for students..."
+                  placeholder="Detailed instructions for learners..."
                   value={newAssignment.description}
                   onChange={(e) => setNewAssignment({ ...newAssignment, description: e.target.value })}
-                  className="admin-input"
-                  style={{ width: '100%' }}
+                  className="admin-textarea"
                 />
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '0.5rem' }}>
+              <div className="admin-modal-footer" style={{ padding: '1rem 0 0 0', borderTop: 'none' }}>
                 <button type="button" onClick={() => setShowCreateAssignmentModal(false)} className="admin-btn admin-btn-ghost">Cancel</button>
                 <button type="submit" className="admin-btn admin-btn-primary">Publish Assignment</button>
               </div>
@@ -1374,31 +1293,34 @@ export function LearnersPage() {
       {/* ── MODAL 5: INSTRUCTOR/ADMIN POST NOTICE ── */}
       {showCreateNoticeModal && (
         <div className="admin-modal-backdrop" onClick={() => setShowCreateNoticeModal(false)}>
-          <div className="admin-modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '550px' }}>
-            <h2 style={{ fontSize: '1.35rem', fontWeight: 800, margin: '0 0 1rem 0' }}>📢 Post Notice Announcement</h2>
+          <div className="admin-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '520px' }}>
+            <div className="admin-modal-header">
+              <span className="admin-modal-title">Post Announcement</span>
+              <button onClick={() => setShowCreateNoticeModal(false)} className="admin-btn admin-btn-ghost admin-btn-icon" style={{ border: 'none' }}>
+                <X size={16} />
+              </button>
+            </div>
 
-            <form onSubmit={handleCreateNoticeSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <div>
-                <label className="admin-label">Announcement Title</label>
+            <form onSubmit={handleCreateNoticeSubmit} className="admin-modal-body">
+              <div className="admin-form-group">
+                <label className="admin-label admin-label-req">Announcement Title</label>
                 <input
                   required
                   type="text"
-                  placeholder="e.g. Hackathon Registration Open!"
+                  placeholder="e.g. Hackathon Registration Open"
                   value={newNotice.title}
                   onChange={(e) => setNewNotice({ ...newNotice, title: e.target.value })}
                   className="admin-input"
-                  style={{ width: '100%' }}
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.875rem' }}>
+                <div className="admin-form-group">
                   <label className="admin-label">Category</label>
                   <select
                     value={newNotice.category}
                     onChange={(e) => setNewNotice({ ...newNotice, category: e.target.value as any })}
-                    className="admin-input"
-                    style={{ width: '100%' }}
+                    className="admin-select"
                   >
                     <option value="General">General</option>
                     <option value="Academic">Academic</option>
@@ -1408,13 +1330,12 @@ export function LearnersPage() {
                   </select>
                 </div>
 
-                <div>
+                <div className="admin-form-group">
                   <label className="admin-label">Urgency</label>
                   <select
                     value={newNotice.urgency}
                     onChange={(e) => setNewNotice({ ...newNotice, urgency: e.target.value as any })}
-                    className="admin-input"
-                    style={{ width: '100%' }}
+                    className="admin-select"
                   >
                     <option value="Normal">Normal</option>
                     <option value="High">High</option>
@@ -1423,16 +1344,15 @@ export function LearnersPage() {
                 </div>
               </div>
 
-              <div>
-                <label className="admin-label">Announcement Content</label>
+              <div className="admin-form-group">
+                <label className="admin-label admin-label-req">Content</label>
                 <textarea
                   required
                   rows={4}
                   placeholder="Write notice details..."
                   value={newNotice.content}
                   onChange={(e) => setNewNotice({ ...newNotice, content: e.target.value })}
-                  className="admin-input"
-                  style={{ width: '100%' }}
+                  className="admin-textarea"
                 />
               </div>
 
@@ -1443,10 +1363,10 @@ export function LearnersPage() {
                   checked={newNotice.is_pinned}
                   onChange={(e) => setNewNotice({ ...newNotice, is_pinned: e.target.checked })}
                 />
-                <label htmlFor="pinCheck" style={{ fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>Pin this notice to top of board</label>
+                <label htmlFor="pinCheck" style={{ fontSize: '13px', color: 'var(--adm-text-2)', cursor: 'pointer' }}>Pin this notice to top of board</label>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '0.5rem' }}>
+              <div className="admin-modal-footer" style={{ padding: '1rem 0 0 0', borderTop: 'none' }}>
                 <button type="button" onClick={() => setShowCreateNoticeModal(false)} className="admin-btn admin-btn-ghost">Cancel</button>
                 <button type="submit" className="admin-btn admin-btn-primary">Post Announcement</button>
               </div>
@@ -1458,12 +1378,17 @@ export function LearnersPage() {
       {/* ── MODAL 6: INSTRUCTOR/ADMIN ADD EVENT ── */}
       {showCreateEventModal && (
         <div className="admin-modal-backdrop" onClick={() => setShowCreateEventModal(false)}>
-          <div className="admin-modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '550px' }}>
-            <h2 style={{ fontSize: '1.35rem', fontWeight: 800, margin: '0 0 1rem 0' }}>📅 Add Calendar Event</h2>
+          <div className="admin-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '520px' }}>
+            <div className="admin-modal-header">
+              <span className="admin-modal-title">Add Calendar Event</span>
+              <button onClick={() => setShowCreateEventModal(false)} className="admin-btn admin-btn-ghost admin-btn-icon" style={{ border: 'none' }}>
+                <X size={16} />
+              </button>
+            </div>
 
-            <form onSubmit={handleCreateEventSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <div>
-                <label className="admin-label">Event Title</label>
+            <form onSubmit={handleCreateEventSubmit} className="admin-modal-body">
+              <div className="admin-form-group">
+                <label className="admin-label admin-label-req">Event Title</label>
                 <input
                   required
                   type="text"
@@ -1471,18 +1396,16 @@ export function LearnersPage() {
                   value={newEvent.title}
                   onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
                   className="admin-input"
-                  style={{ width: '100%' }}
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.875rem' }}>
+                <div className="admin-form-group">
                   <label className="admin-label">Event Type</label>
                   <select
                     value={newEvent.event_type}
                     onChange={(e) => setNewEvent({ ...newEvent, event_type: e.target.value as any })}
-                    className="admin-input"
-                    style={{ width: '100%' }}
+                    className="admin-select"
                   >
                     <option value="Workshop">Workshop</option>
                     <option value="Webinar">Webinar</option>
@@ -1492,21 +1415,20 @@ export function LearnersPage() {
                   </select>
                 </div>
 
-                <div>
-                  <label className="admin-label">Date (YYYY-MM-DD)</label>
+                <div className="admin-form-group">
+                  <label className="admin-label admin-label-req">Date</label>
                   <input
                     required
                     type="date"
                     value={newEvent.event_date}
                     onChange={(e) => setNewEvent({ ...newEvent, event_date: e.target.value })}
                     className="admin-input"
-                    style={{ width: '100%' }}
                   />
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.875rem' }}>
+                <div className="admin-form-group">
                   <label className="admin-label">Start Time</label>
                   <input
                     type="text"
@@ -1514,11 +1436,10 @@ export function LearnersPage() {
                     value={newEvent.start_time}
                     onChange={(e) => setNewEvent({ ...newEvent, start_time: e.target.value })}
                     className="admin-input"
-                    style={{ width: '100%' }}
                   />
                 </div>
 
-                <div>
+                <div className="admin-form-group">
                   <label className="admin-label">End Time</label>
                   <input
                     type="text"
@@ -1526,12 +1447,11 @@ export function LearnersPage() {
                     value={newEvent.end_time}
                     onChange={(e) => setNewEvent({ ...newEvent, end_time: e.target.value })}
                     className="admin-input"
-                    style={{ width: '100%' }}
                   />
                 </div>
               </div>
 
-              <div>
+              <div className="admin-form-group">
                 <label className="admin-label">Location</label>
                 <input
                   type="text"
@@ -1539,23 +1459,21 @@ export function LearnersPage() {
                   value={newEvent.location}
                   onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
                   className="admin-input"
-                  style={{ width: '100%' }}
                 />
               </div>
 
-              <div>
+              <div className="admin-form-group">
                 <label className="admin-label">Description</label>
                 <textarea
                   rows={3}
                   placeholder="Event details..."
                   value={newEvent.description}
                   onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
-                  className="admin-input"
-                  style={{ width: '100%' }}
+                  className="admin-textarea"
                 />
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '0.5rem' }}>
+              <div className="admin-modal-footer" style={{ padding: '1rem 0 0 0', borderTop: 'none' }}>
                 <button type="button" onClick={() => setShowCreateEventModal(false)} className="admin-btn admin-btn-ghost">Cancel</button>
                 <button type="submit" className="admin-btn admin-btn-primary">Add Event</button>
               </div>

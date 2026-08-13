@@ -138,7 +138,7 @@ func EnsureSystemSetup(db *gorm.DB) {
 		fmt.Println("[Setup] Initializing sample Notice Board...")
 		notices := []models.Notice{
 			{
-				Title:       "🚀 Summer Tech Showcase & Hackathon 2026",
+				Title:       "Summer Tech Showcase & Hackathon 2026",
 				Content:     "We are thrilled to announce our upcoming Tech Showcase! All learners are invited to present their final projects in Python, Scratch, and Web Dev to parents and guest judges. Prizes and certificates will be awarded.",
 				Category:    "Event",
 				Urgency:     "High",
@@ -147,7 +147,7 @@ func EnsureSystemSetup(db *gorm.DB) {
 				TargetGroup: "All",
 			},
 			{
-				Title:       "📢 CBT Centre Laptop Setup & Guidelines",
+				Title:       "CBT Centre Laptop Setup & Guidelines",
 				Content:     "Learners attending the CBT Centre lab sessions must ensure their assigned laptops are fully charged before morning classes. Chargers should be labeled with student IDs.",
 				Category:    "Academic",
 				Urgency:     "Normal",
@@ -156,7 +156,7 @@ func EnsureSystemSetup(db *gorm.DB) {
 				TargetGroup: "All",
 			},
 			{
-				Title:       "🏆 PuzzlePro Championship Leaderboard Update",
+				Title:       "PuzzlePro Championship Leaderboard Update",
 				Content:     "Congratulations to all students who completed Level 5 in PuzzlePro this week! Check out the updated leaderboard in your learner dashboard.",
 				Category:    "General",
 				Urgency:     "Normal",

@@ -103,7 +103,7 @@ const INITIAL_ASSIGNMENTS: LearnerAssignment[] = [
 const INITIAL_NOTICES: LearnerNotice[] = [
   {
     id: 1,
-    title: '🚀 Summer Tech Showcase & Hackathon 2026',
+    title: 'Summer Tech Showcase & Hackathon 2026',
     content: 'We are thrilled to announce our upcoming Tech Showcase! All learners are invited to present their final projects in Python, Scratch, and Web Dev to parents and guest judges. Prizes and certificates will be awarded.',
     category: 'Event',
     urgency: 'High',
@@ -114,7 +114,7 @@ const INITIAL_NOTICES: LearnerNotice[] = [
   },
   {
     id: 2,
-    title: '📢 CBT Centre Laptop Setup & Guidelines',
+    title: 'CBT Centre Laptop Setup & Guidelines',
     content: 'Learners attending the CBT Centre lab sessions must ensure their assigned laptops are fully charged before morning classes. Chargers should be labeled with student IDs.',
     category: 'Academic',
     urgency: 'Normal',
@@ -125,7 +125,7 @@ const INITIAL_NOTICES: LearnerNotice[] = [
   },
   {
     id: 3,
-    title: '🏆 PuzzlePro Championship Leaderboard Update',
+    title: 'PuzzlePro Championship Leaderboard Update',
     content: 'Congratulations to all students who completed Level 5 in PuzzlePro this week! Check out the updated leaderboard in your learner dashboard.',
     category: 'General',
     urgency: 'Normal',
