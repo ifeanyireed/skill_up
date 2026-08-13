@@ -28,7 +28,7 @@ export function AdminBottomNav() {
       <nav className="admin-bottom-nav">
         <div className="admin-bottom-nav-scroll" style={{ justifyContent: 'center' }}>
           <NavLink
-            to="/admin/learners"
+            to="/learners"
             className={({ isActive }) => `admin-bottom-nav-item${isActive ? ' active' : ''}`}
           >
             <GraduationCap size={18} />
@@ -41,7 +41,7 @@ export function AdminBottomNav() {
 
   const mobileNavItems = [
     { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
-    { to: '/admin/learners', label: 'Learners', icon: GraduationCap },
+    { to: '/learners', label: 'Learners', icon: GraduationCap },
     { to: '/admin/school', label: 'PuzzlePro', icon: Puzzle },
     { to: '/admin/children', label: 'Children', icon: Users },
     { to: '/admin/checkin', label: 'Check-In', icon: LogIn },

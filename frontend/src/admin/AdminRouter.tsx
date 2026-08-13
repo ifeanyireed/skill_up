@@ -59,7 +59,7 @@ export function AdminRouter() {
       <Route path="login" element={<AdminLoginPage />} />
       <Route element={<AdminShell />}>
         <Route index element={<DashboardIndexGuard />} />
-        <Route path="learners" element={<LearnersPage />} />
+        <Route path="learners" element={<Navigate to="/learners" replace />} />
         <Route
           path="school"
           element={

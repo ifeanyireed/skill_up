@@ -1,7 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import { AdminRouter } from './admin/AdminRouter'
+import { AdminShell } from './admin/AdminShell'
 import { AdminLoginPage } from './admin/pages/AdminLoginPage'
+import { LearnersPage } from './admin/pages/LearnersPage'
 import { ParentRegistrationPage } from './public/ParentRegistrationPage'
 import { useAdminStore, isLearnerUser } from './admin/store/useAdminStore'
 
@@ -33,8 +35,10 @@ export default function App() {
         <Route path="/" element={<RootAuthRedirect />} />
         <Route path="/login" element={<RootAuthRedirect />} />
 
-        {/* Top-Level /learners Route (Redirects into /admin/learners shell) */}
-        <Route path="/learners/*" element={<Navigate to="/admin/learners" replace />} />
+        {/* Dedicated Top-Level /learners Route */}
+        <Route element={<AdminShell />}>
+          <Route path="/learners" element={<LearnersPage />} />
+        </Route>
 
         {/* Public Parent Child Registration Page */}
         <Route path="/register" element={<ParentRegistrationPage />} />
@@ -44,7 +48,7 @@ export default function App() {
         <Route path="/school" element={<Navigate to="/admin/school" replace />} />
         <Route path="/puzzlepro" element={<Navigate to="/admin/school" replace />} />
 
-        {/* Admin and Learner Shell routes */}
+        {/* Admin Shell routes */}
         <Route path="/admin/*" element={<AdminRouter />} />
 
         {/* Fallback to Root */}

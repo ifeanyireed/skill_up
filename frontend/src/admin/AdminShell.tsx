@@ -21,7 +21,7 @@ export function AdminShell() {
   const path = location.pathname.toLowerCase()
 
   // RBAC Guard: Learners are strictly confined to /learners
-  if (isLearner && !path.startsWith('/admin/learners') && !path.startsWith('/learners')) {
+  if (isLearner && path !== '/learners' && !path.startsWith('/learners/')) {
     return <Navigate to="/learners" replace />
   }
 
