@@ -323,7 +323,7 @@ export function LearnersPage() {
             Learners Portal
           </h1>
           <div className="admin-page-desc">
-            Welcome back, {user?.fullName || 'Learner'}. Access weekly assignments, view official announcements, and stay updated with upcoming tech events.
+            Welcome back, {user?.fullName ? user.fullName.split(' ')[0] : 'Learner'}. Access weekly assignments, view official announcements, and stay updated with upcoming tech events.
           </div>
         </div>
 

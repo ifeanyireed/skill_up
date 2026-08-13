@@ -2,7 +2,7 @@
 // Skill Up Academy Check-in portal — Central Zustand Store
 // ============================================================================
 import { create } from 'zustand'
-import { API_BASE_URL } from '../services/api'
+import { API_BASE_URL, getChildren, getChildAvatar } from '../services/api'
 
 export interface AdminUser {
   id: string
@@ -137,12 +137,36 @@ export const useAdminStore = create<AdminStore>((set, get) => ({
       return false
     }
 
+    let firstName = 'Learner'
+    let studentAvatar = '/avatars/character1.jpg'
+    let studentId = `kid-${cleanCode}`
+
+    try {
+      const children = await getChildren()
+      const match = children.find(
+        (c) =>
+          c.active_code === cleanCode ||
+          c.student_id === cleanCode ||
+          c.student_id.replace(/\D/g, '') === cleanCode ||
+          cleanCode.endsWith(c.student_id.replace(/\D/g, ''))
+      )
+
+      if (match && match.full_name) {
+        const parts = match.full_name.trim().split(/\s+/)
+        firstName = parts[0] || match.full_name
+        studentAvatar = getChildAvatar(match.photo, match.full_name)
+        studentId = String(match.id || match.student_id)
+      }
+    } catch (err) {
+      console.warn('Child lookup during kidLogin warning:', err)
+    }
+
     const kidUser: AdminUser = {
-      id: `kid-${cleanCode}`,
-      fullName: `Student (${cleanCode})`,
+      id: studentId,
+      fullName: firstName,
       email: `student@kids.skilluplearningacademy.com`,
       role: 'Student',
-      avatar: '/avatars/character1.jpg',
+      avatar: studentAvatar,
       status: 'active',
       lastLogin: new Date().toISOString()
     }
