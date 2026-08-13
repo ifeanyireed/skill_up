@@ -36,7 +36,7 @@ export function AdminSidebar() {
   const navItems = [
     ...(!isLearner ? [{ to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true }] : []),
     { to: '/admin/learners', label: 'Learners Portal', icon: GraduationCap },
-    { to: '/admin/school', label: 'PuzzlePro', icon: Puzzle },
+    ...(!isLearner ? [{ to: '/admin/school', label: 'PuzzlePro', icon: Puzzle }] : []),
   ]
 
   const safetyItems = [

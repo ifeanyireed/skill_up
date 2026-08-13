@@ -34,13 +34,6 @@ export function AdminBottomNav() {
             <GraduationCap size={18} />
             <span>Learners</span>
           </NavLink>
-          <NavLink
-            to="/admin/school"
-            className={({ isActive }) => `admin-bottom-nav-item${isActive ? ' active' : ''}`}
-          >
-            <Puzzle size={18} />
-            <span>PuzzlePro</span>
-          </NavLink>
         </div>
       </nav>
     )

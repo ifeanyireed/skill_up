@@ -60,7 +60,14 @@ export function AdminRouter() {
       <Route element={<AdminShell />}>
         <Route index element={<DashboardIndexGuard />} />
         <Route path="learners" element={<LearnersPage />} />
-        <Route path="school" element={<SchoolPuzzleProPage />} />
+        <Route
+          path="school"
+          element={
+            <StaffOnlyRoute>
+              <SchoolPuzzleProPage />
+            </StaffOnlyRoute>
+          }
+        />
         <Route
           path="children"
           element={

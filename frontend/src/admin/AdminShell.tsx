@@ -20,8 +20,8 @@ export function AdminShell() {
   const isLearner = isLearnerUser(session.user)
   const path = location.pathname.toLowerCase()
 
-  // RBAC Guard: Learners are strictly confined to /learners and /admin/school
-  if (isLearner && !path.startsWith('/admin/learners') && !path.startsWith('/learners') && !path.startsWith('/admin/school')) {
+  // RBAC Guard: Learners are strictly confined to /learners
+  if (isLearner && !path.startsWith('/admin/learners') && !path.startsWith('/learners')) {
     return <Navigate to="/learners" replace />
   }
 
