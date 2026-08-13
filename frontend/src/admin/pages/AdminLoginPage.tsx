@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowRight, KeyRound, ShieldCheck, UserPlus, Smile, GraduationCap, Puzzle } from 'lucide-react'
 import '../admin.css'
-import { useAdminStore } from '../store/useAdminStore'
+import { useAdminStore, isLearnerUser } from '../store/useAdminStore'
 
 export function AdminLoginPage() {
   const { login, kidLogin } = useAdminStore()
@@ -35,7 +35,12 @@ export function AdminLoginPage() {
 
     const success = await login(email, password)
     if (success) {
-      navigate('/admin', { replace: true })
+      const loggedUser = useAdminStore.getState().session.user
+      if (isLearnerUser(loggedUser)) {
+        navigate('/learners', { replace: true })
+      } else {
+        navigate('/admin', { replace: true })
+      }
     } else {
       setError('Invalid credentials or account disabled.')
       setLoading(false)
@@ -57,7 +62,7 @@ export function AdminLoginPage() {
 
     const success = await kidLogin(cleanCode)
     if (success) {
-      navigate('/admin', { replace: true })
+      navigate('/learners', { replace: true })
     } else {
       setError('Invalid 8-digit student code.')
       setLoading(false)

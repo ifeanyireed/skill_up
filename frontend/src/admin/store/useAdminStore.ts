@@ -19,6 +19,28 @@ export interface AdminSession {
   user: AdminUser | null
 }
 
+export function isLearnerUser(user: AdminUser | null): boolean {
+  if (!user) return false
+  const role = (user.role || '').toLowerCase()
+  return role === 'student' || role === 'learner' || role === 'child'
+}
+
+export function isAdminUser(user: AdminUser | null): boolean {
+  if (!user) return false
+  const role = (user.role || '').toLowerCase()
+  return role === 'lead admin' || role === 'administrator' || role === 'admin'
+}
+
+export function isInstructorUser(user: AdminUser | null): boolean {
+  if (!user) return false
+  const role = (user.role || '').toLowerCase()
+  return role === 'instructor' || role === 'teacher'
+}
+
+export function canManageLearners(user: AdminUser | null): boolean {
+  return isAdminUser(user) || isInstructorUser(user)
+}
+
 interface AdminStore {
   // Auth
   session: AdminSession

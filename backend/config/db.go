@@ -77,6 +77,10 @@ func InitDB() *gorm.DB {
 		&models.AttendanceLog{},
 		&models.User{},
 		&models.Setting{},
+		&models.Assignment{},
+		&models.AssignmentSubmission{},
+		&models.Notice{},
+		&models.Event{},
 	)
 	if err != nil {
 		fmt.Printf("[DB Warning] AutoMigrate notice: %v\n", err)

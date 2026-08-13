@@ -41,6 +41,20 @@ func registerAPIRoutes(api *gin.RouterGroup) {
 	api.GET("/settings", controllers.GetSettings)
 	api.PUT("/settings", controllers.UpdateSettings)
 	api.POST("/admin/wipe-test-data", controllers.WipeDatabase)
+
+	// Learners Portal (Assignments, Notice Board, Events Calendar)
+	api.GET("/assignments", controllers.GetAssignments)
+	api.POST("/assignments", controllers.CreateAssignment)
+	api.DELETE("/assignments/:id", controllers.DeleteAssignment)
+	api.POST("/assignments/:id/submit", controllers.SubmitAssignment)
+
+	api.GET("/notices", controllers.GetNotices)
+	api.POST("/notices", controllers.CreateNotice)
+	api.DELETE("/notices/:id", controllers.DeleteNotice)
+
+	api.GET("/events", controllers.GetEvents)
+	api.POST("/events", controllers.CreateEvent)
+	api.DELETE("/events/:id", controllers.DeleteEvent)
 }
 
 func SetupRouter() *gin.Engine {
