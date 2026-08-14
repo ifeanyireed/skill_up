@@ -14,6 +14,14 @@ const getApiBaseUrl = () => {
 
 export const API_BASE_URL = getApiBaseUrl()
 
+const getPlayerServiceUrl = () => {
+  let url = import.meta.env.VITE_PLAYER_SERVICE_URL || import.meta.env.NEXT_PUBLIC_PLAYER_SERVICE_URL
+  if (url) return url.replace(/\/+$/, '')
+  return 'https://player-service-y1ur.onrender.com/api/v1'
+}
+
+export const PLAYER_SERVICE_URL = getPlayerServiceUrl()
+
 export function getChildAvatar(photo?: string, identifier?: string | number): string {
   if (photo && photo.startsWith('/avatars/character')) {
     return photo
@@ -160,7 +168,7 @@ export async function createChild(data: Partial<BackendChild>): Promise<BackendC
       code = ('88000000' + digits).slice(-8)
     }
 
-    await fetch('https://player-service-bttg.onrender.com/api/v1/users', {
+    await fetch(`${PLAYER_SERVICE_URL}/users`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

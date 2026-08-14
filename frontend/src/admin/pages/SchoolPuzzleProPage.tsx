@@ -27,7 +27,7 @@ import { getChildAvatar } from '../services/api'
 const PLAYER_SERVICE_URL = (
   import.meta.env.VITE_PLAYER_SERVICE_URL ||
   import.meta.env.NEXT_PUBLIC_PLAYER_SERVICE_URL ||
-  'https://player-service-bttg.onrender.com/api/v1'
+  'https://player-service-y1ur.onrender.com/api/v1'
 ).replace(/\/+$/, '')
 
 export interface SchoolStudent {
