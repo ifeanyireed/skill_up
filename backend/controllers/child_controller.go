@@ -197,9 +197,11 @@ func UpdateChildStatus(c *gin.Context) {
 }
 
 type UpdateChildInput struct {
-	Center string `json:"center"`
-	Group  string `json:"group"`
-	Status string `json:"status"`
+	Center      string `json:"center"`
+	Group       string `json:"group"`
+	Status      string `json:"status"`
+	FullName    string `json:"full_name"`
+	SeniorTrack string `json:"senior_track"`
 }
 
 // PUT /api/children/:id
@@ -232,16 +234,25 @@ func UpdateChild(c *gin.Context) {
 	if strings.TrimSpace(input.Status) != "" {
 		child.Status = strings.TrimSpace(input.Status)
 	}
+	if input.FullName != "" {
+		child.FullName = strings.TrimSpace(input.FullName)
+	}
+	if input.SeniorTrack != "" {
+		child.SeniorTrack = strings.TrimSpace(input.SeniorTrack)
+	}
 
 	if err := config.DB.Save(&child).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Sync center update to active attendance log for today
+	// Sync center and name update to active attendance log for today
 	config.DB.Model(&models.AttendanceLog{}).
 		Where("student_id = ? AND date = ?", child.StudentID, getWATNow().Format("2006-01-02")).
-		Update("center", child.Center)
+		Updates(map[string]interface{}{
+			"center":     child.Center,
+			"child_name": child.FullName,
+		})
 
 	c.JSON(http.StatusOK, child)
 }

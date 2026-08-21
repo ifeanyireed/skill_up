@@ -19,7 +19,7 @@ import {
   Trash2
 } from 'lucide-react'
 import '../admin.css'
-import { getChildren, deleteChild, updateChildCenter, getChildAvatar, BackendChild } from '../services/api'
+import { getChildren, deleteChild, updateChildCenter, updateChildDetails, getChildAvatar, BackendChild } from '../services/api'
 import { useAdminStore } from '../store/useAdminStore'
 
 const getStatusBadgeClass = (status: string) => {
@@ -98,6 +98,18 @@ export function ChildrenDirectoryPage() {
       loadData()
     } catch (err: any) {
       alert(err.message || 'Failed to update center')
+    }
+  }
+
+  const handleDetailsChange = async (childId: number, data: Partial<BackendChild>) => {
+    try {
+      const updated = await updateChildDetails(childId, data)
+      if (selectedChild && selectedChild.id === childId) {
+        setSelectedChild(updated)
+      }
+      loadData()
+    } catch (err: any) {
+      alert(err.message || 'Failed to update child details')
     }
   }
 
@@ -486,10 +498,21 @@ export function ChildrenDirectoryPage() {
                 style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover', border: '2.5px solid var(--adm-accent)' }}
               />
               <div style={{ flex: 1 }}>
-                <h2 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--adm-text-1)', margin: 0 }}>
-                  {selectedChild.full_name}
-                </h2>
-                <div style={{ fontSize: '13px', fontFamily: 'monospace', fontWeight: 800, color: 'var(--adm-accent)' }}>
+                {isAdmin ? (
+                  <input
+                    type="text"
+                    className="admin-input"
+                    value={selectedChild.full_name}
+                    onChange={(e) => setSelectedChild({ ...selectedChild, full_name: e.target.value })}
+                    onBlur={(e) => handleDetailsChange(selectedChild.id, { full_name: e.target.value })}
+                    style={{ fontSize: '18px', fontWeight: 800, color: 'var(--adm-text-1)', margin: 0, padding: '2px 6px', width: '100%', height: '32px' }}
+                  />
+                ) : (
+                  <h2 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--adm-text-1)', margin: 0 }}>
+                    {selectedChild.full_name}
+                  </h2>
+                )}
+                <div style={{ fontSize: '13px', fontFamily: 'monospace', fontWeight: 800, color: 'var(--adm-accent)', marginTop: isAdmin ? '4px' : '0' }}>
                   {selectedChild.student_id}
                 </div>
                 <div style={{ fontSize: '12px', color: 'var(--adm-text-3)', marginTop: '2px' }}>
@@ -531,7 +554,22 @@ export function ChildrenDirectoryPage() {
               </div>
               <div style={{ fontSize: 13, color: 'var(--adm-text-1)' }}>Camp Group: <strong>{selectedChild.group}</strong></div>
               <div style={{ fontSize: 12.5, color: 'var(--adm-accent)', fontWeight: 700 }}>
-                Senior Track: {selectedChild.senior_track || 'N/A - Junior Camp'}
+                {isAdmin ? (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '4px' }}>
+                    <span>Senior Track:</span>
+                    <input
+                      type="text"
+                      className="admin-input"
+                      value={selectedChild.senior_track || ''}
+                      placeholder="e.g. N/A - Junior Camp"
+                      onChange={(e) => setSelectedChild({ ...selectedChild, senior_track: e.target.value })}
+                      onBlur={(e) => handleDetailsChange(selectedChild.id, { senior_track: e.target.value })}
+                      style={{ fontSize: '12px', height: '28px', padding: '0 0.5rem', flex: 1 }}
+                    />
+                  </div>
+                ) : (
+                  `Senior Track: ${selectedChild.senior_track || 'N/A - Junior Camp'}`
+                )}
               </div>
             </div>
 

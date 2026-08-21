@@ -286,6 +286,27 @@ export async function updateChildCenter(id: number | string, center: string): Pr
   throw new Error(errorMsg)
 }
 
+export async function updateChildDetails(id: number | string, data: Partial<BackendChild>): Promise<BackendChild> {
+  const res = await fetch(`${API_BASE_URL}/children/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  })
+  
+  if (!res.ok) {
+    const text = await res.text()
+    let errorMsg = 'Failed to update child details'
+    try {
+      const err = JSON.parse(text)
+      errorMsg = err.error || errorMsg
+    } catch {
+      if (text) errorMsg = text
+    }
+    throw new Error(errorMsg)
+  }
+  return res.json()
+}
+
 export async function updateChildStatus(id: number | string, status: string, instructorName?: string): Promise<BackendChild> {
   const res = await fetch(`${API_BASE_URL}/children/${id}/status`, {
     method: 'PUT',
