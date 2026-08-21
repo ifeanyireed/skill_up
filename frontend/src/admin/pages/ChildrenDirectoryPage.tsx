@@ -358,7 +358,7 @@ export function ChildrenDirectoryPage() {
                         <option value="Festac Centre">Festac Centre</option>
                       </select>
                       <div style={{ fontSize: '11px', color: 'var(--adm-text-2)', marginTop: '2px', fontWeight: 600 }}>{child.group}</div>
-                      {isAdmin ? (
+                      {isAdmin && child.group?.includes('Senior') ? (
                         <select
                           className="admin-select"
                           value={child.senior_track || 'N/A - Junior Camp'}
@@ -567,28 +567,30 @@ export function ChildrenDirectoryPage() {
                 </select>
               </div>
               <div style={{ fontSize: 13, color: 'var(--adm-text-1)' }}>Camp Group: <strong>{selectedChild.group}</strong></div>
-              <div style={{ fontSize: 12.5, color: 'var(--adm-accent)', fontWeight: 700 }}>
-                {isAdmin ? (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '4px' }}>
-                    <span>Senior Track:</span>
-                    <select
-                      className="admin-select"
-                      value={selectedChild.senior_track || 'N/A - Junior Camp'}
-                      onChange={(e) => {
-                        setSelectedChild({ ...selectedChild, senior_track: e.target.value })
-                        handleDetailsChange(selectedChild.id, { senior_track: e.target.value })
-                      }}
-                      style={{ fontSize: '12px', height: '28px', padding: '0 0.5rem', flex: 1 }}
-                    >
-                      <option value="N/A - Junior Camp">N/A - Junior Camp</option>
-                      <option value="Graphics Design (Corel Draw) + Robotics">Graphics Design (Corel Draw) + Robotics</option>
-                      <option value="Cybersecurity + Python Programming">Cybersecurity + Python Programming</option>
-                    </select>
-                  </div>
-                ) : (
-                  `Senior Track: ${selectedChild.senior_track || 'N/A - Junior Camp'}`
-                )}
-              </div>
+              {selectedChild.group?.includes('Senior') && (
+                <div style={{ fontSize: 12.5, color: 'var(--adm-accent)', fontWeight: 700 }}>
+                  {isAdmin ? (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '4px' }}>
+                      <span>Senior Track:</span>
+                      <select
+                        className="admin-select"
+                        value={selectedChild.senior_track || 'N/A - Junior Camp'}
+                        onChange={(e) => {
+                          setSelectedChild({ ...selectedChild, senior_track: e.target.value })
+                          handleDetailsChange(selectedChild.id, { senior_track: e.target.value })
+                        }}
+                        style={{ fontSize: '12px', height: '28px', padding: '0 0.5rem', flex: 1 }}
+                      >
+                        <option value="N/A - Junior Camp">N/A - Junior Camp</option>
+                        <option value="Graphics Design (Corel Draw) + Robotics">Graphics Design (Corel Draw) + Robotics</option>
+                        <option value="Cybersecurity + Python Programming">Cybersecurity + Python Programming</option>
+                      </select>
+                    </div>
+                  ) : (
+                    `Senior Track: ${selectedChild.senior_track || 'N/A - Junior Camp'}`
+                  )}
+                </div>
+              )}
             </div>
 
             {/* SECTION 2: ACADEMIC & SCHOOL DETAILS */}
