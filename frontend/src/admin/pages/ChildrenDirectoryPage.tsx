@@ -358,10 +358,24 @@ export function ChildrenDirectoryPage() {
                         <option value="Festac Centre">Festac Centre</option>
                       </select>
                       <div style={{ fontSize: '11px', color: 'var(--adm-text-2)', marginTop: '2px', fontWeight: 600 }}>{child.group}</div>
-                      {child.senior_track && child.senior_track !== 'N/A - Junior Camp' && (
-                        <div style={{ fontSize: '10.5px', color: 'var(--adm-accent)', fontWeight: 600, maxWidth: '170px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                          Track: {child.senior_track}
-                        </div>
+                      {isAdmin ? (
+                        <select
+                          className="admin-select"
+                          value={child.senior_track || 'N/A - Junior Camp'}
+                          onClick={(e) => e.stopPropagation()}
+                          onChange={(e) => handleDetailsChange(child.id, { senior_track: e.target.value })}
+                          style={{ fontSize: '10.5px', padding: '0.2rem', height: '24px', minWidth: '140px', marginTop: '4px', maxWidth: '160px' }}
+                        >
+                          <option value="N/A - Junior Camp">N/A - Junior Camp</option>
+                          <option value="Graphics Design (Corel Draw) + Robotics">Graphics + Robotics</option>
+                          <option value="Cybersecurity + Python Programming">Cybersecurity + Python</option>
+                        </select>
+                      ) : (
+                        child.senior_track && child.senior_track !== 'N/A - Junior Camp' && (
+                          <div style={{ fontSize: '10.5px', color: 'var(--adm-accent)', fontWeight: 600, maxWidth: '170px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            Track: {child.senior_track}
+                          </div>
+                        )
                       )}
                     </td>
 
@@ -557,15 +571,19 @@ export function ChildrenDirectoryPage() {
                 {isAdmin ? (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '4px' }}>
                     <span>Senior Track:</span>
-                    <input
-                      type="text"
-                      className="admin-input"
-                      value={selectedChild.senior_track || ''}
-                      placeholder="e.g. N/A - Junior Camp"
-                      onChange={(e) => setSelectedChild({ ...selectedChild, senior_track: e.target.value })}
-                      onBlur={(e) => handleDetailsChange(selectedChild.id, { senior_track: e.target.value })}
+                    <select
+                      className="admin-select"
+                      value={selectedChild.senior_track || 'N/A - Junior Camp'}
+                      onChange={(e) => {
+                        setSelectedChild({ ...selectedChild, senior_track: e.target.value })
+                        handleDetailsChange(selectedChild.id, { senior_track: e.target.value })
+                      }}
                       style={{ fontSize: '12px', height: '28px', padding: '0 0.5rem', flex: 1 }}
-                    />
+                    >
+                      <option value="N/A - Junior Camp">N/A - Junior Camp</option>
+                      <option value="Graphics Design (Corel Draw) + Robotics">Graphics Design (Corel Draw) + Robotics</option>
+                      <option value="Cybersecurity + Python Programming">Cybersecurity + Python Programming</option>
+                    </select>
                   </div>
                 ) : (
                   `Senior Track: ${selectedChild.senior_track || 'N/A - Junior Camp'}`
