@@ -246,12 +246,13 @@ func UpdateChild(c *gin.Context) {
 		return
 	}
 
-	// Sync center and name update to active attendance log for today
+	// Sync center, name and group update to active attendance log for today
 	config.DB.Model(&models.AttendanceLog{}).
 		Where("student_id = ? AND date = ?", child.StudentID, getWATNow().Format("2006-01-02")).
 		Updates(map[string]interface{}{
 			"center":     child.Center,
 			"child_name": child.FullName,
+			"group":      child.Group,
 		})
 
 	c.JSON(http.StatusOK, child)

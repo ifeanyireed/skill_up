@@ -357,7 +357,20 @@ export function ChildrenDirectoryPage() {
                         <option value="Raji Rasaki Centre">Raji Rasaki Centre</option>
                         <option value="Festac Centre">Festac Centre</option>
                       </select>
-                      <div style={{ fontSize: '11px', color: 'var(--adm-text-2)', marginTop: '2px', fontWeight: 600 }}>{child.group}</div>
+                      {isAdmin ? (
+                        <select
+                          className="admin-select"
+                          value={child.group || 'Junior Camp (5–10 years)'}
+                          onClick={(e) => e.stopPropagation()}
+                          onChange={(e) => handleDetailsChange(child.id, { group: e.target.value })}
+                          style={{ fontSize: '10.5px', padding: '0.2rem', height: '24px', minWidth: '140px', marginTop: '2px', maxWidth: '160px' }}
+                        >
+                          <option value="Junior Camp (5–10 years)">Junior Camp (5-10)</option>
+                          <option value="Senior Camp (11+ years)">Senior Camp (11+)</option>
+                        </select>
+                      ) : (
+                        <div style={{ fontSize: '11px', color: 'var(--adm-text-2)', marginTop: '2px', fontWeight: 600 }}>{child.group}</div>
+                      )}
                       {isAdmin && child.group?.includes('Senior') ? (
                         <select
                           className="admin-select"
@@ -566,7 +579,25 @@ export function ChildrenDirectoryPage() {
                   <option value="Festac Centre">Festac Centre</option>
                 </select>
               </div>
-              <div style={{ fontSize: 13, color: 'var(--adm-text-1)' }}>Camp Group: <strong>{selectedChild.group}</strong></div>
+              <div style={{ fontSize: 13, color: 'var(--adm-text-1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span>Camp Group:</span>
+                {isAdmin ? (
+                  <select
+                    className="admin-select"
+                    value={selectedChild.group || 'Junior Camp (5–10 years)'}
+                    onChange={(e) => {
+                      setSelectedChild({ ...selectedChild, group: e.target.value })
+                      handleDetailsChange(selectedChild.id, { group: e.target.value })
+                    }}
+                    style={{ fontSize: '12px', height: '28px', padding: '0 0.5rem', fontWeight: 700 }}
+                  >
+                    <option value="Junior Camp (5–10 years)">Junior Camp (5–10 years)</option>
+                    <option value="Senior Camp (11+ years)">Senior Camp (11+ years)</option>
+                  </select>
+                ) : (
+                  <strong>{selectedChild.group}</strong>
+                )}
+              </div>
               {selectedChild.group?.includes('Senior') && (
                 <div style={{ fontSize: 12.5, color: 'var(--adm-accent)', fontWeight: 700 }}>
                   {isAdmin ? (
