@@ -212,9 +212,9 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
           style={{ width: '180px', padding: '0.5rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13px' }}
         >
           <option value="all">All Senior Tracks</option>
-          <option value="Basic IT">Basic IT (Junior)</option>
-          <option value="Graphics + Robotics">Graphics + Robotics (Senior)</option>
-          <option value="Cybersecurity + Python">Cybersecurity + Python (Senior)</option>
+          <option value="Basic IT">Basic IT</option>
+          <option value="Graphics Design (Corel Draw) + Robotics">Graphics + Robotics</option>
+          <option value="Cybersecurity + Python Programming">Cybersecurity + Python</option>
         </select>
         <select 
           value={centerFilter}
