@@ -100,12 +100,12 @@ export function ParentRegistrationPage() {
       setAge(computedAge)
       if (computedAge >= 11) {
         setGroup('Senior Camp (11+ years)')
-        if (seniorTrack === 'N/A - Junior Camp') {
+        if (seniorTrack === 'Basic IT') {
           setSeniorTrack('Graphics Design (Corel Draw) + Robotics')
         }
       } else {
         setGroup('Junior Camp (5–10 years)')
-        setSeniorTrack('N/A - Junior Camp')
+        setSeniorTrack('Basic IT')
       }
     }
   }
@@ -114,12 +114,12 @@ export function ParentRegistrationPage() {
     setAge(newAge)
     if (newAge >= 11) {
       setGroup('Senior Camp (11+ years)')
-      if (seniorTrack === 'N/A - Junior Camp') {
+      if (seniorTrack === 'Basic IT') {
         setSeniorTrack('Graphics Design (Corel Draw) + Robotics')
       }
     } else {
       setGroup('Junior Camp (5–10 years)')
-      setSeniorTrack('N/A - Junior Camp')
+      setSeniorTrack('Basic IT')
     }
   }
 
@@ -156,7 +156,7 @@ export function ParentRegistrationPage() {
         current_grade: currentGrade.trim(),
         center: center,
         group: group,
-        senior_track: group.includes('Senior') ? seniorTrack : 'N/A - Junior Camp',
+        senior_track: group.includes('Senior') ? seniorTrack : 'Basic IT',
         parent_name: parentName.trim(),
         parent_phone: parentPhone.trim(),
         alt_phone: altPhone.trim(),

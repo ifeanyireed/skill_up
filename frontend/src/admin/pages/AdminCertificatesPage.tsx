@@ -151,6 +151,7 @@ export function AdminCertificatesPage() {
                 </select>
               ) : (
                 <select value={categoryName} onChange={(e) => setCategoryName(e.target.value)} style={{ width: '100%', padding: '0.5rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13px' }}>
+                  <option value="Basic IT">Basic IT (Junior Track)</option>
                   <option value="Graphics Design (Corel Draw) + Robotics">Graphics Design (Corel Draw) + Robotics</option>
                   <option value="Cybersecurity + Python Programming">Cybersecurity + Python Programming</option>
                 </select>

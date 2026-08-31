@@ -28,7 +28,8 @@ export function ChildRegistrationPage() {
   const [dob, setDob] = useState('2019-04-15')
   const [gender, setGender] = useState('Boy')
   const [center, setCenter] = useState('Raji Rasaki Centre')
-  const [group, setGroup] = useState('Junior Champions (Ages 11-19)')
+  const [group, setGroup] = useState('Junior Camp (5–10 years)')
+  const [seniorTrack, setSeniorTrack] = useState('Basic IT')
   
   // Photo & Avatar selection (Optional)
   const [photoMode, setPhotoMode] = useState<'avatar' | 'upload'>('avatar')
@@ -58,15 +59,13 @@ export function ChildRegistrationPage() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              margin: '0 auto 1rem'
+              margin: '0 auto 1.25rem'
             }}
           >
-            <ShieldAlert size={32} />
+            <ShieldAlert size={28} />
           </div>
-          <h2 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--adm-text-1)', marginBottom: '0.5rem' }}>
-            Administrator Permission Required
-          </h2>
-          <p style={{ fontSize: '13px', color: 'var(--adm-text-3)', marginBottom: '1.5rem' }}>
+          <h2 className="admin-card-title" style={{ fontSize: '18px', color: 'var(--adm-text-1)' }}>Access Denied</h2>
+          <p style={{ color: 'var(--adm-text-2)', fontSize: '14px', lineHeight: 1.5, margin: '0.75rem 0 1.5rem' }}>
             Only Lead Administrators and Administrators are authorized to register new child students to the academy directory.
           </p>
           <button className="admin-btn admin-btn-primary" style={{ margin: '0 auto' }} onClick={() => navigate('/admin')}>
@@ -77,7 +76,7 @@ export function ChildRegistrationPage() {
     )
   }
 
-  const activePhoto = selectedAvatar
+  const activePhoto = photoMode === 'avatar' ? selectedAvatar : customPhotoUrl || selectedAvatar
 
   const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -112,6 +111,7 @@ export function ChildRegistrationPage() {
         dob: dob,
         center: center,
         group: group,
+        senior_track: seniorTrack,
         parent_name: parentName.trim(),
         parent_phone: parentPhone.trim(),
         parent_email: parentEmail.trim(),
@@ -401,10 +401,31 @@ export function ChildRegistrationPage() {
 
           <div className="admin-form-group">
             <label className="admin-label admin-label-req">Training Group / Class</label>
-            <select className="admin-select" value={group} onChange={(e) => setGroup(e.target.value)}>
+            <select className="admin-select" value={group} onChange={(e) => {
+              setGroup(e.target.value)
+              if (e.target.value.includes('Senior')) {
+                setSeniorTrack('Graphics Design (Corel Draw) + Robotics')
+              } else {
+                setSeniorTrack('Basic IT')
+              }
+            }}>
               <option value="Junior Camp (5–10 years)">Junior Camp (5–10 years)</option>
               <option value="Senior Camp (11+ years)">Senior Camp (11+ years)</option>
             </select>
+          </div>
+
+          <div className="admin-form-group">
+            <label className="admin-label admin-label-req">Specialized Track</label>
+            {group.includes('Senior') ? (
+              <select className="admin-select" value={seniorTrack} onChange={(e) => setSeniorTrack(e.target.value)}>
+                <option value="Graphics Design (Corel Draw) + Robotics">Graphics + Robotics (Senior)</option>
+                <option value="Cybersecurity + Python Programming">Cybersecurity + Python (Senior)</option>
+              </select>
+            ) : (
+              <select className="admin-select" value={seniorTrack} onChange={(e) => setSeniorTrack(e.target.value)}>
+                <option value="Basic IT">Basic IT (Junior)</option>
+              </select>
+            )}
           </div>
         </div>
 

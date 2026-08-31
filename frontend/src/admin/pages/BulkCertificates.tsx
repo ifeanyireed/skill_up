@@ -145,7 +145,7 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
   }
 
   const availableGroups = Array.from(new Set(allChildren.map(c => c.group).filter(Boolean)))
-  const availableTracks = Array.from(new Set(allChildren.map(c => c.senior_track).filter(t => t && t !== 'N/A - Junior Camp')))
+  const availableTracks = Array.from(new Set(allChildren.map(c => c.senior_track).filter(t => t && t !== 'Basic IT')))
   
   const totalPages = Math.ceil(filteredChildren.length / pageSize) || 1
   const paginatedChildren = filteredChildren.slice((currentPage - 1) * pageSize, currentPage * pageSize)

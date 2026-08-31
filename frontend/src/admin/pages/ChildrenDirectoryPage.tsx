@@ -397,17 +397,17 @@ export function ChildrenDirectoryPage() {
                       {isAdmin && child.group?.includes('Senior') ? (
                         <select
                           className="admin-select"
-                          value={child.senior_track || 'N/A - Junior Camp'}
+                          value={child.senior_track || 'Basic IT'}
                           onClick={(e) => e.stopPropagation()}
                           onChange={(e) => handleDetailsChange(child.id, { senior_track: e.target.value })}
                           style={{ fontSize: '10.5px', padding: '0.2rem', height: '24px', minWidth: '140px', marginTop: '4px', maxWidth: '160px' }}
                         >
-                          <option value="N/A - Junior Camp">N/A - Junior Camp</option>
+                          <option value="Basic IT">Basic IT</option>
                           <option value="Graphics Design (Corel Draw) + Robotics">Graphics + Robotics</option>
                           <option value="Cybersecurity + Python Programming">Cybersecurity + Python</option>
                         </select>
                       ) : (
-                        child.senior_track && child.senior_track !== 'N/A - Junior Camp' && (
+                        child.senior_track && child.senior_track !== 'Basic IT' && (
                           <div style={{ fontSize: '10.5px', color: 'var(--adm-accent)', fontWeight: 600, maxWidth: '170px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                             Track: {child.senior_track}
                           </div>
@@ -628,20 +628,20 @@ export function ChildrenDirectoryPage() {
                       <span>Senior Track:</span>
                       <select
                         className="admin-select"
-                        value={selectedChild.senior_track || 'N/A - Junior Camp'}
+                        value={selectedChild.senior_track || 'Basic IT'}
                         onChange={(e) => {
                           setSelectedChild({ ...selectedChild, senior_track: e.target.value })
                           handleDetailsChange(selectedChild.id, { senior_track: e.target.value })
                         }}
                         style={{ fontSize: '12px', height: '28px', padding: '0 0.5rem', flex: 1 }}
                       >
-                        <option value="N/A - Junior Camp">N/A - Junior Camp</option>
+                        <option value="Basic IT">Basic IT</option>
                         <option value="Graphics Design (Corel Draw) + Robotics">Graphics Design (Corel Draw) + Robotics</option>
                         <option value="Cybersecurity + Python Programming">Cybersecurity + Python Programming</option>
                       </select>
                     </div>
                   ) : (
-                    `Senior Track: ${selectedChild.senior_track || 'N/A - Junior Camp'}`
+                    `Senior Track: ${selectedChild.senior_track || 'Basic IT'}`
                   )}
                 </div>
               )}
