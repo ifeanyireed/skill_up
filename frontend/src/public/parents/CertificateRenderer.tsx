@@ -40,11 +40,24 @@ export function CertificateRenderer({ studentName, track, group, date }: Certifi
     if (!certRef.current) return
     setDownloading(true)
     try {
-      const canvas = await html2canvas(certRef.current, { scale: 2, useCORS: true })
-      const imgData = canvas.toDataURL('image/jpeg', 1.0)
-      const pdf = new jsPDF('landscape', 'px', [canvas.width, canvas.height])
-      pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height)
-      pdf.save(`${studentName.replace(/ /g, '_')}_Certificate.pdf`)
+      if (certRef.current) {
+        const canvas = await html2canvas(certRef.current, { 
+          scale: 2, 
+          useCORS: true,
+          onclone: (doc) => {
+            // "increase the y position of the name on the PDF a little more" 
+            // Move text up for PDF generation
+            const overlays = doc.getElementsByClassName('cert-name-overlay')
+            for (let i = 0; i < overlays.length; i++) {
+              ;(overlays[i] as HTMLElement).style.top = '40%'
+            }
+          }
+        })
+        const imgData = canvas.toDataURL('image/jpeg', 1.0)
+        const pdf = new jsPDF('landscape', 'px', [canvas.width, canvas.height])
+        pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height)
+        pdf.save(`${studentName.replace(/ /g, '_')}_Certificate.pdf`)
+      }
     } catch (err) {
       alert('Failed to generate certificate PDF.')
     } finally {
@@ -86,20 +99,23 @@ export function CertificateRenderer({ studentName, track, group, date }: Certifi
         />
         
         {/* Dynamic Name Overlay */}
-        <div style={{
-          position: 'absolute',
-          top: downloading ? '36%' : '52%', // 36% raises it much higher on PDF, 52% lowers it on frontend
-          left: '15%', 
-          right: '5%',
-          textAlign: 'center',
-          fontSize: '34px',
-          fontWeight: 600,
-          color: '#194674', // Requested blue hex
-          fontFamily: "'Monotype Corsiva', 'Monotype Cursiva', 'Apple Chancery', cursive",
-          lineHeight: '1', 
-          margin: 0,
-          padding: 0
-        }}>
+        <div 
+          className="cert-name-overlay"
+          style={{
+            position: 'absolute',
+            top: '49%', // Lowered slightly on the frontend
+            left: '15%', 
+            right: '5%',
+            textAlign: 'center',
+            fontSize: '34px',
+            fontWeight: 600,
+            color: '#194674',
+            fontFamily: "'Monotype Cursiva', cursive",
+            lineHeight: '1',
+            margin: 0,
+            padding: 0
+          }}
+        >
           {studentName}
         </div>
       </div>
