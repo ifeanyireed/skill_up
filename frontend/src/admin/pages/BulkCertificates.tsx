@@ -4,6 +4,8 @@ import { Download, Users, Loader2, CheckSquare, Square } from 'lucide-react'
 import { API_BASE_URL } from '../services/api'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
+import JSZip from 'jszip'
+import { saveAs } from 'file-saver'
 
 interface BulkCertificatesProps {
   configs: { category_type: string; category_name: string; template_url: string }[]
@@ -103,8 +105,8 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
     setProgress(0)
 
     try {
-      const pdf = new jsPDF('landscape', 'px', [800, 566])
-      let isFirst = true
+      const zip = new JSZip()
+      const folder = selectedChildren.length > 1 ? zip.folder('Certificates') : zip
 
       for (let i = 0; i < selectedChildren.length; i++) {
         const child = selectedChildren[i]
@@ -123,20 +125,26 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
           const canvas = await html2canvas(hiddenCertRef.current, { scale: 2, useCORS: true })
           const imgData = canvas.toDataURL('image/jpeg', 1.0)
           
-          if (!isFirst) {
-            pdf.addPage([800, 566], 'landscape')
+          const childPdf = new jsPDF('landscape', 'px', [800, 566])
+          childPdf.addImage(imgData, 'JPEG', 0, 0, 800, 566)
+          
+          const pdfBlob = childPdf.output('blob')
+          const fileName = `${child.full_name.replace(/ /g, '_')}_Certificate.pdf`
+          
+          if (selectedChildren.length === 1) {
+            saveAs(pdfBlob, fileName)
+          } else {
+            folder?.file(fileName, pdfBlob)
           }
-          pdf.addImage(imgData, 'JPEG', 0, 0, 800, 566)
-          isFirst = false
         }
 
         setProgress(((i + 1) / selectedChildren.length) * 100)
       }
 
-      const exportName = selectedChildren.length === 1 
-        ? `${selectedChildren[0].full_name.replace(/ /g, '_')}_Certificate.pdf`
-        : 'SkillUp_Bulk_Certificates.pdf'
-      pdf.save(exportName)
+      if (selectedChildren.length > 1) {
+        const content = await zip.generateAsync({ type: 'blob' })
+        saveAs(content, 'SkillUp_Bulk_Certificates.zip')
+      }
     } catch (err) {
       console.error(err)
       alert('Error generating bulk certificates. Please try selecting fewer students.')
