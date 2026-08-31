@@ -10,7 +10,7 @@ interface BulkCertificatesProps {
 }
 
 export function BulkCertificates({ configs }: BulkCertificatesProps) {
-  const [children, setChildren] = useState<BackendChild[]>([])
+  const [allChildren, setAllChildren] = useState<BackendChild[]>([])
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
   const [loading, setLoading] = useState(true)
   const [generating, setGenerating] = useState(false)
@@ -19,6 +19,7 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
   // Filters
   const [search, setSearch] = useState('')
   const [groupFilter, setGroupFilter] = useState('all')
+  const [trackFilter, setTrackFilter] = useState('all')
   const [centerFilter, setCenterFilter] = useState('all')
 
   const [currentPage, setCurrentPage] = useState(1)
@@ -27,28 +28,33 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
   const hiddenCertRef = useRef<HTMLDivElement>(null)
   const [currentRenderChild, setCurrentRenderChild] = useState<{ name: string; url: string } | null>(null)
 
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [search, groupFilter, centerFilter])
-
+  // Fetch all children once
   useEffect(() => {
     setLoading(true)
-    getChildren('all', search, centerFilter)
-      .then(data => {
-        if (groupFilter !== 'all') {
-          setChildren(data.filter(c => (c.senior_track || c.group) === groupFilter))
-        } else {
-          setChildren(data)
-        }
-      })
+    getChildren('all', '', 'all')
+      .then(data => setAllChildren(data))
       .finally(() => setLoading(false))
-  }, [search, groupFilter, centerFilter])
+  }, [])
+
+  // Synchronous Filtering
+  const filteredChildren = allChildren.filter(c => {
+    if (centerFilter !== 'all' && c.center !== centerFilter) return false
+    if (groupFilter !== 'all' && c.group !== groupFilter) return false
+    if (trackFilter !== 'all' && c.senior_track !== trackFilter) return false
+    if (search && !c.full_name.toLowerCase().includes(search.toLowerCase())) return false
+    return true
+  })
+
+  // Reset page when filters change
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [search, groupFilter, trackFilter, centerFilter])
 
   const toggleAll = () => {
-    if (selectedIds.size === children.length && children.length > 0) {
+    if (selectedIds.size === filteredChildren.length && filteredChildren.length > 0) {
       setSelectedIds(new Set())
     } else {
-      setSelectedIds(new Set(children.map(c => c.id)))
+      setSelectedIds(new Set(filteredChildren.map(c => c.id)))
     }
   }
 
@@ -89,7 +95,8 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
   const wait = (ms: number) => new Promise(res => setTimeout(res, ms))
 
   const handleBulkGenerate = async () => {
-    const selectedChildren = children.filter(c => selectedIds.has(c.id))
+    if (selectedIds.size === 0) return
+    const selectedChildren = filteredChildren.filter(c => selectedIds.has(c.id))
     if (selectedChildren.length === 0) return
 
     setGenerating(true)
@@ -137,10 +144,11 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
     }
   }
 
-  const allGroups = Array.from(new Set(children.map(c => c.senior_track || c.group).filter(Boolean)))
+  const availableGroups = Array.from(new Set(allChildren.map(c => c.group).filter(Boolean)))
+  const availableTracks = Array.from(new Set(allChildren.map(c => c.senior_track).filter(t => t && t !== 'N/A - Junior Camp')))
   
-  const totalPages = Math.ceil(children.length / pageSize) || 1
-  const paginatedChildren = children.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+  const totalPages = Math.ceil(filteredChildren.length / pageSize) || 1
+  const paginatedChildren = filteredChildren.slice((currentPage - 1) * pageSize, currentPage * pageSize)
 
   return (
     <div style={{ background: '#FFF', borderRadius: '12px', padding: '1.5rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #E2E8F0' }}>
@@ -192,13 +200,21 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
         <select 
           value={groupFilter}
           onChange={e => setGroupFilter(e.target.value)}
-          style={{ width: '200px', padding: '0.5rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13px' }}
+          style={{ width: '180px', padding: '0.5rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13px' }}
         >
-          <option value="all">All Groups & Tracks</option>
+          <option value="all">All Age Groups</option>
           <option value="Junior Camp (5–10 years)">Junior Camp (5–10 years)</option>
           <option value="Senior Camp (11+ years)">Senior Camp (11+ years)</option>
-          <option value="Graphics Design (Corel Draw) + Robotics">Graphics Design (Corel Draw) + Robotics</option>
-          <option value="Cybersecurity + Python Programming">Cybersecurity + Python Programming</option>
+        </select>
+        <select 
+          value={trackFilter}
+          onChange={e => setTrackFilter(e.target.value)}
+          style={{ width: '180px', padding: '0.5rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13px' }}
+        >
+          <option value="all">All Senior Tracks</option>
+          <option value="Basic IT">Basic IT (Junior)</option>
+          <option value="Graphics + Robotics">Graphics + Robotics (Senior)</option>
+          <option value="Cybersecurity + Python">Cybersecurity + Python (Senior)</option>
         </select>
         <select 
           value={centerFilter}
@@ -217,7 +233,7 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
             <tr style={{ background: '#F8FAFC', borderBottom: '1px solid #E2E8F0', textAlign: 'left' }}>
               <th style={{ padding: '0.75rem 1rem', width: '40px' }}>
                 <div onClick={toggleAll} style={{ cursor: 'pointer', color: '#64748B' }}>
-                  {selectedIds.size === children.length && children.length > 0 ? <CheckSquare size={18} color="#0284C7" /> : <Square size={18} />}
+                  {selectedIds.size === filteredChildren.length && filteredChildren.length > 0 ? <CheckSquare size={18} color="#0284C7" /> : <Square size={18} />}
                 </div>
               </th>
               <th style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#475569' }}>Student Name</th>
@@ -228,7 +244,7 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
           <tbody>
             {loading ? (
               <tr><td colSpan={4} style={{ padding: '2rem', textAlign: 'center', color: '#64748B' }}><Loader2 size={24} className="spin" style={{ margin: '0 auto' }} /></td></tr>
-            ) : children.length === 0 ? (
+            ) : filteredChildren.length === 0 ? (
               <tr><td colSpan={4} style={{ padding: '2rem', textAlign: 'center', color: '#64748B' }}>No students found.</td></tr>
             ) : (
               paginatedChildren.map(child => {
@@ -252,10 +268,10 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
         </table>
       </div>
 
-      {!loading && children.length > 0 && (
+      {!loading && filteredChildren.length > 0 && (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem', fontSize: '13px', color: '#64748B' }}>
           <div>
-            Showing {((currentPage - 1) * pageSize) + 1} to {Math.min(currentPage * pageSize, children.length)} of {children.length} students
+            Showing {((currentPage - 1) * pageSize) + 1} to {Math.min(currentPage * pageSize, filteredChildren.length)} of {filteredChildren.length} students
           </div>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
             <button 
