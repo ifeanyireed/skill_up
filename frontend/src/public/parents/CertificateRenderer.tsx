@@ -91,8 +91,8 @@ export function CertificateRenderer({ studentName, track, group, date }: Certifi
         {/* Dynamic Name Overlay */}
         <div style={{
           position: 'absolute',
-          top: '46%',
-          left: '15%', // Adjusted a bit more to the left
+          top: '39%', // Moved up to sit above the line
+          left: '15%', 
           right: '5%',
           textAlign: 'center',
           fontSize: '34px',
