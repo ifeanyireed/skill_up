@@ -133,7 +133,10 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
         setProgress(((i + 1) / selectedChildren.length) * 100)
       }
 
-      pdf.save('SkillUp_Bulk_Certificates.pdf')
+      const exportName = selectedChildren.length === 1 
+        ? `${selectedChildren[0].full_name.replace(/ /g, '_')}_Certificate.pdf`
+        : 'SkillUp_Bulk_Certificates.pdf'
+      pdf.save(exportName)
     } catch (err) {
       console.error(err)
       alert('Error generating bulk certificates. Please try selecting fewer students.')
