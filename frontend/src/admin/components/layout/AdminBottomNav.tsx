@@ -16,12 +16,12 @@ import {
   GraduationCap,
   Puzzle
 } from 'lucide-react'
-import { useAdminStore, isLearnerUser, isAdminUser } from '../../store/useAdminStore'
+import { useAdminStore, isLearnerUser, isSuperAdmin } from '../../store/useAdminStore'
 
 export function AdminBottomNav() {
   const { session } = useAdminStore()
   const isLearner = isLearnerUser(session.user)
-  const isAdmin = isAdminUser(session.user)
+  const isSuper = isSuperAdmin(session.user)
 
   if (isLearner) {
     return (
@@ -49,7 +49,7 @@ export function AdminBottomNav() {
     { to: '/admin/attendance', label: 'Attendance', icon: CalendarCheck },
     { to: '/admin/history', label: 'History', icon: History },
     { to: '/admin/register', label: 'Register', icon: UserPlus },
-    ...(isAdmin
+    ...(isSuper
       ? [
           { to: '/admin/users', label: 'Staff', icon: UserCog },
           { to: '/admin/settings', label: 'Settings', icon: Settings },

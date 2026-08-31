@@ -21,7 +21,7 @@ import {
   Award,
   FileText
 } from 'lucide-react'
-import { useAdminStore, isLearnerUser, isAdminUser } from '../../store/useAdminStore'
+import { useAdminStore, isLearnerUser, isAdminUser, isSuperAdmin } from '../../store/useAdminStore'
 
 export function AdminSidebar() {
   const { session, logout, sidebarCollapsed, toggleSidebar } = useAdminStore()
@@ -34,6 +34,7 @@ export function AdminSidebar() {
 
   const isLearner = isLearnerUser(session.user)
   const isAdmin = isAdminUser(session.user)
+  const isSuper = isSuperAdmin(session.user)
 
   const navItems = [
     ...(!isLearner ? [{ to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true }] : []),
@@ -124,8 +125,8 @@ export function AdminSidebar() {
           </div>
         )}
 
-        {/* Administration Section (Only visible for Lead Admins) */}
-        {isAdmin && !isLearner && (
+        {/* Administration Section (Only visible for Super Admins) */}
+        {isSuper && !isLearner && (
           <div className="admin-nav-section">
             <div className="admin-nav-label">Administration</div>
             {adminItems.map(({ to, label, icon: Icon }) => (

@@ -21,18 +21,18 @@ import { AdminFormBuilder } from './pages/AdminFormBuilder'
 import { AdminFormSubmissions } from './pages/AdminFormSubmissions'
 import { AdminCertificatesPage } from './pages/AdminCertificatesPage'
 import { AdminDocumentsPage } from './pages/AdminDocumentsPage'
-import { useAdminStore, isLearnerUser, isAdminUser } from './store/useAdminStore'
+import { useAdminStore, isLearnerUser, isSuperAdmin } from './store/useAdminStore'
 
 function AdminOnlyRoute({ children }: { children: React.ReactNode }) {
   const { session } = useAdminStore()
-  const isAdmin = isAdminUser(session.user)
+  const isSuper = isSuperAdmin(session.user)
   const isLearner = isLearnerUser(session.user)
 
   if (isLearner) {
     return <Navigate to="/learners" replace />
   }
 
-  if (!isAdmin) {
+  if (!isSuper) {
     return <Navigate to="/admin" replace />
   }
 

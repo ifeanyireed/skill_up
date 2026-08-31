@@ -29,7 +29,7 @@ export function isLearnerUser(user: AdminUser | null): boolean {
 export function isAdminUser(user: AdminUser | null): boolean {
   if (!user) return false
   const role = (user.role || '').toLowerCase()
-  return role === 'super admin' || role === 'program supervisor'
+  return role === 'super admin' || role === 'program supervisor' || role === 'administrator' || role === 'admin' || role === 'lead admin'
 }
 
 export function isSuperAdmin(user: AdminUser | null): boolean {
