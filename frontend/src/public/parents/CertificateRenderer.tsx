@@ -110,7 +110,7 @@ export function CertificateRenderer({ studentName, track, group, date }: Certifi
             fontSize: '30px',
             fontWeight: 600,
             color: '#194674',
-            fontFamily: "'Monotype Cursiva', cursive",
+            fontFamily: "'MonotypeCorsiva'",
             lineHeight: '1',
             margin: 0,
             padding: 0

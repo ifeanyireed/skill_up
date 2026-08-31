@@ -176,7 +176,7 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
             />
             <div style={{
               position: 'absolute', top: '45%', left: '18%', right: '2%', textAlign: 'center',
-              fontSize: '30px', fontWeight: 600, color: '#194674', fontFamily: "'Monotype Cursiva', cursive",
+              fontSize: '30px', fontWeight: 600, color: '#194674', fontFamily: "'MonotypeCorsiva'",
               lineHeight: '1', margin: 0, padding: 0
             }}>
               {currentRenderChild.name}

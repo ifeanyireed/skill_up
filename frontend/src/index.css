@@ -437,3 +437,11 @@ select.input-dark {
   }
 }
 
+
+@font-face {
+  font-family: 'MonotypeCorsiva';
+  src: url('/fonts/Monotype-Corsiva-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
