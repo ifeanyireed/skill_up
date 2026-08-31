@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Plus, Trash2, Award, FileImage, LayoutTemplate, ShieldCheck } from 'lucide-react'
+import { Plus, Trash2, Award, FileImage, LayoutTemplate, ShieldCheck, Download, Settings as SettingsIcon } from 'lucide-react'
 import { API_BASE_URL } from '../services/api'
 import { useAdminStore, isAdminUser } from '../store/useAdminStore'
+import { BulkCertificates } from './BulkCertificates'
 import '../admin.css'
 
 interface CertConfig {
@@ -16,6 +17,7 @@ export function AdminCertificatesPage() {
   const isAdmin = isAdminUser(session.user)
   const [configs, setConfigs] = useState<CertConfig[]>([])
   const [loading, setLoading] = useState(false)
+  const [activeTab, setActiveTab] = useState<'configure' | 'bulk'>('configure')
 
   // Form State
   const [categoryType, setCategoryType] = useState('Group')
@@ -86,11 +88,43 @@ export function AdminCertificatesPage() {
           <Award size={28} />
         </div>
         <div>
-          <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 800, color: '#0F172A' }}>Certificate Templates</h1>
-          <p style={{ margin: 0, color: '#64748B', fontSize: '14px' }}>Assign dynamic graphics to specific Groups or Tracks.</p>
+          <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 800, color: '#0F172A' }}>Certificates Management</h1>
+          <p style={{ margin: 0, color: '#64748B', fontSize: '14px' }}>Map templates and bulk-generate PDFs for students.</p>
         </div>
       </div>
 
+      <div style={{ display: 'flex', gap: '1.5rem', borderBottom: '1px solid #E2E8F0', marginBottom: '2rem' }}>
+        <button
+          onClick={() => setActiveTab('configure')}
+          style={{
+            background: 'none', border: 'none',
+            borderBottom: activeTab === 'configure' ? '2px solid #C40000' : '2px solid transparent',
+            padding: '0 0.5rem 0.75rem 0.5rem',
+            color: activeTab === 'configure' ? '#C40000' : '#64748B',
+            fontWeight: 700, fontSize: '14px', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', gap: '0.5rem'
+          }}
+        >
+          <SettingsIcon size={16} /> Assign Templates
+        </button>
+        <button
+          onClick={() => setActiveTab('bulk')}
+          style={{
+            background: 'none', border: 'none',
+            borderBottom: activeTab === 'bulk' ? '2px solid #C40000' : '2px solid transparent',
+            padding: '0 0.5rem 0.75rem 0.5rem',
+            color: activeTab === 'bulk' ? '#C40000' : '#64748B',
+            fontWeight: 700, fontSize: '14px', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', gap: '0.5rem'
+          }}
+        >
+          <Download size={16} /> Bulk Generation
+        </button>
+      </div>
+
+      {activeTab === 'bulk' && <BulkCertificates configs={configs} />}
+
+      {activeTab === 'configure' && (
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '2rem' }}>
         
         {/* Mapping Form */}
@@ -181,6 +215,7 @@ export function AdminCertificatesPage() {
         </div>
 
       </div>
+      )}
     </div>
   )
 }
