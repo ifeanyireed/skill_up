@@ -135,7 +135,6 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
     <div style={{ background: '#FFF', borderRadius: '12px', padding: '1.5rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #E2E8F0' }}>
       
       {/* Hidden Renderer for html2canvas */}
-      <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
       <div style={{ overflow: 'hidden', height: 0, width: 0, position: 'absolute', top: -9999, left: -9999 }}>
         {currentRenderChild && (
           <div ref={hiddenCertRef} style={{ position: 'relative', width: '800px', height: '566px', backgroundColor: '#fff' }}>
@@ -145,8 +144,8 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
               style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
             />
             <div style={{
-              position: 'absolute', top: '46%', left: '15%', right: '5%', textAlign: 'center',
-              fontSize: '34px', fontWeight: 600, color: '#002b80', fontFamily: "'Great Vibes', cursive",
+              position: 'absolute', top: '42%', left: '15%', right: '5%', textAlign: 'center',
+              fontSize: '34px', fontWeight: 600, color: '#194674', fontFamily: "'Monotype Corsiva', 'Monotype Cursiva', 'Apple Chancery', cursive",
               lineHeight: '1', margin: 0, padding: 0
             }}>
               {currentRenderChild.name}

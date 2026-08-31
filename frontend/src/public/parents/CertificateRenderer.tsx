@@ -77,9 +77,6 @@ export function CertificateRenderer({ studentName, track, group, date }: Certifi
           borderRadius: '8px'
         }}
       >
-        {/* Load Handwriting Font */}
-        <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
-
         {/* Background Graphic */}
         <img 
           src={templateUrl} 
@@ -91,15 +88,15 @@ export function CertificateRenderer({ studentName, track, group, date }: Certifi
         {/* Dynamic Name Overlay */}
         <div style={{
           position: 'absolute',
-          top: '46%', // Reverted to look correct on frontend
+          top: downloading ? '42%' : '48%', // Raised for PDF printout, lowered slightly for frontend UI
           left: '15%', 
           right: '5%',
           textAlign: 'center',
           fontSize: '34px',
           fontWeight: 600,
-          color: '#002b80', // Richer shade of blue
-          fontFamily: "'Great Vibes', cursive",
-          lineHeight: '1', // Fixes the html2canvas bug that shifts text down in the PDF printout
+          color: '#194674', // Requested blue hex
+          fontFamily: "'Monotype Corsiva', 'Monotype Cursiva', 'Apple Chancery', cursive",
+          lineHeight: '1', 
           margin: 0,
           padding: 0
         }}>
