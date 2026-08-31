@@ -77,6 +77,9 @@ export function CertificateRenderer({ studentName, track, group, date }: Certifi
           boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
         }}
       >
+        {/* Load Handwriting Font */}
+        <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
+
         {/* Background Graphic */}
         <img 
           src={templateUrl} 
@@ -92,41 +95,12 @@ export function CertificateRenderer({ studentName, track, group, date }: Certifi
           left: '0',
           right: '0',
           textAlign: 'center',
-          fontSize: '42px',
-          fontWeight: 700,
-          color: '#1f2937',
-          fontFamily: 'serif' // Ideally use a loaded Google Font like 'Great Vibes'
+          fontSize: '56px',
+          fontWeight: 400,
+          color: '#0e1f57', // Dark blue
+          fontFamily: "'Great Vibes', cursive"
         }}>
           {studentName}
-        </div>
-
-        {/* Dynamic Track Overlay */}
-        <div style={{
-          position: 'absolute',
-          top: '64%', // Adjust based on your specific PDF visual layout
-          left: '0',
-          right: '0',
-          textAlign: 'center',
-          fontSize: '24px',
-          fontWeight: 600,
-          color: '#4b5563',
-          fontFamily: 'sans-serif'
-        }}>
-          For successfully completing: {track}
-        </div>
-
-        {/* Dynamic Date Overlay */}
-        <div style={{
-          position: 'absolute',
-          bottom: '15%',
-          left: '25%', // Adjust based on your specific PDF visual layout
-          transform: 'translateX(-50%)',
-          fontSize: '18px',
-          fontWeight: 600,
-          color: '#1f2937',
-          fontFamily: 'sans-serif'
-        }}>
-          {date}
         </div>
       </div>
     </div>

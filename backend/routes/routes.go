@@ -74,6 +74,11 @@ func registerAPIRoutes(api *gin.RouterGroup) {
 	api.GET("/forms/:slug", controllers.GetFormBySlug)
 	api.POST("/forms/:slug/submit", controllers.SubmitForm)
 
+	// Documents
+	api.GET("/documents", controllers.GetDocuments)
+	api.POST("/admin/documents", controllers.CreateDocument)
+	api.DELETE("/admin/documents/:id", controllers.DeleteDocument)
+
 	// Certificate Templates
 	api.GET("/certificates/match", controllers.MatchCertificate)
 	api.GET("/admin/certificates", controllers.GetCertificateConfigs)

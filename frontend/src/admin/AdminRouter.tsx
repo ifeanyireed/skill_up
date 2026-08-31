@@ -20,6 +20,7 @@ import { AdminFormsDashboard } from './pages/AdminFormsDashboard'
 import { AdminFormBuilder } from './pages/AdminFormBuilder'
 import { AdminFormSubmissions } from './pages/AdminFormSubmissions'
 import { AdminCertificatesPage } from './pages/AdminCertificatesPage'
+import { AdminDocumentsPage } from './pages/AdminDocumentsPage'
 import { useAdminStore, isLearnerUser, isAdminUser } from './store/useAdminStore'
 
 function AdminOnlyRoute({ children }: { children: React.ReactNode }) {
@@ -173,6 +174,14 @@ export function AdminRouter() {
           element={
             <AdminOnlyRoute>
               <AdminCertificatesPage />
+            </AdminOnlyRoute>
+          }
+        />
+        <Route
+          path="documents"
+          element={
+            <AdminOnlyRoute>
+              <AdminDocumentsPage />
             </AdminOnlyRoute>
           }
         />
