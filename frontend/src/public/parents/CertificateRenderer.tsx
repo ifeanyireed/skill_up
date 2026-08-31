@@ -95,7 +95,7 @@ export function CertificateRenderer({ studentName, track, group, date }: Certifi
           left: '0',
           right: '0',
           textAlign: 'center',
-          fontSize: '56px',
+          fontSize: '34px',
           fontWeight: 400,
           color: '#0e1f57', // Dark blue
           fontFamily: "'Great Vibes', cursive"

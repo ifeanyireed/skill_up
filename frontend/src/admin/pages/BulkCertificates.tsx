@@ -146,7 +146,7 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
             />
             <div style={{
               position: 'absolute', top: '46%', left: '0', right: '0', textAlign: 'center',
-              fontSize: '56px', fontWeight: 400, color: '#0e1f57', fontFamily: "'Great Vibes', cursive"
+              fontSize: '34px', fontWeight: 400, color: '#0e1f57', fontFamily: "'Great Vibes', cursive"
             }}>
               {currentRenderChild.name}
             </div>
