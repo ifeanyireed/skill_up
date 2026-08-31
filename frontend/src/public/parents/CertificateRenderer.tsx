@@ -63,46 +63,44 @@ export function CertificateRenderer({ studentName, track, group, date }: Certifi
         {downloading ? 'Generating PDF...' : 'Download Certificate'}
       </button>
 
-      {/* Wrapper to scale down the massive 800px preview visually while keeping DOM real size for html2canvas */}
-      <div style={{ width: '100%', maxWidth: '500px', margin: '0 auto', overflow: 'hidden', borderRadius: '8px' }}>
-        <div style={{ transform: 'scale(0.625)', transformOrigin: 'top left', width: '800px', height: '566px' }}>
-          <div 
-            ref={certRef} 
-            style={{ 
-              position: 'relative', 
-              width: '800px',
-              height: '566px',
-              backgroundColor: '#fff',
-              overflow: 'hidden',
-              boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-            }}
-          >
-            {/* Load Handwriting Font */}
-            <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
+      {/* 100% Resolution preview container */}
+      <div 
+        ref={certRef} 
+        style={{ 
+          position: 'relative', 
+          width: '800px',
+          height: '566px',
+          backgroundColor: '#fff',
+          overflow: 'hidden',
+          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+          margin: '0 auto',
+          borderRadius: '8px'
+        }}
+      >
+        {/* Load Handwriting Font */}
+        <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
 
-            {/* Background Graphic */}
-            <img 
-              src={templateUrl} 
-              crossOrigin="anonymous"
-              alt="Certificate Background" 
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-            />
-            
-            {/* Dynamic Name Overlay */}
-            <div style={{
-              position: 'absolute',
-              top: '46%',
-              left: '25%', // Center on the right 3/4 of the certificate
-              right: '0',
-              textAlign: 'center',
-              fontSize: '34px',
-              fontWeight: 600,
-              color: '#002b80', // Richer shade of blue
-              fontFamily: "'Great Vibes', cursive"
-            }}>
-              {studentName}
-            </div>
-          </div>
+        {/* Background Graphic */}
+        <img 
+          src={templateUrl} 
+          crossOrigin="anonymous"
+          alt="Certificate Background" 
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+        />
+        
+        {/* Dynamic Name Overlay */}
+        <div style={{
+          position: 'absolute',
+          top: '46%',
+          left: '15%', // Adjusted a bit more to the left
+          right: '5%',
+          textAlign: 'center',
+          fontSize: '34px',
+          fontWeight: 600,
+          color: '#002b80', // Richer shade of blue
+          fontFamily: "'Great Vibes', cursive"
+        }}>
+          {studentName}
         </div>
       </div>
     </div>

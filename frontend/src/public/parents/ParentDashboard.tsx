@@ -113,34 +113,34 @@ export function ParentDashboard() {
                 No children linked to your account yet.
               </div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '1.5rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                 {children.map((child) => (
-                  <div key={child.id} className="admin-card" style={{ overflow: 'hidden' }}>
-                    <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--adm-border)', background: 'var(--adm-surface-2)' }}>
-                      <h2 style={{ margin: '0 0 0.5rem 0', fontSize: '18px', color: 'var(--adm-text-1)', fontWeight: 800 }}>
+                  <div key={child.id} className="admin-card" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <div style={{ padding: '1.5rem', width: '100%', borderBottom: '1px solid var(--adm-border)', background: 'var(--adm-surface-2)' }}>
+                      <h2 style={{ margin: '0 0 0.5rem 0', fontSize: '20px', color: 'var(--adm-text-1)', fontWeight: 800 }}>
                         {child.full_name}
                       </h2>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', color: 'var(--adm-text-2)', fontSize: '13px', fontWeight: 600 }}>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', color: 'var(--adm-text-2)', fontSize: '14px', fontWeight: 600 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          <GraduationCap size={14} color="var(--adm-accent)" /> 
+                          <GraduationCap size={16} color="var(--adm-accent)" /> 
                           {child.senior_track || child.group}
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          <Calendar size={14} color="var(--adm-accent)" />
+                          <Calendar size={16} color="var(--adm-accent)" />
                           {child.center || 'Main Center'}
                         </div>
                       </div>
                     </div>
 
-                    <div style={{ padding: '1.5rem' }}>
-                      <h3 style={{ margin: '0 0 0.75rem 0', fontSize: '14px', fontWeight: 700, color: 'var(--adm-text-1)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <Award size={16} color="var(--adm-accent)" /> Certificate of Completion
+                    <div style={{ padding: '2rem', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      <h3 style={{ margin: '0 0 0.75rem 0', fontSize: '16px', fontWeight: 700, color: 'var(--adm-text-1)', display: 'flex', alignItems: 'center', gap: '0.5rem', alignSelf: 'flex-start' }}>
+                        <Award size={18} color="var(--adm-accent)" /> Certificate of Completion
                       </h3>
-                      <p style={{ color: 'var(--adm-text-2)', fontSize: '13px', marginBottom: '1.25rem', lineHeight: '1.5' }}>
+                      <p style={{ color: 'var(--adm-text-2)', fontSize: '14px', marginBottom: '1.5rem', lineHeight: '1.5', alignSelf: 'flex-start' }}>
                         Download the official graduation certificate. The design will automatically match their registered group and track.
                       </p>
                       
-                      <div style={{ background: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px dashed #CBD5E1' }}>
+                      <div style={{ background: '#F8FAFC', padding: '1.5rem', borderRadius: '12px', border: '1px dashed #CBD5E1', display: 'inline-block', maxWidth: '100%', overflowX: 'auto' }}>
                         <CertificateRenderer 
                           studentName={child.full_name} 
                           track={child.senior_track || ''} 
