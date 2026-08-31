@@ -233,26 +233,28 @@ export function ChildrenDirectoryPage() {
           </p>
         </div>
         <div style={{ display: 'flex', gap: '0.75rem' }}>
-          <button 
-            className="admin-btn" 
-            style={{ background: '#10B981', color: '#FFF', border: 'none', padding: '0.5rem 1rem', borderRadius: '6px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}
-            onClick={() => {
-              const headers = ['ID', 'Full Name', 'Age', 'Gender', 'Group', 'Track', 'Center', 'Parent Name', 'Parent Phone', 'Parent Email']
-              const rows = children.map((c: BackendChild) => [
-                c.id, `"${c.full_name}"`, c.age, c.gender, `"${c.group}"`, `"${c.senior_track || 'N/A'}"`, `"${c.center}"`, `"${c.parent_name}"`, `"${c.parent_phone}"`, `"${c.parent_email}"`
-              ])
-              const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map((r: any[]) => r.join(','))].join('\n')
-              const encodedUri = encodeURI(csvContent)
-              const link = document.createElement('a')
-              link.setAttribute('href', encodedUri)
-              link.setAttribute('download', 'skillup_students.csv')
-              document.body.appendChild(link)
-              link.click()
-              link.remove()
-            }}
-          >
-            <Download size={16} /> Export CSV
-          </button>
+          {isSuper && (
+            <button 
+              className="admin-btn" 
+              style={{ background: '#10B981', color: '#FFF', border: 'none', padding: '0.5rem 1rem', borderRadius: '6px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}
+              onClick={() => {
+                const headers = ['ID', 'Full Name', 'Age', 'Gender', 'Group', 'Track', 'Center', 'Parent Name', 'Parent Phone', 'Parent Email']
+                const rows = children.map((c: BackendChild) => [
+                  c.id, `"${c.full_name}"`, c.age, c.gender, `"${c.group}"`, `"${c.senior_track || 'N/A'}"`, `"${c.center}"`, `"${c.parent_name}"`, `"${c.parent_phone}"`, `"${c.parent_email}"`
+                ])
+                const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map((r: any[]) => r.join(','))].join('\n')
+                const encodedUri = encodeURI(csvContent)
+                const link = document.createElement('a')
+                link.setAttribute('href', encodedUri)
+                link.setAttribute('download', 'skillup_students.csv')
+                document.body.appendChild(link)
+                link.click()
+                link.remove()
+              }}
+            >
+              <Download size={16} /> Export CSV
+            </button>
+          )}
 
           <button className="admin-btn admin-btn-accent" onClick={() => navigate('/register')}>
             <Plus size={16} /> Public Parent Register Form
