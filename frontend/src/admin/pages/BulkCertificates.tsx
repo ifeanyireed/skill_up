@@ -19,13 +19,21 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
   // Filters
   const [search, setSearch] = useState('')
   const [groupFilter, setGroupFilter] = useState('all')
+  const [centerFilter, setCenterFilter] = useState('all')
+
+  const [currentPage, setCurrentPage] = useState(1)
+  const pageSize = 20
 
   const hiddenCertRef = useRef<HTMLDivElement>(null)
   const [currentRenderChild, setCurrentRenderChild] = useState<{ name: string; url: string } | null>(null)
 
   useEffect(() => {
+    setCurrentPage(1)
+  }, [search, groupFilter, centerFilter])
+
+  useEffect(() => {
     setLoading(true)
-    getChildren(undefined, search, undefined)
+    getChildren('all', search, centerFilter)
       .then(data => {
         if (groupFilter !== 'all') {
           setChildren(data.filter(c => (c.senior_track || c.group) === groupFilter))
@@ -34,7 +42,7 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
         }
       })
       .finally(() => setLoading(false))
-  }, [search, groupFilter])
+  }, [search, groupFilter, centerFilter])
 
   const toggleAll = () => {
     if (selectedIds.size === children.length && children.length > 0) {
@@ -130,6 +138,9 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
   }
 
   const allGroups = Array.from(new Set(children.map(c => c.senior_track || c.group).filter(Boolean)))
+  
+  const totalPages = Math.ceil(children.length / pageSize) || 1
+  const paginatedChildren = children.slice((currentPage - 1) * pageSize, currentPage * pageSize)
 
   return (
     <div style={{ background: '#FFF', borderRadius: '12px', padding: '1.5rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #E2E8F0' }}>
@@ -189,6 +200,16 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
           <option value="Graphics Design (Corel Draw) + Robotics">Graphics Design (Corel Draw) + Robotics</option>
           <option value="Cybersecurity + Python Programming">Cybersecurity + Python Programming</option>
         </select>
+        <select 
+          value={centerFilter}
+          onChange={e => setCenterFilter(e.target.value)}
+          style={{ width: '200px', padding: '0.5rem', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13px' }}
+        >
+          <option value="all">All Centers</option>
+          <option value="Raji Rasaki Centre">Raji Rasaki Centre</option>
+          <option value="Festac Centre">Festac Centre</option>
+          <option value="CBT Centre">CBT Centre</option>
+        </select>
       </div>
 
       <div style={{ border: '1px solid #E2E8F0', borderRadius: '8px', overflow: 'hidden' }}>
@@ -211,7 +232,7 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
             ) : children.length === 0 ? (
               <tr><td colSpan={4} style={{ padding: '2rem', textAlign: 'center', color: '#64748B' }}>No students found.</td></tr>
             ) : (
-              children.map(child => {
+              paginatedChildren.map(child => {
                 const isSelected = selectedIds.has(child.id)
                 const url = getTemplateUrl(child)
                 return (
@@ -231,6 +252,33 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
           </tbody>
         </table>
       </div>
+
+      {!loading && children.length > 0 && (
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem', fontSize: '13px', color: '#64748B' }}>
+          <div>
+            Showing {((currentPage - 1) * pageSize) + 1} to {Math.min(currentPage * pageSize, children.length)} of {children.length} students
+          </div>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button 
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              style={{ padding: '0.35rem 0.75rem', border: '1px solid #CBD5E1', background: '#FFF', borderRadius: '4px', cursor: currentPage === 1 ? 'not-allowed' : 'pointer', opacity: currentPage === 1 ? 0.5 : 1 }}
+            >
+              Previous
+            </button>
+            <div style={{ padding: '0.35rem 0.75rem', fontWeight: 600 }}>
+              Page {currentPage} of {totalPages}
+            </div>
+            <button 
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              style={{ padding: '0.35rem 0.75rem', border: '1px solid #CBD5E1', background: '#FFF', borderRadius: '4px', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', opacity: currentPage === totalPages ? 0.5 : 1 }}
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
 
     </div>
   )
