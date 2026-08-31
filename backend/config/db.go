@@ -85,6 +85,7 @@ func InitDB() *gorm.DB {
 		&models.Form{},
 		&models.FormField{},
 		&models.FormSubmission{},
+		&models.CertificateConfig{},
 	)
 	if err != nil {
 		fmt.Printf("[DB Warning] AutoMigrate notice: %v\n", err)

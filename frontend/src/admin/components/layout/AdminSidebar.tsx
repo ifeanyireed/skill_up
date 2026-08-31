@@ -17,7 +17,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Puzzle,
-  GraduationCap
+  GraduationCap,
+  Award
 } from 'lucide-react'
 import { useAdminStore, isLearnerUser, isAdminUser } from '../../store/useAdminStore'
 
@@ -50,6 +51,7 @@ export function AdminSidebar() {
 
   const adminItems = [
     { to: '/admin/forms', label: 'Custom Forms', icon: LayoutDashboard },
+    { to: '/admin/certificates', label: 'Certificates', icon: Award },
     { to: '/admin/users', label: 'Instructors & Staff', icon: UserCog },
     { to: '/admin/settings', label: 'Settings', icon: Settings },
   ]

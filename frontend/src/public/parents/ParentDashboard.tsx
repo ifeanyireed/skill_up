@@ -81,7 +81,8 @@ export function ParentDashboard() {
                   <div style={{ background: '#f9fafb', padding: '1rem', borderRadius: '8px', border: '1px dashed #d1d5db' }}>
                     <CertificateRenderer 
                       studentName={child.full_name} 
-                      track={child.senior_track || child.group} 
+                      track={child.senior_track || ''} 
+                      group={child.group}
                       date={new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} 
                     />
                   </div>
