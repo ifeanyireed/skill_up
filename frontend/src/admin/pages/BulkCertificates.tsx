@@ -145,7 +145,7 @@ export function BulkCertificates({ configs }: BulkCertificatesProps) {
               style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
             />
             <div style={{
-              position: 'absolute', top: '40%', left: '15%', right: '5%', textAlign: 'center',
+              position: 'absolute', top: '43%', left: '15%', right: '5%', textAlign: 'center',
               fontSize: '34px', fontWeight: 600, color: '#194674', fontFamily: "'Monotype Cursiva', cursive",
               lineHeight: '1', margin: 0, padding: 0
             }}>

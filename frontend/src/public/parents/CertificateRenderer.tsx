@@ -49,7 +49,7 @@ export function CertificateRenderer({ studentName, track, group, date }: Certifi
             // Move text up for PDF generation
             const overlays = doc.getElementsByClassName('cert-name-overlay')
             for (let i = 0; i < overlays.length; i++) {
-              ;(overlays[i] as HTMLElement).style.top = '40%'
+              ;(overlays[i] as HTMLElement).style.top = '43%'
             }
           }
         })
