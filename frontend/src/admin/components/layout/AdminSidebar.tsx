@@ -49,6 +49,7 @@ export function AdminSidebar() {
   ]
 
   const adminItems = [
+    { to: '/admin/forms', label: 'Custom Forms', icon: LayoutDashboard },
     { to: '/admin/users', label: 'Instructors & Staff', icon: UserCog },
     { to: '/admin/settings', label: 'Settings', icon: Settings },
   ]

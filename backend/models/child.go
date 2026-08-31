@@ -40,6 +40,7 @@ type Child struct {
 	ActiveCode         string         `gorm:"type:varchar(10)" json:"active_code"`
 	CheckInTime        string         `gorm:"type:varchar(50)" json:"check_in_time"`
 	CheckOutTime       string         `gorm:"type:varchar(50)" json:"check_out_time"`
+	ParentID           *uint          `gorm:"index" json:"parent_id,omitempty"`
 	CreatedAt          time.Time      `json:"created_at"`
 	UpdatedAt          time.Time      `json:"updated_at"`
 	DeletedAt          gorm.DeletedAt `gorm:"index" json:"-"`

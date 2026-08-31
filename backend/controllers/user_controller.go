@@ -8,6 +8,7 @@ import (
 
 	"checkin-backend/config"
 	"checkin-backend/models"
+	"checkin-backend/utils"
 )
 
 // GET /api/users
@@ -106,9 +107,15 @@ func Login(c *gin.Context) {
 		return
 	}
 
+	token, err := utils.GenerateToken(user)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Authentication successful",
-		"token":   "session-token-skillup-2026",
+		"token":   token,
 		"user":    user,
 	})
 }

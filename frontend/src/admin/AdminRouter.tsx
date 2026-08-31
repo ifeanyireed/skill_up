@@ -16,6 +16,9 @@ import { InstructorsPage } from './pages/InstructorsPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { SchoolPuzzleProPage } from './pages/SchoolPuzzleProPage'
 import { LearnersPage } from './pages/LearnersPage'
+import { AdminFormsDashboard } from './pages/AdminFormsDashboard'
+import { AdminFormBuilder } from './pages/AdminFormBuilder'
+import { AdminFormSubmissions } from './pages/AdminFormSubmissions'
 import { useAdminStore, isLearnerUser, isAdminUser } from './store/useAdminStore'
 
 function AdminOnlyRoute({ children }: { children: React.ReactNode }) {
@@ -129,6 +132,38 @@ export function AdminRouter() {
           element={
             <AdminOnlyRoute>
               <SettingsPage />
+            </AdminOnlyRoute>
+          }
+        />
+        <Route
+          path="forms"
+          element={
+            <AdminOnlyRoute>
+              <AdminFormsDashboard />
+            </AdminOnlyRoute>
+          }
+        />
+        <Route
+          path="forms/:id/edit"
+          element={
+            <AdminOnlyRoute>
+              <AdminFormBuilder />
+            </AdminOnlyRoute>
+          }
+        />
+        <Route
+          path="forms/new"
+          element={
+            <AdminOnlyRoute>
+              <AdminFormBuilder />
+            </AdminOnlyRoute>
+          }
+        />
+        <Route
+          path="forms/:id/submissions"
+          element={
+            <AdminOnlyRoute>
+              <AdminFormSubmissions />
             </AdminOnlyRoute>
           }
         />

@@ -3,19 +3,21 @@
 // ============================================================================
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowRight, KeyRound, ShieldCheck, UserPlus, Smile, GraduationCap, Puzzle } from 'lucide-react'
+import { ArrowRight, KeyRound, ShieldCheck, UserPlus, Smile, GraduationCap, Puzzle, Eye, EyeOff } from 'lucide-react'
 import '../admin.css'
 import { useAdminStore, isLearnerUser } from '../store/useAdminStore'
+import { loginParent } from '../../public/parents/parentApi'
 
 export function AdminLoginPage() {
   const { login, kidLogin } = useAdminStore()
   const navigate = useNavigate()
 
-  // Mode: 'kid' (8-digit code) vs 'staff' (email + password)
-  const [loginMode, setLoginMode] = useState<'kid' | 'staff'>('kid')
+  // Mode: 'kid' (8-digit code) vs 'staff' (email + password) vs 'parent' (email + password)
+  const [loginMode, setLoginMode] = useState<'kid' | 'staff' | 'parent'>('kid')
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [kidCode, setKidCode] = useState('')
 
   const [error, setError] = useState('')
@@ -65,6 +67,27 @@ export function AdminLoginPage() {
       navigate('/learners', { replace: true })
     } else {
       setError('Invalid 8-digit student code.')
+      setLoading(false)
+    }
+  }
+
+  const handleParentSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+    await new Promise((r) => setTimeout(r, 300))
+
+    if (!email.trim() || !password.trim()) {
+      setError('Please enter your email/phone and password.')
+      setLoading(false)
+      return
+    }
+
+    try {
+      await loginParent(email, password)
+      navigate('/parents/dashboard', { replace: true })
+    } catch (err: any) {
+      setError(err.message || 'Invalid parent credentials.')
       setLoading(false)
     }
   }
@@ -340,7 +363,7 @@ export function AdminLoginPage() {
               <div
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: '1fr 1fr',
+                  gridTemplateColumns: '1fr 1fr 1fr',
                   background: 'rgba(255, 255, 255, 0.08)',
                   borderRadius: '3px',
                   padding: '3px',
@@ -357,16 +380,16 @@ export function AdminLoginPage() {
                     border: 'none',
                     borderRadius: '2px',
                     padding: '0.5rem',
-                    fontSize: '12px',
+                    fontSize: '11px',
                     fontWeight: 700,
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '0.375rem'
+                    gap: '0.25rem'
                   }}
                 >
-                  <Smile size={14} /> Kids (8-Digit Code)
+                  <Smile size={12} /> Kids
                 </button>
                 <button
                   type="button"
@@ -377,16 +400,36 @@ export function AdminLoginPage() {
                     border: 'none',
                     borderRadius: '2px',
                     padding: '0.5rem',
-                    fontSize: '12px',
+                    fontSize: '11px',
                     fontWeight: 700,
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '0.375rem'
+                    gap: '0.25rem'
                   }}
                 >
-                  <GraduationCap size={14} /> Staff Login
+                  <GraduationCap size={12} /> Staff
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setLoginMode('parent'); setError('') }}
+                  style={{
+                    background: loginMode === 'parent' ? 'var(--adm-accent, #C40000)' : 'transparent',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '2px',
+                    padding: '0.5rem',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.25rem'
+                  }}
+                >
+                  <UserPlus size={12} /> Parents
                 </button>
               </div>
 
@@ -396,7 +439,7 @@ export function AdminLoginPage() {
                 </div>
               )}
 
-              {loginMode === 'kid' ? (
+              {loginMode === 'kid' && (
                 <form onSubmit={handleKidSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
                   <div style={{ borderBottom: '1px solid rgba(255,255,255,0.12)', paddingBottom: '0.75rem', marginBottom: '0.25rem' }}>
                     <div style={{ fontSize: '0.6875rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--adm-accent, #C40000)', marginBottom: '0.25rem' }}>
@@ -461,7 +504,9 @@ export function AdminLoginPage() {
                     <ArrowRight size={15} />
                   </button>
                 </form>
-              ) : (
+              )}
+
+              {loginMode === 'staff' && (
                 <form onSubmit={handleStaffSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
                   <div style={{ borderBottom: '1px solid rgba(255,255,255,0.12)', paddingBottom: '0.75rem', marginBottom: '0.25rem' }}>
                     <div style={{ fontSize: '0.6875rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--adm-accent, #C40000)', marginBottom: '0.25rem' }}>
@@ -503,25 +548,45 @@ export function AdminLoginPage() {
                         Password <span style={{ color: 'var(--adm-accent)' }}>*</span>
                       </label>
                     </div>
-                    <input
-                      type="password"
-                      required
-                      autoComplete="current-password"
-                      placeholder="Enter password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      style={{
-                        width: '100%',
-                        background: 'rgba(255, 255, 255, 0.08)',
-                        border: '1.5px solid rgba(255, 255, 255, 0.2)',
-                        borderRadius: '3px',
-                        padding: '0.625rem 0.875rem',
-                        color: '#fff',
-                        fontSize: '13px',
-                        outline: 'none',
-                        boxSizing: 'border-box'
-                      }}
-                    />
+                    <div style={{ position: 'relative' }}>
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        required
+                        autoComplete="current-password"
+                        placeholder="Enter password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        style={{
+                          width: '100%',
+                          background: 'rgba(255, 255, 255, 0.08)',
+                          border: '1.5px solid rgba(255, 255, 255, 0.2)',
+                          borderRadius: '3px',
+                          padding: '0.625rem 2.5rem 0.625rem 0.875rem',
+                          color: '#fff',
+                          fontSize: '13px',
+                          outline: 'none',
+                          boxSizing: 'border-box'
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        style={{
+                          position: 'absolute',
+                          right: '10px',
+                          top: '50%',
+                          transform: 'translateY(-50%)',
+                          background: 'none',
+                          border: 'none',
+                          color: 'rgba(255,255,255,0.5)',
+                          cursor: 'pointer',
+                          padding: 0,
+                          display: 'flex'
+                        }}
+                      >
+                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
                   </div>
 
                   <button
@@ -546,6 +611,116 @@ export function AdminLoginPage() {
                     }}
                   >
                     {loading ? 'Authenticating…' : 'Sign In to Portal'}
+                    <ArrowRight size={15} />
+                  </button>
+                </form>
+              )}
+
+              {loginMode === 'parent' && (
+                <form onSubmit={handleParentSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+                  <div style={{ borderBottom: '1px solid rgba(255,255,255,0.12)', paddingBottom: '0.75rem', marginBottom: '0.25rem' }}>
+                    <div style={{ fontSize: '0.6875rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--adm-accent, #C40000)', marginBottom: '0.25rem' }}>
+                      PARENTS PORTAL
+                    </div>
+                    <div style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.8)' }}>
+                      Enter your parent email and password.
+                    </div>
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'rgba(255,255,255,0.8)', marginBottom: '0.375rem' }}>
+                      Email Address or Phone Number <span style={{ color: 'var(--adm-accent)' }}>*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      autoComplete="username"
+                      placeholder="e.g. 08031234567 or parent@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      style={{
+                        width: '100%',
+                        background: 'rgba(255, 255, 255, 0.08)',
+                        border: '1.5px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: '3px',
+                        padding: '0.625rem 0.875rem',
+                        color: '#fff',
+                        fontSize: '13px',
+                        outline: 'none',
+                        boxSizing: 'border-box'
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.375rem' }}>
+                      <label style={{ fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'rgba(255,255,255,0.8)' }}>
+                        Password <span style={{ color: 'var(--adm-accent)' }}>*</span>
+                      </label>
+                    </div>
+                    <div style={{ position: 'relative' }}>
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        required
+                        autoComplete="current-password"
+                        placeholder="Enter password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        style={{
+                          width: '100%',
+                          background: 'rgba(255, 255, 255, 0.08)',
+                          border: '1.5px solid rgba(255, 255, 255, 0.2)',
+                          borderRadius: '3px',
+                          padding: '0.625rem 2.5rem 0.625rem 0.875rem',
+                          color: '#fff',
+                          fontSize: '13px',
+                          outline: 'none',
+                          boxSizing: 'border-box'
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        style={{
+                          position: 'absolute',
+                          right: '10px',
+                          top: '50%',
+                          transform: 'translateY(-50%)',
+                          background: 'none',
+                          border: 'none',
+                          color: 'rgba(255,255,255,0.5)',
+                          cursor: 'pointer',
+                          padding: 0,
+                          display: 'flex'
+                        }}
+                      >
+                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    style={{
+                      width: '100%',
+                      background: 'var(--adm-accent, #C40000)',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '3px',
+                      padding: '0.75rem 1.25rem',
+                      fontSize: '14px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.5rem',
+                      marginTop: '0.5rem',
+                      transition: 'opacity 0.15s'
+                    }}
+                  >
+                    {loading ? 'Authenticating…' : 'Enter Portal'}
                     <ArrowRight size={15} />
                   </button>
                 </form>

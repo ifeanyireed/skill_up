@@ -17,6 +17,7 @@ export interface AdminUser {
 export interface AdminSession {
   isAuthenticated: boolean
   user: AdminUser | null
+  token?: string
 }
 
 export function isLearnerUser(user: AdminUser | null): boolean {
@@ -28,7 +29,13 @@ export function isLearnerUser(user: AdminUser | null): boolean {
 export function isAdminUser(user: AdminUser | null): boolean {
   if (!user) return false
   const role = (user.role || '').toLowerCase()
-  return role === 'lead admin' || role === 'administrator' || role === 'admin'
+  return role === 'super admin' || role === 'program supervisor'
+}
+
+export function isSuperAdmin(user: AdminUser | null): boolean {
+  if (!user) return false
+  const role = (user.role || '').toLowerCase()
+  return role === 'super admin'
 }
 
 export function isInstructorUser(user: AdminUser | null): boolean {
@@ -120,7 +127,7 @@ export const useAdminStore = create<AdminStore>((set, get) => ({
         lastLogin: new Date().toISOString()
       }
 
-      const sessionObj = { isAuthenticated: true, user }
+      const sessionObj = { isAuthenticated: true, user, token: data.token }
       localStorage.setItem('skillup_admin_session', JSON.stringify(sessionObj))
       set({ session: sessionObj })
       return true

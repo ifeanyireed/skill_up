@@ -20,7 +20,7 @@ import {
 } from 'lucide-react'
 import '../admin.css'
 import { getChildren, deleteChild, updateChildCenter, updateChildDetails, getChildAvatar, BackendChild } from '../services/api'
-import { useAdminStore } from '../store/useAdminStore'
+import { useAdminStore, isAdminUser, isSuperAdmin } from '../store/useAdminStore'
 
 const getStatusBadgeClass = (status: string) => {
   switch (status) {
@@ -39,7 +39,8 @@ const getStatusBadgeClass = (status: string) => {
 export function ChildrenDirectoryPage() {
   const navigate = useNavigate()
   const { session } = useAdminStore()
-  const isAdmin = session.user?.role === 'Lead Admin' || session.user?.role === 'Administrator'
+  const isAdmin = isAdminUser(session.user)
+  const isSuper = isSuperAdmin(session.user)
 
   const [children, setChildren] = useState<BackendChild[]>([])
   const [loading, setLoading] = useState(true)
@@ -74,8 +75,8 @@ export function ChildrenDirectoryPage() {
   }, [search, statusFilter, centerFilter])
 
   const handleDeleteChild = async (id: number, name: string, studentId: string) => {
-    if (!isAdmin) {
-      alert('Unauthorized: Only system Administrators can delete child records.')
+    if (!isSuper) {
+      alert('Unauthorized: Only the Super Admin can delete child records.')
       return
     }
     if (window.confirm(`Are you sure you want to permanently delete student "${name}" (${studentId}) from the directory?`)) {
@@ -450,11 +451,11 @@ export function ChildrenDirectoryPage() {
                         >
                           Full Profile
                         </button>
-                        {isAdmin && (
+                        {isSuper && (
                           <button
                             className="admin-btn admin-btn-ghost admin-btn-sm"
                             style={{ color: 'var(--adm-danger)' }}
-                            title="Delete Student Record (Admins Only)"
+                            title="Delete Student Record (Super Admin Only)"
                             onClick={(e) => {
                               e.stopPropagation()
                               handleDeleteChild(child.id, child.full_name, child.student_id)
@@ -732,7 +733,7 @@ export function ChildrenDirectoryPage() {
                 </button>
               </div>
 
-              {isAdmin && (
+              {isSuper && (
                 <button
                   className="admin-btn admin-btn-secondary"
                   style={{ width: '100%', justifyContent: 'center', color: 'var(--adm-danger)', borderColor: 'var(--adm-danger)' }}

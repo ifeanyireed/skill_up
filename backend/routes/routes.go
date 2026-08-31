@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"checkin-backend/controllers"
+	"checkin-backend/middlewares"
 )
 
 func registerAPIRoutes(api *gin.RouterGroup) {
@@ -23,10 +24,15 @@ func registerAPIRoutes(api *gin.RouterGroup) {
 	api.PUT("/children/:id/status", controllers.UpdateChildStatus)
 	api.POST("/children/:id/checkin", controllers.CheckInChild)
 	api.POST("/children/checkout", controllers.CheckOutChild)
-	api.DELETE("/children/:id", controllers.DeleteChild)
-	api.POST("/children/:id/delete", controllers.DeleteChild)
-	api.POST("/children/delete/:id", controllers.DeleteChild)
-	api.DELETE("/children/delete/:id", controllers.DeleteChild)
+	// Super Admin Protected Delete Routes
+	super := api.Group("/children")
+	super.Use(middlewares.SuperAdminOnly())
+	{
+		super.DELETE("/:id", controllers.DeleteChild)
+		super.POST("/:id/delete", controllers.DeleteChild)
+		super.POST("/delete/:id", controllers.DeleteChild)
+		super.DELETE("/delete/:id", controllers.DeleteChild)
+	}
 
 	// Attendance
 	api.GET("/attendance", controllers.GetAttendanceLogs)
@@ -55,6 +61,28 @@ func registerAPIRoutes(api *gin.RouterGroup) {
 	api.GET("/events", controllers.GetEvents)
 	api.POST("/events", controllers.CreateEvent)
 	api.DELETE("/events/:id", controllers.DeleteEvent)
+
+	// Custom Forms (Admin)
+	api.GET("/admin/forms", controllers.GetForms)
+	api.POST("/admin/forms", controllers.CreateForm)
+	api.GET("/admin/forms/:id", controllers.GetFormByID)
+	api.PUT("/admin/forms/:id", controllers.UpdateForm)
+	api.DELETE("/admin/forms/:id", controllers.DeleteForm)
+	api.GET("/admin/forms/:id/submissions", controllers.GetFormSubmissions)
+
+	// Custom Forms (Public)
+	api.GET("/forms/:slug", controllers.GetFormBySlug)
+	api.POST("/forms/:slug/submit", controllers.SubmitForm)
+
+	// Parent Portal
+	api.POST("/parents/register", controllers.RegisterParent)
+	api.POST("/parents/login", controllers.LoginParent)
+	
+	parentGroup := api.Group("/parents")
+	parentGroup.Use(controllers.ParentAuthOnly())
+	{
+		parentGroup.GET("/children", controllers.GetParentChildren)
+	}
 }
 
 func SetupRouter() *gin.Engine {

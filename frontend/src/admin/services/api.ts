@@ -210,11 +210,23 @@ export async function deleteChild(id: number | string): Promise<{ message: strin
   ]
 
   let lastRes: Response | null = null
+  let token = ''
+  try {
+    const sessionStr = localStorage.getItem('skillup_admin_session')
+    if (sessionStr) {
+      const parsed = JSON.parse(sessionStr)
+      if (parsed.token) token = parsed.token
+    }
+  } catch (err) {}
+
   for (const ep of endpoints) {
     try {
       const res = await fetch(ep.url, {
         method: ep.method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
       })
       lastRes = res
       if (res.ok) {

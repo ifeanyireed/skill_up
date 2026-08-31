@@ -155,6 +155,48 @@ func CreateChild(c *gin.Context) {
 		return
 	}
 
+	// Auto-link: Generate or link Parent account instantly
+	go func(createdChild models.Child) {
+		email := strings.TrimSpace(strings.ToLower(createdChild.ParentEmail))
+		phone := strings.TrimSpace(createdChild.ParentPhone)
+		name := strings.TrimSpace(createdChild.ParentName)
+
+		if name == "" {
+			name = "Parent of " + createdChild.FullName
+		}
+
+		var parent models.Parent
+		var searchErr error
+
+		if email != "" {
+			searchErr = config.DB.Where("LOWER(email) = ?", email).First(&parent).Error
+		} else if phone != "" {
+			searchErr = config.DB.Where("phone = ?", phone).First(&parent).Error
+		} else {
+			return
+		}
+
+		if searchErr != nil {
+			// Parent doesn't exist yet, create them!
+			newEmail := email
+			if newEmail == "" {
+				newEmail = phone + "@skillup-parent.com"
+			}
+			parent = models.Parent{
+				FullName:     name,
+				Email:        newEmail,
+				Phone:        phone,
+				PasswordHash: "skillup2026",
+			}
+			if err := config.DB.Create(&parent).Error; err == nil {
+				config.DB.Model(&createdChild).Update("parent_id", parent.ID)
+			}
+		} else {
+			// Parent exists, just link the sibling!
+			config.DB.Model(&createdChild).Update("parent_id", parent.ID)
+		}
+	}(child)
+
 	c.JSON(http.StatusCreated, child)
 }
 

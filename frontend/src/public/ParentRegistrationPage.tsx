@@ -533,10 +533,11 @@ export function ParentRegistrationPage() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                 <div>
                   <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', display: 'block', marginBottom: '4px' }}>
-                    Email Address
+                    Email Address *
                   </label>
                   <input
                     type="email"
+                    required
                     placeholder="parent@example.com"
                     value={parentEmail}
                     onChange={(e) => setParentEmail(e.target.value)}

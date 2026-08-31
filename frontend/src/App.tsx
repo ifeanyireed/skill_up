@@ -5,6 +5,9 @@ import { AdminShell } from './admin/AdminShell'
 import { AdminLoginPage } from './admin/pages/AdminLoginPage'
 import { LearnersPage } from './admin/pages/LearnersPage'
 import { ParentRegistrationPage } from './public/ParentRegistrationPage'
+import { PublicFormViewer } from './admin/pages/PublicFormViewer'
+import { ParentAuthPage } from './public/parents/ParentAuthPage'
+import { ParentDashboard } from './public/parents/ParentDashboard'
 import { useAdminStore, isLearnerUser } from './admin/store/useAdminStore'
 
 function ScrollToTop() {
@@ -43,6 +46,12 @@ export default function App() {
         {/* Public Parent Child Registration Page */}
         <Route path="/register" element={<ParentRegistrationPage />} />
         <Route path="/parent-register" element={<ParentRegistrationPage />} />
+        <Route path="/f/:slug" element={<PublicFormViewer />} />
+        <Route path="/forms/:slug" element={<PublicFormViewer />} />
+
+        {/* Parent Portal Routes */}
+        <Route path="/parents/login" element={<AdminLoginPage />} />
+        <Route path="/parents/dashboard" element={<ParentDashboard />} />
 
         {/* PuzzlePro School Routes */}
         <Route path="/school" element={<Navigate to="/admin/school" replace />} />
