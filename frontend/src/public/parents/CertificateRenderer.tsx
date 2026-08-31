@@ -49,7 +49,7 @@ export function CertificateRenderer({ studentName, track, group, date }: Certifi
             // Move text up for PDF generation
             const overlays = doc.getElementsByClassName('cert-name-overlay')
             for (let i = 0; i < overlays.length; i++) {
-              ;(overlays[i] as HTMLElement).style.top = '43%'
+              ;(overlays[i] as HTMLElement).style.top = '45%'
             }
           }
         })
@@ -104,10 +104,10 @@ export function CertificateRenderer({ studentName, track, group, date }: Certifi
           style={{
             position: 'absolute',
             top: '49%', // Lowered slightly on the frontend
-            left: '15%', 
-            right: '5%',
+            left: '18%', 
+            right: '2%',
             textAlign: 'center',
-            fontSize: '34px',
+            fontSize: '30px',
             fontWeight: 600,
             color: '#194674',
             fontFamily: "'Monotype Cursiva', cursive",
