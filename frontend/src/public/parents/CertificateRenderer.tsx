@@ -88,7 +88,7 @@ export function CertificateRenderer({ studentName, track, group, date }: Certifi
         {/* Dynamic Name Overlay */}
         <div style={{
           position: 'absolute',
-          top: downloading ? '42%' : '48%', // Raised for PDF printout, lowered slightly for frontend UI
+          top: downloading ? '36%' : '52%', // 36% raises it much higher on PDF, 52% lowers it on frontend
           left: '15%', 
           right: '5%',
           textAlign: 'center',
