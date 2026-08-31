@@ -63,44 +63,46 @@ export function CertificateRenderer({ studentName, track, group, date }: Certifi
         {downloading ? 'Generating PDF...' : 'Download Certificate'}
       </button>
 
-      {/* The visible preview container. 
-          We use a standard A4 landscape ratio width/height. 
-          The overlay positioning is percentage-based so it scales perfectly. */}
-      <div 
-        ref={certRef} 
-        style={{ 
-          position: 'relative', 
-          width: '800px', // Fixed internal width for consistent rendering, scaled down via CSS transform if needed
-          height: '566px', // A4 Landscape ratio (297x210)
-          backgroundColor: '#fff',
-          overflow: 'hidden',
-          boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-        }}
-      >
-        {/* Load Handwriting Font */}
-        <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
+      {/* Wrapper to scale down the massive 800px preview visually while keeping DOM real size for html2canvas */}
+      <div style={{ width: '100%', maxWidth: '500px', margin: '0 auto', overflow: 'hidden', borderRadius: '8px' }}>
+        <div style={{ transform: 'scale(0.625)', transformOrigin: 'top left', width: '800px', height: '566px' }}>
+          <div 
+            ref={certRef} 
+            style={{ 
+              position: 'relative', 
+              width: '800px',
+              height: '566px',
+              backgroundColor: '#fff',
+              overflow: 'hidden',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+            }}
+          >
+            {/* Load Handwriting Font */}
+            <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
 
-        {/* Background Graphic */}
-        <img 
-          src={templateUrl} 
-          crossOrigin="anonymous"
-          alt="Certificate Background" 
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-        />
-        
-        {/* Dynamic Name Overlay */}
-        <div style={{
-          position: 'absolute',
-          top: '46%', // Adjust based on your specific PDF visual layout
-          left: '0',
-          right: '0',
-          textAlign: 'center',
-          fontSize: '34px',
-          fontWeight: 400,
-          color: '#0e1f57', // Dark blue
-          fontFamily: "'Great Vibes', cursive"
-        }}>
-          {studentName}
+            {/* Background Graphic */}
+            <img 
+              src={templateUrl} 
+              crossOrigin="anonymous"
+              alt="Certificate Background" 
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+            />
+            
+            {/* Dynamic Name Overlay */}
+            <div style={{
+              position: 'absolute',
+              top: '46%',
+              left: '25%', // Center on the right 3/4 of the certificate
+              right: '0',
+              textAlign: 'center',
+              fontSize: '34px',
+              fontWeight: 600,
+              color: '#002b80', // Richer shade of blue
+              fontFamily: "'Great Vibes', cursive"
+            }}>
+              {studentName}
+            </div>
+          </div>
         </div>
       </div>
     </div>
