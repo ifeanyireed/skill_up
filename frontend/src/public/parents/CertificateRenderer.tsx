@@ -91,14 +91,17 @@ export function CertificateRenderer({ studentName, track, group, date }: Certifi
         {/* Dynamic Name Overlay */}
         <div style={{
           position: 'absolute',
-          top: '39%', // Moved up to sit above the line
+          top: '46%', // Reverted to look correct on frontend
           left: '15%', 
           right: '5%',
           textAlign: 'center',
           fontSize: '34px',
           fontWeight: 600,
           color: '#002b80', // Richer shade of blue
-          fontFamily: "'Great Vibes', cursive"
+          fontFamily: "'Great Vibes', cursive",
+          lineHeight: '1', // Fixes the html2canvas bug that shifts text down in the PDF printout
+          margin: 0,
+          padding: 0
         }}>
           {studentName}
         </div>
