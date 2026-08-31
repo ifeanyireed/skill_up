@@ -238,9 +238,9 @@ export function ChildrenDirectoryPage() {
               className="admin-btn" 
               style={{ background: '#10B981', color: '#FFF', border: 'none', padding: '0.5rem 1rem', borderRadius: '6px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}
               onClick={() => {
-                const headers = ['ID', 'Full Name', 'Age', 'Gender', 'Group', 'Track', 'Center', 'Parent Name', 'Payment Status']
+                const headers = ['ID', 'Full Name', 'Age', 'Gender', 'Group', 'Track', 'Center', 'Parent Name', 'Payment Status', 'Amount Paid']
                 const rows = children.map((c: BackendChild) => [
-                  c.id, `"${c.full_name}"`, c.age, c.gender, `"${c.group}"`, `"${c.senior_track || 'N/A'}"`, `"${c.center}"`, `"${c.parent_name}"`, `"${c.payment_status || 'N/A'}"`
+                  c.id, `"${c.full_name}"`, c.age, c.gender, `"${c.group}"`, `"${c.senior_track || 'N/A'}"`, `"${c.center}"`, `"${c.parent_name}"`, `"${c.payment_status || 'N/A'}"`, c.amount_paid || 0
                 ])
                 const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map((r: any[]) => r.join(','))].join('\n')
                 const encodedUri = encodeURI(csvContent)
