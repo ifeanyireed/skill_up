@@ -169,7 +169,7 @@ export function PublicFormViewer() {
               type="submit" 
               disabled={submitting}
               style={{
-                background: 'var(--adm-primary)',
+                background: 'var(--adm-accent)',
                 color: 'white',
                 border: 'none',
                 padding: '0.875rem 2rem',
