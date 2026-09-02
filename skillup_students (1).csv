@@ -1,0 +1,291 @@
+ID,Full Name,Age,Gender,Group,Track,Center,Parent Name,Payment Status,Amount Paid
+359,"Obiamalu Blue",9,Female,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Obiamalu Edward","Full Payment",60000
+358,"Gideon Okhuakhua",16,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Mrs Joan Okhuakhua","Full Payment",50000
+357,"Lamidi Ayomipo Samuel",16,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Temitope Okokon","Full Payment",40000
+356,"Otojareri Wisdom Akpojevoge",15,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","OTOJARERI","Full Payment",50000
+355,"Onyelonu David Chizitere",12,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Onyelonu amara","Full Payment",50000
+354,"Okeke Chiagozie",16,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Okeke ijeoma","Full Payment",50000
+353,"Okeke Ifechukwu",10,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Okeke ijeoma","Full Payment",50000
+352,"Okeke Chibuike",18,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Okeke ijeoma","Full Payment",50000
+351,"Chiedu Francis Chukwudubem",13,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Mrs Ogechi Chiedu","Full Payment",60000
+350,"Igwe Kelvin Ebubechukwu",14,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Mrs Amaka Igwe","Full Payment",60000
+349,"Igwe Lawrence Obiora",16,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Mrs Amaka Igwe","Full Payment",60000
+348,"Chukwuemeka Precious",13,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Kennedy Chukwudi salvation","Full Payment",50000
+347,"Iheanacho Emmanuel",11,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Kennedy Chukwudi salvation","Full Payment",50000
+346,"Iheanacho Mercy",13,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Kennedy Chukwudi salvation","Full Payment",50000
+345,"Olisa David",15,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","David Nwoji","Full Payment",0
+344,"Gift David",12,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","David Nwoji","Full Payment",60000
+343,"Akhuemokhan Oseremen Nehita",16,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Paulina","Full Payment",60000
+342,"Raji Awwal",17,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Abdul-waheed Raji","Full Payment",60000
+341,"Agbasi Leo",14,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Agbasi Celine","Full Payment",60000
+340,"Chiegboka MUNACHIMSO Valeria",11,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Amuche Chiegboka","Full Payment",60000
+339,"Chiegboka Chiamanda Emmanuella",10,Female,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Amuche","Full Payment",60000
+338,"Eze Ifechukwu Emmanuella",9,Female,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Eze Merit","Full Payment",50000
+337,"Eze Chimdiuto Damian",8,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Eze Merit","Full Payment",50000
+336,"Fatima Mahmud Bachaka",10,Female,"Senior Camp (11+ years)","Basic IT","Festac Centre","Mrs Rashidat Mahmud","Full Payment",60000
+335,"Zainab Mahmud Bachaka",15,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Mrs Rashidat Mahmud","Full Payment",60000
+334,"Wisdom Okafor",15,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Philip Okafor","Full Payment",50000
+333,"Edna-Mmesomachukwu Samuel",15,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Echem Juliet","Full Payment",60000
+332,"Nzekwe Chidiebere A.Temitope",14,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Nzekwe Favour","Full Payment",60000
+331,"Tega Isreal",9,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Asinine Isreal","Full Payment",60000
+330,"Nwabichie Chinonso Excel",16,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Nworie","Full Payment",60000
+329,"Jason Chichetam Okoroafor",11,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Chidi Okoroafor","Full Payment",60000
+328,"Charissa Kobichukwudi Akpunonu",9,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Chinedu Akpunonu","Full Payment",50000
+327,"David Obinna",10,Male,"Senior Camp (11+ years)","Basic IT","Festac Centre","Mrs Obinna","Full Payment",60000
+326,"Rex Chukuyem Okuwe",16,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Queen Dalene okuwe","Full Payment",50000
+325,"Okoye Chioma",18,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Okoye Doris obiageli","Full Payment",60000
+324,"Ifechukwu Angel  Okwuosa",15,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Chigozie Okwuosa","Full Payment",50000
+323,"Onwuakpa Ugochukwu Daniel",12,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Reina Onwuakpa","Full Payment",55000
+322,"Uduaka Ebube Martins",16,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Uduaka pula","Full Payment",50000
+321,"Hassan Naqib",16,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Hassan Asabe","Full Payment",60000
+320,"Jidenna Williams Ezike",5,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Njideka ezike","Full Payment",55000
+319,"Chimeremeze David Ezike",7,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Njideka ezike","Full Payment",55000
+318,"Nwachinemere Richard Ezike",9,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Njideka ezike","Full Payment",55000
+317,"Ifechukwu Obijekwu",14,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Praise chisom obijekwu","Full Payment",50000
+316,"Chayil Enahoro",7,Female,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Emuobosa","Full Payment",50000
+315,"Ozulumba Tobenna Joshua",11,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Chika Ozulumba","Full Payment",60000
+314,"Emmanuella Ubabuko",10,Female,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Ugochukwu Solomon and Esther Chioma","Full Payment",50000
+313,"Kobi Edwards",4,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Vivian","Full Payment",60000
+312,"Kossy Edwards",7,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Vivian","Full Payment",60000
+311,"Onuoha Erinma Nicole",13,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Onuoha Blessing","Full Payment",50000
+310,"Madu Kamsi Bryan",13,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Madu Christiana","Full Payment",50000
+309,"Kamssy Edwards",7,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Vivian Ohaebuka","Full Payment",60000
+308,"Alisi Goodluck Chidubem",16,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Mrs. Ogechi Alisi","Full Payment",50000
+306,"Ikechukwu Henry Ekegha",5,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Ezinne Ekegha","Full Payment",50000
+305,"Eze Joel-Philbert Chimeremeze",6,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Emmanuela Eze","Full Payment",50000
+304,"Ekene Maxwell Ekegha",7,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Ezinne Ekegha","Full Payment",50000
+302,"Eze Jayson-Wilbert Chimebuka",7,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Emmanuela Eze","Full Payment",50000
+301,"EzeJerry-Hubert Kodichinma",9,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Emmanuela Eze","Full Payment",50000
+300,"Ovie-Okudor Chisaram Okeoghene",6,Female,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Chizoba Ovie-Okudor","Full Payment",50000
+299,"Chiamaka Chidi-Agba",18,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Mr. Kenneth","Full Payment",60000
+298,"Ikechukwu Emmanuel Chukwuebuka",7,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Parents","Full Payment",50000
+297,"Ayoola Darasimi Israel",12,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Oluwabusayo","Full Payment",50000
+296,"ANENE CHIMAMANDA GRACIOUS",6,Female,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","ANENE ONYINYE JESSICA","Full Payment",55000
+295,"Okoye Joshua Ifeanyi",11,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Hope  okoye","Full Payment",50000
+293,"Emmanuel Samson",18,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Mr. Samson","Full Payment",60000
+292,"ANENE KOBICHIMDI BILL",7,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","ANENE ONYINYE JESSICA","Full Payment",55
+291,"Okpala Valerie Chidobelum",12,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Okpala Nneka","Full Payment",50000
+290,"Okpala Chimdiomimi Gold",15,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Okpala Nneka","Full Payment",50000
+289,"Okpala Chimamanda",16,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Nneka okpala","Full Payment",50000
+288,"Onyekaonwu Chigozie Alex",16,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Mrs ekiotimi onyekaonwu","Full Payment",50000
+287,"Melody Mozoba",10,Male,"Senior Camp (11+ years)","Basic IT","Festac Centre","Emeka mozoba","Full Payment",50000
+286,"Ikechukwu Christabel  Chikamso",13,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Judith Oge","Full Payment",50000
+285,"Umejiego Chisom Favour",15,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Mary Umejiego","Full Payment",60000
+284,"Chidubem Chinonye-Amatalam",7,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Chinonye-Amatalam Nancy Osamudiamen","Full Payment",50000
+283,"Ihejirika Chidera Treasure",9,Female,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Ihejirika Ogechi","Full Payment",50000
+282,"Nweke Kendrick ifeanyichuckwu",10,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Mrs Nweke ewere","Part Payment (Installment)",30000
+281,"Ihejirika Osinachi Favour",11,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Ihejirika Ogechi","Full Payment",50000
+280,"Chidinma Anyakuba",5,Female,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Elizabeth Onyekachi Anyakuba","Full Payment",50000
+279,"Nwokeoma Wisdom-Golden  Chimaobi",5,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Emeka Anyakuba","Full Payment",50000
+278,"UCHECHUKWU ANYAKUBA",9,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Elizabeth Onyekachi Anyakuba","Full Payment",50000
+277,"Chukwudubem Anyakuba",12,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Elizabeth Onyekachi Anyakuba","Full Payment",50000
+276,"Somtochukwu Okafor",13,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Mr. Obi Okafor","Full Payment",50000
+275,"Franklin Oduonyemefe",14,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Ukwu vincent","Full Payment",50000
+274,"Ugochukwu Chidi-Agba",16,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Kenneth Chidi-Agba","Full Payment",50000
+273,"Desire Ifunanya",17,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Mrs Njigide Doris","Part Payment (Installment)",30000
+272,"Jessica Chioma Okoroafor",7,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Ifeyinwa Okoroafor","Full Payment",60000
+271,"Nicole Zina Okoroafor",7,Female,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Chidi Okoroafor","Full Payment",60000
+269,"Megbuwe, Daniel Toluwalope Melody",14,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Foluke Megbuwe","Full Payment",50000
+268,"Destiny Onyedibe",16,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Onyedibe Veronica","Full Payment",50000
+266,"Okpalanwankwo Chidubem Kelvin",4,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Okpalanwankwo princess","Full Payment",60000
+265,"Chukwuaja Oscar Somtochukwu",13,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Chinyere Chukwuaja","Full Payment",50000
+264,"Okoro Daniel Ugonna",14,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Orjiugo Okoro","Full Payment",50000
+263,"Okpalanwankwo Chichebem Kennedy",8,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Okpalanwankwo princess","Full Payment",60000
+262,"Osedebamen Anthony Iyamah",6,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Gift Iyamah","Full Payment",60000
+261,"Onosetale Andrew Iyamah",6,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Gift Iyamah","Full Payment",60000
+260,"Zienachimdi Oluwadamisire Iwuchukwu",9,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Uchenna Iwuchukwu","Full Payment",60000
+259,"Okoye Blessing Chisom",14,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Mrs. Okoye Hope","Full Payment",50000
+258,"Chizaram Oluwadariolasimi Iwuchukwu",11,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Uchenna Iwuchukwu","Full Payment",60000
+257,"Ezenwafor Zita Chinecherem",7,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Ijeoma","Full Payment",50000
+256,"Opara Bryan- Dominic Chiziterem",13,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Mr. Opara Uchenna","Full Payment",50000
+255,"SHITTU MOHAMMED",12,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Mr. Muhydeen SHITTU","Full Payment",50000
+254,"Samantha Izu okoro",9,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Henry","Full Payment",50000
+253,"Tehillah Izu-okoro",13,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Ruth Izu-Okoro","Full Payment",50000
+252,"Lucas Izu okoro",14,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Henry","Full Payment",50000
+251,"Shittu  Moriam Adetomi",16,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Mr. Muhydeen SHITTU","Full Payment",50000
+249,"Nwabunor Chukwuemeka",12,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Mrs Feyisayo Nwabunor","Full Payment",50000
+248,"Chibueze Kelechukwu Praise",14,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","MRS  CHIBUEZE OGECHUKWU P","Full Payment",60000
+247,"Chiemelie Nnamchi",17,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Chinedu Nnamchi","Full Payment",50000
+246,"Efosa Steven-Idemudia",9,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Mrs. Atinuke Stephen- Idemudia","Full Payment",60000
+245,"Ezenwafor Gerald Chibueze",11,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Ezenwafor mrs","Full Payment",50000
+244,"Anazodo Chukwunonso Ifedibaluchukwu",14,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Mrs. Anazodo","Part Payment (Installment)",30000
+243,"Anazodo Chukwuebuka Chiemelie",16,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Mrs. Anazodo","Full Payment",59999
+242,"Okereafor Isaac Kelechi",12,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Mrs. Joy Okerafor","Full Payment",60000
+241,"Okereafor David Ifenyichukwu",14,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Mrs. Joy Okerafor","Full Payment",60000
+240,"Okwuonu Kamsiyochukwu Keirian",15,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Mr. Okwuonu","Full Payment",50000
+239,"Unekwe Joel",14,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Mr.Uneke Benjamin","Full Payment",50000
+237,"Janice Efemena Brodrick",7,Female,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Eno Brodrick","Full Payment",60000
+236,"Chukwuemeka David",15,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Mr.&Mrs Ibeh","Full Payment",50000
+235,"Eliel Akachi Orji",6,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Wendy Orji","Full Payment",50000
+234,"Okonkwo Edeh Stephen",10,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Okonkwo Augustina","Full Payment",50000
+233,"Prosper Emeka",14,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","EMEKA PRAISE","Full Payment",60000
+232,"Numbe Terlumun Ephraim",15,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Ezeanyi Chinyere","Full Payment",50000
+231,"Ezeanyi Chizaram David",10,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Ezeanyi Chinyere","Full Payment",50000
+230,"Ezeanyi Chiziterem Daniel",10,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Ezeanyi Chinyere","Full Payment",50000
+229,"Chizara Beverly Emeka",12,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Kimberly Oguejiofor","Full Payment",50000
+228,"Ogunmola Daniel Opemipo",15,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Mr. Funsho Ogunmola","Full Payment",50000
+227,"Tifeoluwalase Ethan George",6,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Senami George","Full Payment",55000
+226,"Esther Oniyechukwu Orji",7,Female,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Mr Orji","Full Payment",60000
+225,"Okwuosa Chimdinma  Isabella",8,Female,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Joy Okwuosa","Full Payment",55000
+224,"Henry Ogboo",16,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Rosemary","Full Payment",50000
+223,"Oluwatosin Emmanuel Ogunniyi",4,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","OGUNNIYI BOLANLE","Full Payment",60000
+222,"Ogboo Cynthia",17,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Rosemary","Full Payment",50000
+221,"Oluwatobi David Ogunniyi",6,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","OGUNNIYI BOLANLE","Full Payment",60000
+220,"Olivia Oluku",16,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Jennifer oluku","Full Payment",50000
+219,"Alyssia Oluku",12,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Jennifer oluku","Full Payment",50000
+218,"Amelia Oluku",14,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Jennifer oluku","Full Payment",50000
+216,"Jerry Ibapou",6,Male,"Senior Camp (11+ years)","Basic IT","Festac Centre","Tombra Sunday","Full Payment",50000
+215,"Ngonadi Chimemelie",16,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Ngonadi Chiamaka Amarachi","Full Payment",50000
+214,"Chisom Kendra Osademe",10,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Lovina Osademe","Full Payment",50000
+213,"Ezenwafor Albert Ugochukwu",13,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Ezenwafor ijeoma","Full Payment",50000
+212,"Ezenwafor Sharon Adaugo",14,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Ezenwafor ijeoma","Full Payment",50000
+211,"Anthony Chidiebube Nweke",8,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Eucharia","Full Payment",50000
+210,"Okechukwu Ndiogazili",18,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Edward Ndiogazili","Full Payment",60000
+209,"Michael Sharon",13,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Chioma Michael","Full Payment",60000
+208,"Khalil Ibrahim Sabo",11,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Mr. Ibrahim","Full Payment",50000
+207,"Nwamba-Chidi Ifunanya Favour",15,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Nkem Nwamba","Full Payment",50000
+206,"Onochie Chukwudi Daniel",18,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Charles","Full Payment",60000
+205,"Emmanuela Owuye",9,Female,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Mr&Mrs Josephine Owuye","Full Payment",50000
+204,"Melody Owuye",7,Female,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Mr&Mrs Josephine Owuye","Full Payment",50000
+203,"Chidubem Philip Ozoemena",17,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Mrs. Chinese Vivian Ozoemena","Full Payment",60000
+202,"Nwadiugwu Nneoma Stephanie",16,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Nwadiugwu Nkem Sylvia","Full Payment",50000
+201,"Nwadiugwu Kosisochukwu Clare",13,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Nwadiugwu","Full Payment",50000
+200,"Nwadiugwu Chimamanda Michelle",14,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Mrs Sylvia Nwadiugwu","Full Payment",60000
+199,"Nwamba-Chidi Akuchukwu Melvin",8,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Nkem Nwamba","Full Payment",50000
+198,"Nwamba-Chidi Chimeremeze Daniel",9,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Nkem Nwamba","Full Payment",50000
+197,"Nwamba-Chidi Somtochukwu David",9,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Nkem Nwamba","Full Payment",50000
+196,"Nwamba-Chidi Chidera Eva",12,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Nkem Nwamba","Full Payment",50000
+194,"Nwamba-Chidi Chineye Precious",14,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Nkem Nwamba","Full Payment",50000
+193,"Uzochukwu Fortune",15,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Mrs Uzochukwu","Full Payment",60000
+192,"Okechukwu Dilinna Chinedu",15,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Mr&Mrs Okechukwu","Full Payment",50000
+191,"David Ambrose",8,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Bernare Ambrose","Full Payment",50000
+190,"Perpetual Nweke",17,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Mrs Ifeoma Chukwuchebe","Full Payment",50000
+189,"Setin Hodonu",15,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Olugbenga","Full Payment",50000
+188,"Chimbusomma Chukwuchebe",11,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Mrs Ifeoma Chukwuchebe","Full Payment",50000
+187,"Mbah Chidubem Victor",13,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Ifeyinwa mbah","Full Payment",50000
+186,"Mbah Chibugo Praise",11,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Ifeyinwa mbah","Full Payment",50000
+185,"Ibrahim Akorede Adelekan",12,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Alymatsadia Olabisi","Full Payment",50000
+184,"Mbah Munachi Blessing",15,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Ifeyinwa mbah","Full Payment",50000
+183,"Anuo Faith Oziomachukwu",14,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Mr&Mrs Anuo","Full Payment",50000
+182,"Chidubem Gerard Chinonso",8,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Mrs Chinonso","Full Payment",60000
+181,"Victor Ugodiebube Orji",9,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Sophia Orji","Full Payment",50000
+180,"Anuo Dominion Chikwudinma",11,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Mr&Mrs Anuo","Full Payment",50000
+179,"Isaac Obinna Orji",17,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Sophia Orji","Full Payment",50000
+177,"Mgbakor Esther",16,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Anyanwu George","Full Payment",50000
+176,"Divine Jahbuike Nwaloka",10,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Nkiru nwaloka","Full Payment",60000
+175,"Jesse Somkenechukwu Chinedu.",8,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Samuel Okonkwo","Full Payment",50000
+174,"Imohabasi Samuel Isong",5,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Mrs Ojo","Full Payment",50000
+173,"Sophia Chimbusonma Chinedu",10,Female,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Samuel Okonkwo","Full Payment",50000
+169,"Ekeh Kamsiyochukwu Daniel",7,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Ekeh Blessing Ifunanya","Full Payment",50000
+167,"Fesojaiye Oluwatise Olamide",15,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Fesojaiye Yetunde","Full Payment",50000
+166,"Jasper Jimre John",9,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","jimre John yadzugwa","Full Payment",50000
+165,"Egbonwon Oluwamayokun David",6,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Omobolanle Egbonwon","Full Payment",50000
+164,"Grace Adanna Ejefor",8,Female,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Omowunmi serki","Full Payment",50000
+163,"Jude Jimre John",12,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","jimre John yadzugwa","Full Payment",50000
+162,"Ekeh Nnaemeka Nathan",8,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Ekeh Blessing Ifunanya","Full Payment",50000
+161,"Kamsi Ekeh",7,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Ifunanya Ekeh","Full Payment",50000
+160,"Nnamdi Ekeh",8,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Ifunanya Ekeh","Full Payment",50000
+159,"Ozioma Anuo",14,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Mrs. Anuo","Full Payment",50000
+158,"Egbuna Ikenna Chukwuzimuzo",12,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Ikenna Egbuna","Part Payment (Installment)",25000
+157,"Adegoke Iyinoluwa Micheal",9,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Oluwakemi Aremo","Full Payment",50000
+156,"Leroy C. George Jr.",5,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","James Torpor","Full Payment",50000
+155,"Nwankwo Ijeoma Angel",8,Female,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Funmilayo Nwankwo","Full Payment",50000
+154,"Adegoke Fiyinfoluwa Akinbiyi",13,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Oluwakemi Aremo","Full Payment",50000
+153,"Mbachu Godswill Chidera",12,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Mr and Mrs. Mbachu","Full Payment",50000
+152,"Mbachu David Ikedinachi",13,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Mr and Mrs. Mbachu","Full Payment",50000
+151,"𝚃𝙰𝙶𝙱𝙾 𝙲𝙷𝙸𝙴𝙼𝙴𝚁𝙸𝙴 𝙶𝙾𝙾𝙳𝙻𝚄𝙲𝙺",15,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Ukanze Ijeoma Juliana","Full Payment",50000
+150,"Ugochukwu Opuruozor",7,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Miracle Uzomefuna","Full Payment",50000
+149,"Olumba, Somtochukwu Stanley.",15,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Joy Olumba","Full Payment",50000
+148,"Olumba Stanley",13,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Joy Olumba","Full Payment",50000
+146,"Athar Oluwatimileyin",15,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Uche Nwoko","Full Payment",50000
+145,"Ugwu Great Daniel Chidiebere",8,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Mrs Ugwu Chinenye","Full Payment",50000
+144,"Muhammad Ibrahim Sabo",9,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Ibrahim Sabo Garko","Full Payment",50000
+143,"Ugwu Cynthia Chimsimdi .C.",10,Female,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Mrs Ugwu Chinenye","Full Payment",50000
+142,"Ebube Jeffrey Chinonso",13,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Mrs Chinonso","Full Payment",50000
+140,"Ugwu Divine Chukwuebuka",11,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Mrs Ugwu Chinenye","Full Payment",50000
+139,"Umejiego Mmesoma Jessica",14,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Umejiego Obiageli Mary","Full Payment",60000
+136,"Ugwu Mirabel Chimamanda",5,Female,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Mrs Ugwu Chinenye","Full Payment",50000
+131,"Mikel Benjamin",9,Male,"Junior Camp (5–10 years)","Basic IT","Festac Centre","Benjamin Sunday","Full Payment",50000
+129,"Chidiebere God’swill Chinedu Okoye",10,Female,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Dr Chinedu David Okoye","Full Payment",50000
+128,"Chimamanda Goodness Chinedu Okoye",12,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Dr Chinedu David Okoye","Full Payment",50000
+127,"Emmanuel Kosimasichukwu Chinedu Okoye",13,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Dr Chinedu David Okoye","Full Payment",50000
+126,"Chimamanda Keren Osademe",8,Female,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Mrs Lovina Osademe","Full Payment",50000
+125,"Ikechukwu Andrea Osademe",12,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Mrs Lovina Osademe","Full Payment",50000
+124,"Iboi Jacob Ehizode",15,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Iboi Ogochukwu","Full Payment",50000
+123,"Anosike Kamdilichukwu Derrick",9,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Anosike Chinonso","Full Payment",50000
+122,"Mateen Adekeye",6,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Adekeye Muis","Full Payment",50000
+121,"Asomugha Chioma Racheal",6,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Asomugha Rita","Full Payment",50000
+120,"Malik Adekeye",9,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Adekeye Muis","Full Payment",50000
+119,"Asomugha Chimereze David",8,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Asomugha Rita","Full Payment",50000
+118,"Anosike Zikorachukwu Harvey",11,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Anosike Chinonso","Full Payment",50000
+117,"Abdul Warith Adekeye",11,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Adekeye Muis","Full Payment",50000
+116,"Ajiboye Ikeoluwa John",6,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Mrs Ajiboye","Full Payment",50000
+115,"Anosike Kamsiyochukwu Gregory",13,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Anosike Chinonso","Full Payment",50000
+114,"Uramah Kamsiyochukwu Collins",13,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Uramah Esther Ifunanya","Full Payment",60000
+113,"Ajiboye Ireoluwa Joseph",7,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Mrs Ajiboye","Full Payment",50000
+112,"Adesire Jesse Ojo",6,Female,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Olajumoke Ojo","Full Payment",60000
+111,"Chisom Emmanuel Odiih",15,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Okwudili Odiih","Full Payment",50000
+110,"Ademide Justine Ojo",9,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Olajumoke Ojo","Full Payment",60000
+109,"Onwuegbuchi Elvis",14,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Onwuegbuchi Chinyere","Full Payment",50000
+108,"Ogungbemi Oluwaseyi",17,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Parent","Full Payment",50000
+107,"Divine Akinnugba",6,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Omolola Hephzibah","Full Payment",50000
+106,"Benjamin Goodluck Adighiezichukwuihe",15,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Benjamin Ogwu","Full Payment",50000
+105,"Ofoegbu Great Zikora",5,Female,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Lovelyn Nkeiruka","Full Payment",50000
+104,"Ofoegbu Chikamara Delight",5,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Lovelyn Nkeiruka","Full Payment",50000
+103,"Ofoegbu Divine Chukwudemebi",5,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Lovelyn Nkeiruka","Full Payment",50000
+100,"Ezeanyi Chibuzor Emmanuel",12,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Ezeanyi Chinyere Peace","Full Payment",50000
+96,"Iniomon Derick Ehinomen",12,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Osayande Iniomon","Full Payment",50000
+95,"Somtochukwu Richard Nnamchi",13,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Nnamchi Chinedu","Full Payment",50000
+94,"Kamsiyochukwu Collins Ikenna",12,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Marylinda Ikenna","Full Payment",50000
+93,"Chinaemeze Jason Uche-Obi",13,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Uche Stanley Obi & Adaku Perpetua Uche-Obi","Full Payment",50000
+92,"Fahim Anas Gebe",13,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Farida Gebe","Full Payment",50000
+91,"Muhammad Shamsudeen Abarshi",13,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Farida Gebe","Full Payment",5000
+90,"Aisha Shamsudeen Abarshi",15,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Farida Gebe","Full Payment",50000
+89,"Onyezubere Chidubem Michael",10,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Onyezubere Adaeze Cynthia","Full Payment",50000
+88,"Val-Adinnu Michelle Chinazom",13,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Val-Adinnu Loveth","Full Payment",3140000
+87,"Val-Adinnu Emmanuella Chidinma",16,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Val-Adinnu Loveth","Full Payment",3140000
+86,"Cruz Oghenetega Adaimoni",20,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Roland Adaimoni","Full Payment",50000
+85,"Akpunonu Modestus Somtochukwu",14,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Mr&mrs Akpunonu Ikechukwu","Full Payment",50000
+84,"Izuchukwu Okechukwu David",12,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Mrs Francis Chioma","Full Payment",50000
+83,"Jesutomiwo Morenikeji",17,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Elemi Morenikeji","Full Payment",50000
+82,"Adeniyi Fiyinfoluwa Orisetimeyin",13,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Mrs Wuraola Adeniyi","Full Payment",45000
+81,"Alfa David Alfa",15,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Mrs Chichi Alfa Onum","Full Payment",50000
+80,"Onyema Chinaza Miracle",12,Female,"Senior Camp (11+ years)","Cybersecurity + App Development","Raji Rasaki Centre","Blessing Ugwumba","Full Payment",50000
+79,"Oluwajoba Praise Kayode",15,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Adetoun Kayode","Full Payment",50000
+77,"Okechukwu Roy Kamsiyochukwu",13,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Mr. & Mrs. Okechukwu","Full Payment",50000
+73,"Ezeanyi Kamsi Emmanuella",12,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Ezeanyi Chinyere Peace","Full Payment",50000
+72,"Chiemeka Bright Ikejiaku",12,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Mr Ugochukwu Benjamin Ikejiaku","Full Payment",60000
+71,"Okonkwo Edeh Nelson",11,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Mrs Augustina Okonkwo","Full Payment",50000
+69,"Morah Declan Kamsiyochukwu",10,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Morah Cynthia","Full Payment",4030
+68,"Iniomon Nicholas Ehidiamen",12,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Osayande Iniomon","Full Payment",50000
+67,"Chukwunedu Mmachi Rachael",9,Female,"Junior Camp (5–10 years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Olasumbo Chukwunedu","Full Payment",60000
+66,"Ugosinachi Ebubechukwu Gabriel",7,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Chinonye Ugosinachi","Full Payment",50000
+65,"Chijindu Denzel Nnamchi",13,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Nnamchi Chinedu","Full Payment",50000
+64,"Chikaima Bryan Ikenna",12,Male,"Senior Camp (11+ years)","Basic IT","Raji Rasaki Centre","Marylinda Ikenna","Full Payment",50000
+63,"Kamsiyochukwu Michael Uche-Obi",13,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Uche Stanley Obi & Adaku Perpetua Uche-Obi","Full Payment",50000
+62,"Khalid Shamsudeen Abarshi",15,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Farida Gebe","Full Payment",50000
+61,"Oluwaseyifunmi Salimon",10,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Salimon Temitope","Full Payment",50000
+59,"Ezeh Chijioke Ifeanyi Victor",14,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Ezeh Chijioke Ijeoma","Full Payment",50000
+56,"Okwuosa Chisom",12,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Okwuosa Joy","Full Payment",50000
+55,"Onyezubere Adaugo Monalisa",10,Male,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Festac Centre","Onyezubere Adaeze Cynthia","Full Payment",50000
+54,"Val-Adinnu Daniel Chiemeka",16,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Val-Adinnu Loveth","Full Payment",3140000
+53,"Roland Elozino Adaimoni",20,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Roland Adaimoni","Full Payment",50000
+52,"Akpunonu Michelle Chinaza",14,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Mr& Mrs Akpunonu Ikechukwu","Full Payment",50000
+51,"Victor Enya Rejeokim",14,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Veronica Nnena Victor Enya","Full Payment",50000
+50,"Izuchukwu Munachimso Victor",12,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Festac Centre","Mrs Francis Chioma","Full Payment",50000
+47,"Okpala Chukwudalu Gerald",15,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Chief Okpala Jonathan Azubuike M","Full Payment",30000
+46,"Jesutise Morenikeji",17,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Elemi Morenikeji","Full Payment",50000
+45,"Adeniyi Oluwafikayomi Oriseetemi",9,Female,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Adeniyi Wuraola","Full Payment",45000
+43,"Nwachukwu Obianujnunwa Benedicta",17,Female,"Senior Camp (11+ years)","Cybersecurity + App Development","Raji Rasaki Centre","Nwachukwu Nkeiru","Full Payment",50000
+42,"Alfa Daniel Innalegwu",8,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Mrs Chichi Alfa Onum","Full Payment",50000
+41,"Alfa Samuel Owalohi",11,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Mrs Chichi Alfa Onum","Full Payment",50000
+39,"Onyema Kamsiyochukwu Francis",11,Male,"Senior Camp (11+ years)","Graphics Design (Corel Draw) + Robotics","Raji Rasaki Centre","Blessing Ugwumba","Full Payment",50000
+37,"Ugboke Eboseta Success",15,Female,"Senior Camp (11+ years)","Cybersecurity + App Development","Festac Centre","Victor Odianosen Ugboke","Full Payment",40
+36,"Chukwubueze Chukwurah Charles",17,Male,"Senior Camp (11+ years)","Cybersecurity + App Development","Festac Centre","Mr Chukwurah Nwabu","Full Payment",200
+34,"Felix-Osita Chizitem Gerald",11,Male,"Senior Camp (11+ years)","Robots,  Ai , graphic design","Raji Rasaki Centre","Felix-Osita Amara Jane","Full Payment",40
+32,"Ifeanyichukwu Mac-Victor Zinachimdi",10,Male,"Junior Camp (5–10 years)","Basic IT","Raji Rasaki Centre","Lady Akosa Chibuzor Chizobam","Full Payment",50000
+31,"Ifeanyichukwu Sophia Adannia",12,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Lady Akosa Chibuzor Chizobam","Full Payment",50000
+29,"Muoegbunam Amarachi",13,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Muoegbunam Ifeyinwa","Full Payment",55000
+28,"Muoegbunam Chioma Jessica",15,Female,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Muoegbunam Ifeyinwa","Full Payment",55000
+27,"Ifeanyichukwu Jaden Chimbundom",6,Boy,"Junior Camp (5–10 years)","N/A","Raji Rasaki Centre","Lady Akosa Chibuzor","Full Payment",0
+22,"Ezeoke Richard K",6,Girl,"Senior Camp (11+ years)","Cybersecurity + Python Programming","Raji Rasaki Centre","Muoegbunam Ifeyinwa","Full Payment",55000

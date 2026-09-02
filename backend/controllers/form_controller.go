@@ -51,6 +51,13 @@ func CreateForm(c *gin.Context) {
 
 	form.Slug = generateSlug(form.Title)
 
+	// Sanitize options for MySQL JSON column
+	for i := range form.Fields {
+		if form.Fields[i].Options == "" {
+			form.Fields[i].Options = "[]"
+		}
+	}
+
 	var count int64
 	config.DB.Model(&models.Form{}).Where("slug = ?", form.Slug).Count(&count)
 	if count > 0 {
@@ -96,6 +103,9 @@ func UpdateForm(c *gin.Context) {
 		for _, field := range updateData.Fields {
 			field.ID = 0
 			field.FormID = form.ID
+			if field.Options == "" {
+				field.Options = "[]"
+			}
 			if err := tx.Create(&field).Error; err != nil {
 				return err
 			}

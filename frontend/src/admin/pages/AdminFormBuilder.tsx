@@ -55,7 +55,14 @@ export function AdminFormBuilder() {
     if (fields.length === 0) return alert('Add at least one field')
 
     setSaving(true)
-    const payload: Partial<Form> = { title, description, is_active: isActive, fields }
+    
+    // Sanitize options to ensure valid JSON is sent to the backend
+    const sanitizedFields = fields.map(f => ({
+      ...f,
+      options: f.options?.trim() === '' ? '[]' : f.options
+    }))
+    
+    const payload: Partial<Form> = { title, description, is_active: isActive, fields: sanitizedFields }
 
     try {
       if (isEditing) {
@@ -66,8 +73,8 @@ export function AdminFormBuilder() {
         alert('Form created successfully!')
       }
       navigate('/admin/forms')
-    } catch (err) {
-      alert('Failed to save form')
+    } catch (err: any) {
+      alert('Failed to save form: ' + err.message)
     } finally {
       setSaving(false)
     }
