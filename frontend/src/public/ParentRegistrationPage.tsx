@@ -186,7 +186,7 @@ export function ParentRegistrationPage() {
   }
 
   return (
-    <div className="parent-reg-page" style={{ background: '#F8FAFC', minHeight: '100vh', padding: '1.5rem 1rem' }}>
+    <div className="parent-reg-page admin-shell" style={{ background: '#F8FAFC', minHeight: '100vh', padding: '1.5rem 1rem' }}>
       {/* Top Bar */}
       <div style={{ maxWidth: '680px', margin: '0 auto 1rem auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <button

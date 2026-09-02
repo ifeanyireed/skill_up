@@ -84,7 +84,7 @@ export function PublicFormViewer() {
   const sortedFields = [...form.fields].sort((a, b) => a.order_index - b.order_index)
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f3f4f6', padding: '3rem 1rem', display: 'flex', justifyContent: 'center' }}>
+    <div className="admin-shell" style={{ minHeight: '100vh', background: '#f3f4f6', padding: '3rem 1rem', display: 'flex', justifyContent: 'center' }}>
       <div style={{ maxWidth: '600px', width: '100%' }}>
         
         <div style={{ background: 'white', borderRadius: '12px', padding: '2.5rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', marginBottom: '1.5rem', borderTop: '8px solid var(--adm-primary)' }}>
