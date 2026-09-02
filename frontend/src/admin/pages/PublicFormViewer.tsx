@@ -86,7 +86,9 @@ export function PublicFormViewer() {
   return (
     <div className="admin-shell" style={{ minHeight: '100vh', background: '#f3f4f6', padding: '3rem 1rem', display: 'flex', justifyContent: 'center' }}>
       <div style={{ maxWidth: '600px', width: '100%' }}>
-        
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <img src="/logo.avif" alt="Logo" style={{ height: '56px', width: 'auto', objectFit: 'contain' }} />
+        </div>
         <div style={{ background: 'white', borderRadius: '12px', padding: '2.5rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', marginBottom: '1.5rem', borderTop: '8px solid var(--adm-primary)' }}>
           <h1 style={{ margin: '0 0 0.5rem 0', color: 'var(--adm-text-1)', fontSize: '2rem' }}>{form.title}</h1>
           {form.description && (
